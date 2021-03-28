@@ -18,15 +18,15 @@ CREATE TABLE `users`
     `last_password_update_date` DATE    DEFAULT NULL,
     `enabled`                   BOOLEAN DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `UK_email` (`email`)
+    UNIQUE KEY `UK_EMAIL` (`email`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled)
-VALUES ('User', 'One', 'user@one.com', 'testing', sysdate(), TRUE);
 INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled, last_access_date, last_password_update_date)
-VALUES ('User', 'Two', 'user@two.com', 'testing', sysdate(), FALSE, '2008-01-01', '2008-01-01');
+VALUES ('User', 'One', 'user@one.com', 'testing', sysdate(), TRUE, '2008-01-01', '2008-01-01');
+INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled)
+VALUES ('User', 'Two', 'user@two.com', 'testing', sysdate(), FALSE);
 INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled, last_access_date, last_password_update_date)
 VALUES ('User', 'Three', 'user@three.com', 'testing', sysdate(), FALSE, sysdate(), sysdate());
 
@@ -72,7 +72,7 @@ CREATE TABLE `password_reset_tokens`
     `expiry_date`   DATE        NOT NULL,
     `id_user`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    CONSTRAINT `FK_USER_PASSWORD_TOKEN` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -85,7 +85,7 @@ CREATE TABLE `user_verification_tokens`
     `expiry_date`   DATE        NOT NULL,
     `id_user`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    CONSTRAINT `FK_USER_VERIFICATION_TOKEN` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
