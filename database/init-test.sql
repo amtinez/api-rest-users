@@ -23,10 +23,10 @@ CREATE TABLE `users`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled)
-VALUES ('User', 'One', 'user@one.com', 'testing', sysdate(), TRUE);
 INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled, last_access_date, last_password_update_date)
-VALUES ('User', 'Two', 'user@two.com', 'testing', sysdate(), FALSE, '2008-01-01', '2008-01-01');
+VALUES ('User', 'One', 'user@one.com', 'testing', sysdate(), TRUE, '2008-01-01', '2008-01-01');
+INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled)
+VALUES ('User', 'Two', 'user@two.com', 'testing', sysdate(), FALSE);
 INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled, last_access_date, last_password_update_date)
 VALUES ('User', 'Three', 'user@three.com', 'testing', sysdate(), FALSE, sysdate(), sysdate());
 
