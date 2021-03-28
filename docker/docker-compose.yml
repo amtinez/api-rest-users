@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: aru-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: api_rest_users
+      MYSQL_USER: amtinez
+      MYSQL_PASSWORD: apirestusers
+      MYSQL_ROOT_PASSWORD: rootapirestusers
+      MYSQL_TCP_PORT: 3306
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    healthcheck:
+      interval: 3s
+      retries: 2000
+      test: /usr/bin/mysql --user=root --password=rootapirestusers --execute "SHOW DATABASES;"
+      timeout: 3s
+    volumes:
+      - ../docker-data/mysql:/var/lib/mysql
+      - ../database/init.sql:/docker-entrypoint-initdb.d/init.sql

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `users`
     `last_password_update_date` DATE    DEFAULT NULL,
     `enabled`                   BOOLEAN DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `UK_email` (`email`)
+    UNIQUE KEY `UK_EMAIL` (`email`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens`
     `expiry_date`   DATE        NOT NULL,
     `id_user`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    CONSTRAINT `FK_USER_PASSWORD_TOKEN` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `user_verification_tokens`
     `expiry_date`   DATE        NOT NULL,
     `id_user`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    CONSTRAINT `FK_USER_VERIFICATION_TOKEN` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
