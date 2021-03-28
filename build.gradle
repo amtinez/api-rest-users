@@ -1,10 +1,13 @@
 plugins {
     id 'org.springframework.boot' version '2.4.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.sonarqube' version '3.1'
+    id 'jacoco'
     id 'java'
 }
 
 group = 'com.amtinez'
+description = 'API Rest Users'
 version = '0.0.1-SNAPSHOT'
 
 configurations {
@@ -33,4 +36,19 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+sonarqube {
+    properties {
+        property 'sonar.exclusions', '**/ApiRestUsersApplication.java'
+        property 'sonar.test.exclusions', '**/ApiRestUsersApplicationTests.java'
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/test/xml"
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/test/xml")
+    }
 }
