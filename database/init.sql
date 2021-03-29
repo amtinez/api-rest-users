@@ -36,16 +36,16 @@ VALUES ('user');
 
 CREATE TABLE IF NOT EXISTS `users_roles`
 (
-    `id_user` BIGINT NOT NULL,
-    `id_role` BIGINT NOT NULL,
-    PRIMARY KEY (`id_role`, `id_user`),
-    CONSTRAINT `FK_ROLE` FOREIGN KEY (`id_role`) REFERENCES `roles` (`id`),
-    CONSTRAINT `FK_USER` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    `user_id` BIGINT NOT NULL,
+    `role_id` BIGINT NOT NULL,
+    PRIMARY KEY (`user_id`, `role_id`),
+    CONSTRAINT `FK_USER` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+    CONSTRAINT `FK_ROLE` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO users_roles (id_user, id_role)
+INSERT INTO users_roles (user_id, role_id)
 VALUES (1, 1);
 
 CREATE TABLE IF NOT EXISTS `password_reset_tokens`
@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens`
     `token`         VARCHAR(50) NOT NULL,
     `creation_date` DATE        NOT NULL,
     `expiry_date`   DATE        NOT NULL,
-    `id_user`       BIGINT      NOT NULL,
+    `user_id`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER_PASSWORD_TOKEN` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    CONSTRAINT `FK_USER_PASSWORD_TOKEN` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS `user_verification_tokens`
     `token`         VARCHAR(50) NOT NULL,
     `creation_date` DATE        NOT NULL,
     `expiry_date`   DATE        NOT NULL,
-    `id_user`       BIGINT      NOT NULL,
+    `user_id`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER_VERIFICATION_TOKEN` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
+    CONSTRAINT `FK_USER_VERIFICATION_TOKEN` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
