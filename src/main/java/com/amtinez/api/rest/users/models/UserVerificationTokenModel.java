@@ -1,6 +1,6 @@
-package com.amtinez.api.rest.users.models.tokens;
+package com.amtinez.api.rest.users.models;
 
-import com.amtinez.api.rest.users.constants.DatabaseConstants.Table.PasswordResetToken;
+import com.amtinez.api.rest.users.constants.DatabaseConstants.Table.UserVerificationToken;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = PasswordResetToken.TABLE_NAME)
-public class PasswordResetTokenModel extends TokenModel {
+@Table(name = UserVerificationToken.TABLE_NAME)
+public class UserVerificationTokenModel extends TokenModel {
 
 }
