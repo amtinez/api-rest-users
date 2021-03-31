@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 public class PasswordResetTokenServiceIntegrationTest {
 
-    private static final String TEST_CODE = "testCode";
+    private static final String TEST_TOKEN_CODE = "testTokenCode";
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
@@ -53,7 +53,7 @@ public class PasswordResetTokenServiceIntegrationTest {
                                                                   .birthdayDate(LocalDate.now())
                                                                   .build());
         testPasswordResetToken = passwordResetTokenService.saveToken(PasswordResetTokenModel.builder()
-                                                                                            .code(TEST_CODE)
+                                                                                            .code(TEST_TOKEN_CODE)
                                                                                             .creationDate(LocalDate.now())
                                                                                             .expiryDate(LocalDate.now())
                                                                                             .user(userModel)
@@ -61,31 +61,31 @@ public class PasswordResetTokenServiceIntegrationTest {
     }
 
     @Test
-    public void testFindPasswordResetTokenById() {
+    public void testFindTokenById() {
         final Optional<PasswordResetTokenModel> tokenFound = passwordResetTokenService.findToken(testPasswordResetToken.getId());
         assertTrue(tokenFound.isPresent());
-        assertThat(tokenFound.get().getCode()).isEqualTo(TEST_CODE);
+        assertThat(tokenFound.get().getCode()).isEqualTo(TEST_TOKEN_CODE);
     }
 
     @Test
-    public void testFindPasswordResetTokenByToken() {
+    public void testFindTokenByToken() {
         final Optional<PasswordResetTokenModel> tokenFound = passwordResetTokenService.findToken(testPasswordResetToken.getCode());
         assertTrue(tokenFound.isPresent());
-        assertThat(tokenFound.get().getCode()).isEqualTo(TEST_CODE);
+        assertThat(tokenFound.get().getCode()).isEqualTo(TEST_TOKEN_CODE);
     }
 
     @Test
-    public void testFindPasswordResetTokenByUser() {
+    public void testFindTokenByUser() {
         final Optional<PasswordResetTokenModel> tokenFound = passwordResetTokenService.findToken(testPasswordResetToken.getUser());
         assertTrue(tokenFound.isPresent());
-        assertThat(tokenFound.get().getCode()).isEqualTo(TEST_CODE);
+        assertThat(tokenFound.get().getCode()).isEqualTo(TEST_TOKEN_CODE);
     }
 
     @Test
-    public void testSavePasswordResetToken() {
+    public void testSaveToken() {
         assertNotNull(testPasswordResetToken);
         assertNotNull(testPasswordResetToken.getId());
-        assertThat(testPasswordResetToken.getCode()).isEqualTo(TEST_CODE);
+        assertThat(testPasswordResetToken.getCode()).isEqualTo(TEST_TOKEN_CODE);
         assertThat(testPasswordResetToken.getCreationDate()).isEqualTo(LocalDate.now());
         assertThat(testPasswordResetToken.getExpiryDate()).isEqualTo(LocalDate.now());
         assertNotNull(testPasswordResetToken.getUser());
@@ -94,7 +94,7 @@ public class PasswordResetTokenServiceIntegrationTest {
     }
 
     @Test
-    public void testDeletePasswordResetToken() {
+    public void testDeleteToken() {
         passwordResetTokenService.deleteToken(testPasswordResetToken.getId());
         assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
     }
