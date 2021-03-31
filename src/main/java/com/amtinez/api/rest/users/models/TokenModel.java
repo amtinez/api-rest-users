@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,14 +31,14 @@ public abstract class TokenModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = Token.TOKEN_FIELD, length = Token.TOKEN_FIELD_LENGTH, nullable = false)
+    @Column(name = Token.TOKEN_FIELD, nullable = false, length = Token.TOKEN_FIELD_LENGTH)
     private String token;
 
     @Column(name = Token.CREATION_DATE_FIELD, nullable = false)
-    private String creationDate;
+    private LocalDate creationDate;
 
     @Column(name = Token.EXPIRY_DATE_FIELD, nullable = false)
-    private String expiryDate;
+    private LocalDate expiryDate;
 
     @OneToOne(targetEntity = UserModel.class, fetch = FetchType.EAGER)
     @JoinColumn(name = Token.USER_ID_FIELD, nullable = false)
