@@ -31,8 +31,8 @@ public abstract class TokenModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = Token.TOKEN_FIELD, nullable = false, length = Token.TOKEN_FIELD_LENGTH)
-    private String token;
+    @Column(name = Token.CODE_FIELD, nullable = false, length = Token.CODE_FIELD_LENGTH)
+    private String code;
 
     @Column(name = Token.CREATION_DATE_FIELD, nullable = false)
     private LocalDate creationDate;
