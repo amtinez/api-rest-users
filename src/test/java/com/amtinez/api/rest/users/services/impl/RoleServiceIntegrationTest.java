@@ -43,9 +43,15 @@ public class RoleServiceIntegrationTest {
 
     @Test
     public void testFindRole() {
-        final Optional<RoleModel> roleModelFound = roleService.findRole(testRole.getId());
-        assertTrue(roleModelFound.isPresent());
-        assertThat(roleModelFound.get().getName()).isEqualTo(TEST_ROLE_NAME);
+        final Optional<RoleModel> roleFound = roleService.findRole(testRole.getId());
+        assertTrue(roleFound.isPresent());
+        assertThat(roleFound.get().getName()).isEqualTo(TEST_ROLE_NAME);
+    }
+
+    @Test
+    public void testFindRoleNotExists() {
+        final Optional<RoleModel> roleFound = roleService.findRole(Long.MAX_VALUE);
+        assertFalse(roleFound.isPresent());
     }
 
     @Test
