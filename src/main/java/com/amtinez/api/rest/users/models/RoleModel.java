@@ -1,8 +1,7 @@
-package com.amtinez.api.rest.users.models.roles;
+package com.amtinez.api.rest.users.models;
 
 import com.amtinez.api.rest.users.constants.DatabaseConstants.Table.Role;
 import com.amtinez.api.rest.users.constants.DatabaseConstants.Table.UsersRoles;
-import com.amtinez.api.rest.users.models.users.UserModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,6 @@
-package com.amtinez.api.rest.users.models.tokens;
+package com.amtinez.api.rest.users.models;
 
-import com.amtinez.api.rest.users.constants.DatabaseConstants;
-import com.amtinez.api.rest.users.models.users.UserModel;
+import com.amtinez.api.rest.users.constants.DatabaseConstants.Table.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,17 +29,17 @@ public abstract class TokenModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = DatabaseConstants.Table.Token.TOKEN_FIELD, length = DatabaseConstants.Table.Token.TOKEN_FIELD_LENGTH, nullable = false)
+    @Column(name = Token.TOKEN_FIELD, length = Token.TOKEN_FIELD_LENGTH, nullable = false)
     private String token;
 
-    @Column(name = DatabaseConstants.Table.Token.CREATION_DATE_FIELD, nullable = false)
+    @Column(name = Token.CREATION_DATE_FIELD, nullable = false)
     private String creationDate;
 
-    @Column(name = DatabaseConstants.Table.Token.EXPIRY_DATE_FIELD, nullable = false)
+    @Column(name = Token.EXPIRY_DATE_FIELD, nullable = false)
     private String expiryDate;
 
     @OneToOne(targetEntity = UserModel.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = DatabaseConstants.Table.Token.USER_ID_FIELD, nullable = false)
+    @JoinColumn(name = Token.USER_ID_FIELD, nullable = false)
     private UserModel user;
 
 }
