@@ -3,11 +3,11 @@ package com.amtinez.api.rest.users.constants;
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public class DatabaseConstants {
+public final class DatabaseConstants {
 
-    public static class Table {
+    public static final class Table {
 
-        public static class User {
+        public static final class User {
 
             public static final String TABLE_NAME = "users";
             public static final String FIRST_NAME_FIELD = "first_name";
@@ -27,7 +27,7 @@ public class DatabaseConstants {
             }
         }
 
-        public static class Role {
+        public static final class Role {
 
             public static final String TABLE_NAME = "roles";
             public static final String NAME_FIELD = "name";
@@ -37,7 +37,7 @@ public class DatabaseConstants {
             }
         }
 
-        public static class UsersRoles {
+        public static final class UsersRoles {
 
             public static final String TABLE_NAME = "users_roles";
             public static final String USER_ID_FIELD = "user_id";
@@ -47,10 +47,10 @@ public class DatabaseConstants {
             }
         }
 
-        public static class Token {
+        public static final class Token {
 
-            public static final String TOKEN_FIELD = "token";
-            public static final int TOKEN_FIELD_LENGTH = 50;
+            public static final String CODE_FIELD = "code";
+            public static final int CODE_FIELD_LENGTH = 50;
             public static final String CREATION_DATE_FIELD = "creation_date";
             public static final String EXPIRY_DATE_FIELD = "expiry_date";
             public static final String USER_ID_FIELD = "user_id";
@@ -59,7 +59,7 @@ public class DatabaseConstants {
             }
         }
 
-        public static class PasswordResetToken {
+        public static final class PasswordResetToken {
 
             public static final String TABLE_NAME = "password_reset_tokens";
 
@@ -67,7 +67,7 @@ public class DatabaseConstants {
             }
         }
 
-        public static class UserVerificationToken {
+        public static final class UserVerificationToken {
 
             public static final String TABLE_NAME = "user_verification_tokens";
 

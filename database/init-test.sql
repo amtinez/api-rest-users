@@ -46,12 +46,13 @@ CREATE TABLE IF NOT EXISTS `users_roles`
 CREATE TABLE `password_reset_tokens`
 (
     `id`            BIGINT      NOT NULL AUTO_INCREMENT,
-    `token`         VARCHAR(50) NOT NULL,
+    `code`          VARCHAR(50) NOT NULL,
     `creation_date` DATE        NOT NULL,
     `expiry_date`   DATE        NOT NULL,
     `user_id`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER_PASSWORD_TOKEN` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    UNIQUE KEY `UK_PASSWORD_RESET_TOKEN_CODE` (`code`),
+    CONSTRAINT `FK_PASSWORD_RESET_TOKEN_USER` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -59,12 +60,13 @@ CREATE TABLE `password_reset_tokens`
 CREATE TABLE `user_verification_tokens`
 (
     `id`            BIGINT      NOT NULL AUTO_INCREMENT,
-    `token`         VARCHAR(50) NOT NULL,
+    `code`          VARCHAR(50) NOT NULL,
     `creation_date` DATE        NOT NULL,
     `expiry_date`   DATE        NOT NULL,
     `user_id`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_USER_VERIFICATION_TOKEN` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    UNIQUE KEY `UK_USER_VERIFICATION_TOKEN_CODE` (`code`),
+    CONSTRAINT `FK_USER_VERIFICATION_TOKEN_USER` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
