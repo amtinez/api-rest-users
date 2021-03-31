@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -34,44 +35,43 @@ public class UserServiceIntegrationTest {
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
-    private static final LocalDate TEST_USER_DATE = LocalDate.now();
 
     private static final String TEST_ROLE_NAME = "testRoleName";
 
     @Resource
     private UserService userService;
 
-    private UserModel userModel;
+    private UserModel testUser;
 
     @BeforeEach
     public void setUp() {
-        userModel = userService.saveUser(UserModel.builder()
-                                                  .firstName(TEST_USER_FIRST_NAME)
-                                                  .lastName(TEST_USER_LAST_NAME)
-                                                  .email(TEST_USER_EMAIL)
-                                                  .password(TEST_USER_PASSWORD)
-                                                  .birthdayDate(TEST_USER_DATE)
-                                                  .lastAccessDate(TEST_USER_DATE)
-                                                  .lastPasswordUpdateDate(TEST_USER_DATE)
-                                                  .enabled(Boolean.TRUE)
-                                                  .roles(Collections.singleton(RoleModel.builder()
-                                                                                        .name(TEST_ROLE_NAME)
-                                                                                        .build()))
-                                                  .build());
+        testUser = userService.saveUser(UserModel.builder()
+                                                 .firstName(TEST_USER_FIRST_NAME)
+                                                 .lastName(TEST_USER_LAST_NAME)
+                                                 .email(TEST_USER_EMAIL)
+                                                 .password(TEST_USER_PASSWORD)
+                                                 .birthdayDate(LocalDate.now())
+                                                 .lastAccessDate(LocalDate.now())
+                                                 .lastPasswordUpdateDate(LocalDate.now())
+                                                 .enabled(Boolean.TRUE)
+                                                 .roles(Collections.singleton(RoleModel.builder()
+                                                                                       .name(TEST_ROLE_NAME)
+                                                                                       .build()))
+                                                 .build());
     }
 
     @Test
     public void testFindUser() {
-        final Optional<UserModel> userModelFound = userService.findUser(userModel.getId());
-        assertTrue(userModelFound.isPresent());
-        assertThat(userModelFound.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
-        assertThat(userModelFound.get().getLastName()).isEqualTo(TEST_USER_LAST_NAME);
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertThat(userFound.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
+        assertThat(userFound.get().getLastName()).isEqualTo(TEST_USER_LAST_NAME);
     }
 
     @Test
     public void testFindUserNotExists() {
-        final Optional<UserModel> userModelFound = userService.findUser(Long.MAX_VALUE);
-        assertFalse(userModelFound.isPresent());
+        final Optional<UserModel> userFound = userService.findUser(Long.MAX_VALUE);
+        assertFalse(userFound.isPresent());
     }
 
     @Test
@@ -83,23 +83,25 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testSaveUser() {
-        assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
-        assertThat(userModel.getLastName()).isEqualTo(TEST_USER_LAST_NAME);
-        assertThat(userModel.getEmail()).isEqualTo(TEST_USER_EMAIL);
-        assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);
-        assertThat(userModel.getBirthdayDate()).isEqualTo(TEST_USER_DATE);
-        assertThat(userModel.getLastAccessDate()).isEqualTo(TEST_USER_DATE);
-        assertThat(userModel.getLastPasswordUpdateDate()).isEqualTo(TEST_USER_DATE);
-        assertTrue(userModel.getEnabled());
-        assertThat(userModel.getRoles().size()).isEqualTo(1);
-        assertTrue(userModel.getRoles().stream().findFirst().isPresent());
-        assertThat(userModel.getRoles().stream().findFirst().get().getName()).isEqualTo(TEST_ROLE_NAME);
+        assertNotNull(testUser);
+        assertNotNull(testUser.getId());
+        assertThat(testUser.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
+        assertThat(testUser.getLastName()).isEqualTo(TEST_USER_LAST_NAME);
+        assertThat(testUser.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(testUser.getPassword()).isEqualTo(TEST_USER_PASSWORD);
+        assertThat(testUser.getBirthdayDate()).isEqualTo(LocalDate.now());
+        assertThat(testUser.getLastAccessDate()).isEqualTo(LocalDate.now());
+        assertThat(testUser.getLastPasswordUpdateDate()).isEqualTo(LocalDate.now());
+        assertTrue(testUser.getEnabled());
+        assertThat(testUser.getRoles().size()).isEqualTo(1);
+        assertTrue(testUser.getRoles().stream().findFirst().isPresent());
+        assertThat(testUser.getRoles().stream().findFirst().get().getName()).isEqualTo(TEST_ROLE_NAME);
     }
 
     @Test
     public void testDeleteUser() {
-        userService.deleteUser(userModel.getId());
-        assertTrue(userService.findUser(userModel.getId()).isEmpty());
+        userService.deleteUser(testUser.getId());
+        assertTrue(userService.findUser(testUser.getId()).isEmpty());
     }
 
     @Test
@@ -114,12 +116,12 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateUserEnabledStatus() {
-        assertThat(userService.updateUserEnabledStatus(userModel.getId(), Boolean.FALSE)).isEqualTo(1);
+        assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.FALSE)).isEqualTo(1);
     }
 
     @Test
     public void testUpdateUserEnabledStatusUserNotExists() {
-        assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isEqualTo(0);
+        assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
     }
 
 }
