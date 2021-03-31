@@ -23,13 +23,6 @@ CREATE TABLE `users`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled, last_access_date, last_password_update_date)
-VALUES ('User', 'One', 'user@one.com', 'testing', sysdate(), TRUE, '2008-01-01', '2008-01-01');
-INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled)
-VALUES ('User', 'Two', 'user@two.com', 'testing', sysdate(), FALSE);
-INSERT INTO users (first_name, last_name, email, password, birthday_date, enabled, last_access_date, last_password_update_date)
-VALUES ('User', 'Three', 'user@three.com', 'testing', sysdate(), FALSE, sysdate(), sysdate());
-
 CREATE TABLE `roles`
 (
     `id`   BIGINT      NOT NULL AUTO_INCREMENT,
@@ -38,13 +31,6 @@ CREATE TABLE `roles`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
-
-INSERT INTO roles (name)
-VALUES ('Role_One');
-INSERT INTO roles (name)
-VALUES ('Role_Two');
-INSERT INTO roles (name)
-VALUES ('Role_Three');
 
 CREATE TABLE IF NOT EXISTS `users_roles`
 (
@@ -56,13 +42,6 @@ CREATE TABLE IF NOT EXISTS `users_roles`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
-
-INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 1);
-INSERT INTO users_roles (user_id, role_id)
-VALUES (2, 2);
-INSERT INTO users_roles (user_id, role_id)
-VALUES (3, 3);
 
 CREATE TABLE `password_reset_tokens`
 (

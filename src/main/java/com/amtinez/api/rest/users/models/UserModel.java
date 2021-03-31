@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,26 +39,26 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = User.FIRST_NAME_FIELD, length = User.FIRST_NAME_FIELD_LENGTH, nullable = false)
+    @Column(name = User.FIRST_NAME_FIELD, nullable = false, length = User.FIRST_NAME_FIELD_LENGTH)
     private String firstName;
 
-    @Column(name = User.LAST_NAME_FIELD, length = User.LAST_NAME_FIELD_LENGTH, nullable = false)
+    @Column(name = User.LAST_NAME_FIELD, nullable = false, length = User.LAST_NAME_FIELD_LENGTH)
     private String lastName;
 
-    @Column(name = User.EMAIL_FIELD, length = User.EMAIL_FIELD_LENGTH, nullable = false, unique = true)
+    @Column(name = User.EMAIL_FIELD, unique = true, nullable = false, length = User.EMAIL_FIELD_LENGTH)
     private String email;
 
-    @Column(name = User.PASSWORD_FIELD, length = User.PASSWORD_FIELD_LENGTH, nullable = false)
+    @Column(name = User.PASSWORD_FIELD, nullable = false, length = User.PASSWORD_FIELD_LENGTH)
     private String password;
 
     @Column(name = User.BIRTHDAY_DATE_FIELD, nullable = false)
-    private LocalDateTime birthdayDate;
+    private LocalDate birthdayDate;
 
     @Column(name = User.LAST_ACCESS_DATE_FIELD)
-    private LocalDateTime lastAccessDate;
+    private LocalDate lastAccessDate;
 
     @Column(name = User.LAST_PASSWORD_UPDATE_DATE_FIELD)
-    private LocalDateTime lastPasswordUpdateDate;
+    private LocalDate lastPasswordUpdateDate;
 
     @Column(name = User.ENABLED_FIELD, nullable = false)
     private Boolean enabled;
