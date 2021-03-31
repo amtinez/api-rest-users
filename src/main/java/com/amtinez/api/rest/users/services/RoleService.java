@@ -28,10 +28,10 @@ public interface RoleService {
     /**
      * Save the role model
      *
-     * @param roleModel the role model
+     * @param role the role model
      * @return the saved role model
      */
-    RoleModel saveRole(final RoleModel roleModel);
+    RoleModel saveRole(final RoleModel role);
 
     /**
      * Delete the role model with the given id

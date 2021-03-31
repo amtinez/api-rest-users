@@ -28,10 +28,10 @@ public interface UserService {
     /**
      * Save the user model
      *
-     * @param userModel the user model
+     * @param user the user model
      * @return the saved user model
      */
-    UserModel saveUser(final UserModel userModel);
+    UserModel saveUser(final UserModel user);
 
     /**
      * Delete the user model with the given id

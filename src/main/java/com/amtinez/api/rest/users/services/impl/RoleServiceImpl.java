@@ -30,8 +30,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleModel saveRole(final RoleModel roleModel) {
-        return roleDao.save(roleModel);
+    public RoleModel saveRole(final RoleModel role) {
+        return roleDao.save(role);
     }
 
     @Override
