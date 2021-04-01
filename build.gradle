@@ -18,6 +18,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -31,7 +32,10 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.1.Final'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.mockito:mockito-core:2.+'
+    testCompile 'org.mockito:mockito-inline:2.+'
 }
 
 test {
