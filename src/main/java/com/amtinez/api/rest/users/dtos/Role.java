@@ -1,5 +1,6 @@
 package com.amtinez.api.rest.users.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import static com.amtinez.api.rest.users.constants.ValidationConstants.Role.NAME
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @Builder
+@AllArgsConstructor
 @Getter
 @Setter
 public class Role {
