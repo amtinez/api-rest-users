@@ -35,8 +35,8 @@ public interface UserDao extends JpaRepository<UserModel, Long> {
      * @param enabled the enabled of the user
      * @return number of updated users
      */
-    @Modifying
     @Transactional
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE UserModel AS U SET U.enabled = :enabled WHERE U.id = :id")
     int updateEnabledStatusById(@Param("id") final Long id, @Param("enabled") final Boolean enabled);
 
