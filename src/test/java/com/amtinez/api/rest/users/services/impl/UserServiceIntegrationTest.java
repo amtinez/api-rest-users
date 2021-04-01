@@ -115,8 +115,19 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateUserEnabledStatus() {
+    public void testUpdateUserEnabledStatusEnable() {
+        assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.TRUE)).isEqualTo(1);
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertTrue(userFound.get().getEnabled());
+    }
+
+    @Test
+    public void testUpdateUserEnabledStatusDisable() {
         assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.FALSE)).isEqualTo(1);
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertFalse(userFound.get().getEnabled());
     }
 
     @Test
