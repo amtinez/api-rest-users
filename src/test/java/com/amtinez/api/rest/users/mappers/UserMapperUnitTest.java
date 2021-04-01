@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -16,13 +20,13 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserMapperUnitTest {
 
     private static final Long TEST_USER_ID = 1L;
@@ -48,28 +52,29 @@ public class UserMapperUnitTest {
     private Role role;
 
     private final UserMapper mapper = new UserMapperImpl();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
     public void setUp() {
-        lenient().when(userModel.getId()).thenReturn(TEST_USER_ID);
-        lenient().when(userModel.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
-        lenient().when(userModel.getLastName()).thenReturn(TEST_USER_LAST_NAME);
-        lenient().when(userModel.getEmail()).thenReturn(TEST_USER_EMAIL);
-        lenient().when(userModel.getBirthdayDate()).thenReturn(TEST_USER_BIRTHDAY_DATE);
+        when(userModel.getId()).thenReturn(TEST_USER_ID);
+        when(userModel.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
+        when(userModel.getLastName()).thenReturn(TEST_USER_LAST_NAME);
+        when(userModel.getEmail()).thenReturn(TEST_USER_EMAIL);
+        when(userModel.getBirthdayDate()).thenReturn(TEST_USER_BIRTHDAY_DATE);
 
-        lenient().when(roleModel.getId()).thenReturn(TEST_ROLE_ID);
-        lenient().when(roleModel.getName()).thenReturn(TEST_ROLE_NAME);
-        lenient().when(userModel.getRoles()).thenReturn(Collections.singleton(roleModel));
+        when(roleModel.getId()).thenReturn(TEST_ROLE_ID);
+        when(roleModel.getName()).thenReturn(TEST_ROLE_NAME);
+        when(userModel.getRoles()).thenReturn(Collections.singleton(roleModel));
 
-        lenient().when(user.getId()).thenReturn(TEST_USER_ID);
-        lenient().when(user.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
-        lenient().when(user.getLastName()).thenReturn(TEST_USER_LAST_NAME);
-        lenient().when(user.getPassword()).thenReturn(TEST_USER_PASSWORD);
-        lenient().when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
-        lenient().when(user.getBirthdayDate()).thenReturn(TEST_USER_BIRTHDAY_DATE);
-        lenient().when(role.getId()).thenReturn(TEST_ROLE_ID);
-        lenient().when(role.getName()).thenReturn(TEST_ROLE_NAME);
-        lenient().when(user.getRoles()).thenReturn(Collections.singleton(role));
+        when(user.getId()).thenReturn(TEST_USER_ID);
+        when(user.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
+        when(user.getLastName()).thenReturn(TEST_USER_LAST_NAME);
+        when(user.getPassword()).thenReturn(TEST_USER_PASSWORD);
+        when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
+        when(user.getBirthdayDate()).thenReturn(TEST_USER_BIRTHDAY_DATE);
+        when(role.getId()).thenReturn(TEST_ROLE_ID);
+        when(role.getName()).thenReturn(TEST_ROLE_NAME);
+        when(user.getRoles()).thenReturn(Collections.singleton(role));
     }
 
     @Test
@@ -140,6 +145,33 @@ public class UserMapperUnitTest {
     @Test
     public void nullDtoToModel() {
         assertNull(mapper.userToUserModel(null));
+    }
+
+    @Test
+    public void dtoToModelRegisterStep() {
+        final UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder);
+        assertThat(userModel.getId()).isEqualTo(TEST_USER_ID);
+        assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
+        assertThat(userModel.getLastName()).isEqualTo(TEST_USER_LAST_NAME);
+        assertThat(userModel.getPassword()).isNotEqualTo(TEST_USER_PASSWORD);
+        assertThat(userModel.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(userModel.getBirthdayDate()).isEqualTo(TEST_USER_BIRTHDAY_DATE);
+        final Set<RoleModel> roles = userModel.getRoles();
+        assertThat(roles.size()).isEqualTo(1);
+        final RoleModel roleModel = roles.iterator().next();
+        assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
+        assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);
+    }
+
+    @Test
+    public void nullDtoToModelRegisterStep() {
+        assertNull(mapper.userToUserModelRegisterStep(null, passwordEncoder));
+    }
+
+    @Test
+    public void dtoToModelRegisterStepNullPasswordEncoder() {
+        UserModel userModel = mapper.userToUserModelRegisterStep(user, null);
+        assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);
     }
 
 }
