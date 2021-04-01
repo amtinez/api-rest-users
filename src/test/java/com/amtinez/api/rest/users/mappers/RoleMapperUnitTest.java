@@ -7,15 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class RoleMapperUnitTest {
 
     private static final Long TEST_ROLE_ID = 1L;
@@ -31,11 +34,11 @@ public class RoleMapperUnitTest {
 
     @BeforeEach
     public void setUp() {
-        lenient().when(roleModel.getId()).thenReturn(TEST_ROLE_ID);
-        lenient().when(roleModel.getName()).thenReturn(TEST_ROLE_NAME);
+        when(roleModel.getId()).thenReturn(TEST_ROLE_ID);
+        when(roleModel.getName()).thenReturn(TEST_ROLE_NAME);
 
-        lenient().when(role.getId()).thenReturn(TEST_ROLE_ID);
-        lenient().when(role.getName()).thenReturn(TEST_ROLE_NAME);
+        when(role.getId()).thenReturn(TEST_ROLE_ID);
+        when(role.getName()).thenReturn(TEST_ROLE_NAME);
     }
 
     @Test
