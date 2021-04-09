@@ -17,6 +17,7 @@ CREATE TABLE `users`
     `last_access_date`          DATE    DEFAULT NULL,
     `last_password_update_date` DATE    DEFAULT NULL,
     `enabled`                   BOOLEAN DEFAULT NULL,
+    `locked`                    BOOLEAN DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `UK_EMAIL` (`email`)
 ) ENGINE = InnoDB
