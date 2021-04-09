@@ -22,6 +22,7 @@ public final class DatabaseConstants {
             public static final String LAST_ACCESS_DATE_FIELD = "last_access_date";
             public static final String LAST_PASSWORD_UPDATE_DATE_FIELD = "last_password_update_date";
             public static final String ENABLED_FIELD = "enabled";
+            public static final String LOCKED_FIELD = "locked";
 
             private User() {
             }
