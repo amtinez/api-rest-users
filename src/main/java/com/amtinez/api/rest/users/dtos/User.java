@@ -51,6 +51,8 @@ public class User {
 
     private Boolean enabled;
 
+    private Boolean locked;
+
     private Set<Role> roles;
 
 }

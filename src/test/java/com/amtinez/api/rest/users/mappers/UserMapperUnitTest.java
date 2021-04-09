@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
@@ -156,6 +157,8 @@ public class UserMapperUnitTest {
         assertThat(userModel.getPassword()).isNotEqualTo(TEST_USER_PASSWORD);
         assertThat(userModel.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(userModel.getBirthdayDate()).isEqualTo(TEST_USER_BIRTHDAY_DATE);
+        assertFalse(userModel.getEnabled());
+        assertFalse(userModel.getLocked());
         final Set<RoleModel> roles = userModel.getRoles();
         assertThat(roles.size()).isEqualTo(1);
         final RoleModel roleModel = roles.iterator().next();

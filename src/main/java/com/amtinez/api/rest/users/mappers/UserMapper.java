@@ -18,9 +18,11 @@ import static com.amtinez.api.rest.users.constants.MapperConstants.SPRING_COMPON
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.DISABLE_USER_BY_DEFAULT;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ENABLED_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ENCRYPT_PASSWORD;
+import static com.amtinez.api.rest.users.constants.MapperConstants.User.LOCKED_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.PASSWORD_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ROLE_MODEL_TO_ROLE;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ROLE_TO_ROLE_MODEL;
+import static com.amtinez.api.rest.users.constants.MapperConstants.User.UNLOCK_USER_BY_DEFAULT;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
@@ -46,6 +48,7 @@ public interface UserMapper {
     RoleModel roleToRoleModel(final Role role);
 
     @Mapping(target = ENABLED_PROPERTY, expression = DISABLE_USER_BY_DEFAULT)
+    @Mapping(target = LOCKED_PROPERTY, expression = UNLOCK_USER_BY_DEFAULT)
     @Mapping(target = PASSWORD_PROPERTY, source = PASSWORD_PROPERTY, qualifiedByName = ENCRYPT_PASSWORD)
     UserModel userToUserModelRegisterStep(final User user, @Context final PasswordEncoder passwordEncoder);
 

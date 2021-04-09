@@ -11,14 +11,15 @@ CREATE TABLE IF NOT EXISTS `users`
     `last_access_date`          DATE    DEFAULT NULL,
     `last_password_update_date` DATE    DEFAULT NULL,
     `enabled`                   BOOLEAN DEFAULT NULL,
+    `locked`                    BOOLEAN DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `UK_EMAIL` (`email`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO users (first_name, last_name, email, password, birthday_date, last_access_date, last_password_update_date, enabled)
-VALUES ('Admin', 'Admin', 'admin@admin.com', '$2a$10$9FLFNGN/dql1T7eyeiSE8e9RuUYQMb9dqj0SL82BTyHkaX0nCXuPC', sysdate(), sysdate(), sysdate(), TRUE);
+INSERT INTO users (first_name, last_name, email, password, birthday_date, last_access_date, last_password_update_date, enabled, locked)
+VALUES ('Admin', 'Admin', 'admin@admin.com', '$2a$10$9FLFNGN/dql1T7eyeiSE8e9RuUYQMb9dqj0SL82BTyHkaX0nCXuPC', sysdate(), sysdate(), sysdate(), TRUE, FALSE);
 
 CREATE TABLE IF NOT EXISTS `roles`
 (

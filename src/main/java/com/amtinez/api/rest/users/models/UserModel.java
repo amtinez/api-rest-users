@@ -63,6 +63,9 @@ public class UserModel {
     @Column(name = User.ENABLED_FIELD, nullable = false)
     private Boolean enabled;
 
+    @Column(name = User.LOCKED_FIELD, nullable = false)
+    private Boolean locked;
+
     @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = UsersRoles.TABLE_NAME,
