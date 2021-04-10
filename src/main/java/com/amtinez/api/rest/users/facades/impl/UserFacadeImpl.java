@@ -65,4 +65,14 @@ public class UserFacadeImpl implements UserFacade {
         return userMapper.userModelToUser(userService.saveUser(userMapper.userToUserModel(user)));
     }
 
+    @Override
+    public int lockUser(final Long id) {
+        return userService.updateLockedStatusById(id, Boolean.TRUE);
+    }
+
+    @Override
+    public int unlockUser(final Long id) {
+        return userService.updateLockedStatusById(id, Boolean.FALSE);
+    }
+
 }

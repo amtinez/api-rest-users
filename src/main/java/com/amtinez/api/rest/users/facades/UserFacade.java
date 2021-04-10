@@ -65,4 +65,20 @@ public interface UserFacade {
      */
     User updateUser(final User user);
 
+    /**
+     * Locks the user
+     *
+     * @param id the id of the user
+     * @return number of updated users
+     */
+    int lockUser(final Long id);
+
+    /**
+     * Unlocks the user
+     *
+     * @param id the id of the user
+     * @return number of updated users
+     */
+    int unlockUser(final Long id);
+
 }
