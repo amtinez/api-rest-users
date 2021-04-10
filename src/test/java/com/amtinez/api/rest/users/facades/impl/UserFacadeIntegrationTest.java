@@ -3,7 +3,6 @@ package com.amtinez.api.rest.users.facades.impl;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
-import com.amtinez.api.rest.users.facades.RoleFacade;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,16 +43,10 @@ public class UserFacadeIntegrationTest {
     @Resource
     private UserFacade userFacade;
 
-    @Resource
-    private RoleFacade roleFacade;
-
     private User testUser;
 
     @BeforeEach
     public void setUp() {
-        final Role testRole = roleFacade.saveRole(Role.builder()
-                                                      .name(TEST_ROLE_NAME)
-                                                      .build());
         testUser = userFacade.registerUser(User.builder()
                                                .firstName(TEST_USER_FIRST_NAME)
                                                .lastName(TEST_USER_LAST_NAME)
@@ -61,7 +54,7 @@ public class UserFacadeIntegrationTest {
                                                .password(TEST_USER_PASSWORD)
                                                .birthdayDate(LocalDate.now())
                                                .roles(Collections.singleton(Role.builder()
-                                                                                .id(testRole.getId())
+                                                                                .name(TEST_ROLE_NAME)
                                                                                 .build()))
                                                .build());
     }
@@ -138,6 +131,36 @@ public class UserFacadeIntegrationTest {
                               .build();
         final User userUpdated = userFacade.updateUser(user);
         assertThat(userUpdated.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME_UPDATED);
+    }
+
+    @Test
+    public void testLockUser() {
+        final int affectedUsers = userFacade.lockUser(testUser.getId());
+        assertThat(affectedUsers).isEqualTo(1);
+        final Optional<User> userFound = userFacade.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertTrue(userFound.get().getLocked());
+    }
+
+    @Test
+    public void testLockUserNotExists() {
+        final int affectedUsers = userFacade.lockUser(Long.MAX_VALUE);
+        assertThat(affectedUsers).isZero();
+    }
+
+    @Test
+    public void testUnlockUser() {
+        final int affectedUsers = userFacade.unlockUser(testUser.getId());
+        assertThat(affectedUsers).isEqualTo(1);
+        final Optional<User> userFound = userFacade.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertFalse(userFound.get().getLocked());
+    }
+
+    @Test
+    public void testUnlockUserNotExists() {
+        final int affectedUsers = userFacade.unlockUser(Long.MAX_VALUE);
+        assertThat(affectedUsers).isZero();
     }
 
 }
