@@ -57,4 +57,13 @@ public interface UserService {
      */
     int updateUserEnabledStatus(final Long id, final Boolean enabled);
 
+    /**
+     * Lock or unlock the user if it exists
+     *
+     * @param id     the id of the user
+     * @param locked the locked of the user
+     * @return number of updated users
+     */
+    int updateLockedStatusById(final Long id, final Boolean locked);
+
 }

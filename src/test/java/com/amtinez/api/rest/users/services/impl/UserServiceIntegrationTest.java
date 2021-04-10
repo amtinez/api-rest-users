@@ -54,6 +54,7 @@ public class UserServiceIntegrationTest {
                                                  .lastAccessDate(LocalDate.now())
                                                  .lastPasswordUpdateDate(LocalDate.now())
                                                  .enabled(Boolean.TRUE)
+                                                 .locked(Boolean.FALSE)
                                                  .roles(Collections.singleton(RoleModel.builder()
                                                                                        .name(TEST_ROLE_NAME)
                                                                                        .build()))
@@ -132,6 +133,27 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateUserEnabledStatusUserNotExists() {
+        assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
+    }
+
+    @Test
+    public void testUpdateLockedStatusByIdLocked() {
+        assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.TRUE)).isEqualTo(1);
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertTrue(userFound.get().getLocked());
+    }
+
+    @Test
+    public void testUpdateLockedStatusByIdUnlocked() {
+        assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.FALSE)).isEqualTo(1);
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertFalse(userFound.get().getLocked());
+    }
+
+    @Test
+    public void testUpdateLockedStatusByIdUserNotExists() {
         assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
     }
 

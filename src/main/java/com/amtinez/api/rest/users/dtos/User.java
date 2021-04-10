@@ -1,5 +1,10 @@
 package com.amtinez.api.rest.users.dtos;
 
+import com.amtinez.api.rest.users.annotations.UniqueUserEmail;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +45,7 @@ public class User {
     @Email
     @NotBlank
     @Size(max = EMAIL_MAX_FIELD_LENGTH)
+    @UniqueUserEmail
     private String email;
 
     @NotBlank
@@ -47,6 +53,8 @@ public class User {
     private String password;
 
     @NotNull
+    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthdayDate;
 
     private Boolean enabled;

@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService {
         return userDao.updateEnabledStatusById(id, enabled);
     }
 
+    @Override
+    public int updateLockedStatusById(final Long id, final Boolean locked) {
+        return userDao.updateLockedStatusById(id, locked);
+    }
+
 }

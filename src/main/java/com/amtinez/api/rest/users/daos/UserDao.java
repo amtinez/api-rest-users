@@ -40,4 +40,16 @@ public interface UserDao extends JpaRepository<UserModel, Long> {
     @Query("UPDATE UserModel AS U SET U.enabled = :enabled WHERE U.id = :id")
     int updateEnabledStatusById(@Param("id") final Long id, @Param("enabled") final Boolean enabled);
 
+    /**
+     * Lock or unlock the user if it exists
+     *
+     * @param id     the id of the user
+     * @param locked the locked of the user
+     * @return number of updated users
+     */
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE UserModel AS U SET U.locked = :locked WHERE U.id = :id")
+    int updateLockedStatusById(@Param("id") final Long id, @Param("locked") final Boolean locked);
+
 }
