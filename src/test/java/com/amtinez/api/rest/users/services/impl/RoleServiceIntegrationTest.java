@@ -58,7 +58,7 @@ public class RoleServiceIntegrationTest {
     public void testFindAllRoles() {
         final List<RoleModel> roles = roleService.findAllRoles();
         assertFalse(roles.isEmpty());
-        assertThat(roles.size()).isEqualTo(1);
+        assertThat(roles).hasSize(1);
     }
 
     @Test

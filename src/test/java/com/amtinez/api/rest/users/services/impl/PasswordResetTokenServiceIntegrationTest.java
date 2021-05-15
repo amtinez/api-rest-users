@@ -37,7 +37,6 @@ public class PasswordResetTokenServiceIntegrationTest {
 
     @Resource
     private TokenService<PasswordResetTokenModel> passwordResetTokenService;
-
     @Resource
     private UserService userService;
 

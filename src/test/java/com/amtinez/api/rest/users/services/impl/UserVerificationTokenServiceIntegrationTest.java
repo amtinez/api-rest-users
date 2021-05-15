@@ -37,7 +37,6 @@ public class UserVerificationTokenServiceIntegrationTest {
 
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
-
     @Resource
     private UserService userService;
 

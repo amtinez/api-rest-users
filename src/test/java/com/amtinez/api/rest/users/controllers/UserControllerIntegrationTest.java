@@ -51,7 +51,6 @@ public class UserControllerIntegrationTest {
 
     @Resource
     private MockMvc mockMvc;
-
     @Resource
     private UserService userService;
 

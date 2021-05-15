@@ -58,7 +58,7 @@ public class RoleFacadeIntegrationTest {
     public void testFindAllRoles() {
         final List<Role> roles = roleFacade.findAllRoles();
         assertFalse(roles.isEmpty());
-        assertThat(roles.size()).isEqualTo(1);
+        assertThat(roles).hasSize(1);
     }
 
     @Test

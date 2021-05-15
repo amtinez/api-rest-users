@@ -7,7 +7,6 @@ import com.amtinez.api.rest.users.models.UserModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -21,7 +20,6 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
@@ -40,42 +38,42 @@ public class UserMapperUnitTest {
     private static final Long TEST_ROLE_ID = 1L;
     private static final String TEST_ROLE_NAME = "testRoleName";
 
-    @Mock
     private UserModel userModel;
-
-    @Mock
-    private RoleModel roleModel;
-
-    @Mock
     private User user;
-
-    @Mock
-    private Role role;
 
     private final UserMapper mapper = new UserMapperImpl();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
     public void setUp() {
-        when(userModel.getId()).thenReturn(TEST_USER_ID);
-        when(userModel.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
-        when(userModel.getLastName()).thenReturn(TEST_USER_LAST_NAME);
-        when(userModel.getEmail()).thenReturn(TEST_USER_EMAIL);
-        when(userModel.getBirthdayDate()).thenReturn(TEST_USER_BIRTHDAY_DATE);
+        final RoleModel roleModel = RoleModel.builder()
+                                             .id(TEST_ROLE_ID)
+                                             .name(TEST_ROLE_NAME)
+                                             .build();
 
-        when(roleModel.getId()).thenReturn(TEST_ROLE_ID);
-        when(roleModel.getName()).thenReturn(TEST_ROLE_NAME);
-        when(userModel.getRoles()).thenReturn(Collections.singleton(roleModel));
+        userModel = UserModel.builder()
+                             .id(TEST_USER_ID)
+                             .firstName(TEST_USER_FIRST_NAME)
+                             .lastName(TEST_USER_LAST_NAME)
+                             .email(TEST_USER_EMAIL)
+                             .birthdayDate(TEST_USER_BIRTHDAY_DATE)
+                             .roles(Collections.singleton(roleModel))
+                             .build();
 
-        when(user.getId()).thenReturn(TEST_USER_ID);
-        when(user.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
-        when(user.getLastName()).thenReturn(TEST_USER_LAST_NAME);
-        when(user.getPassword()).thenReturn(TEST_USER_PASSWORD);
-        when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
-        when(user.getBirthdayDate()).thenReturn(TEST_USER_BIRTHDAY_DATE);
-        when(role.getId()).thenReturn(TEST_ROLE_ID);
-        when(role.getName()).thenReturn(TEST_ROLE_NAME);
-        when(user.getRoles()).thenReturn(Collections.singleton(role));
+        final Role role = Role.builder()
+                              .id(TEST_ROLE_ID)
+                              .name(TEST_ROLE_NAME)
+                              .build();
+
+        user = User.builder()
+                   .id(TEST_USER_ID)
+                   .firstName(TEST_USER_FIRST_NAME)
+                   .lastName(TEST_USER_LAST_NAME)
+                   .password(TEST_USER_PASSWORD)
+                   .email(TEST_USER_EMAIL)
+                   .birthdayDate(TEST_USER_BIRTHDAY_DATE)
+                   .roles(Collections.singleton(role))
+                   .build();
     }
 
     @Test
@@ -88,7 +86,7 @@ public class UserMapperUnitTest {
         assertThat(user.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(user.getBirthdayDate()).isEqualTo(TEST_USER_BIRTHDAY_DATE);
         final Set<Role> roles = user.getRoles();
-        assertThat(roles.size()).isEqualTo(1);
+        assertThat(roles).hasSize(1);
         final Role role = roles.iterator().next();
         assertThat(role.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(role.getName()).isEqualTo(TEST_ROLE_NAME);
@@ -96,14 +94,14 @@ public class UserMapperUnitTest {
 
     @Test
     public void modelToDtoNullRoles() {
-        when(userModel.getRoles()).thenReturn(null);
+        userModel.setRoles(null);
         final User user = mapper.userModelToUser(userModel);
         assertNull(user.getRoles());
     }
 
     @Test
     public void modelToDtoNullRole() {
-        when(userModel.getRoles()).thenReturn(Collections.singleton(null));
+        userModel.setRoles(Collections.singleton(null));
         final User user = mapper.userModelToUser(userModel);
         assertNull(user.getRoles().iterator().next());
     }
@@ -123,7 +121,7 @@ public class UserMapperUnitTest {
         assertThat(userModel.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(userModel.getBirthdayDate()).isEqualTo(TEST_USER_BIRTHDAY_DATE);
         final Set<RoleModel> roles = userModel.getRoles();
-        assertThat(roles.size()).isEqualTo(1);
+        assertThat(roles).hasSize(1);
         final RoleModel roleModel = roles.iterator().next();
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);
@@ -131,14 +129,14 @@ public class UserMapperUnitTest {
 
     @Test
     public void dtoToModelNullRoles() {
-        when(user.getRoles()).thenReturn(null);
+        user.setRoles(null);
         final UserModel userModel = mapper.userToUserModel(user);
         assertNull(userModel.getRoles());
     }
 
     @Test
     public void dtoToModelNullRole() {
-        when(user.getRoles()).thenReturn(Collections.singleton(null));
+        user.setRoles(Collections.singleton(null));
         final UserModel userModel = mapper.userToUserModel(user);
         assertNull(userModel.getRoles().iterator().next());
     }
@@ -160,7 +158,7 @@ public class UserMapperUnitTest {
         assertFalse(userModel.getEnabled());
         assertFalse(userModel.getLocked());
         final Set<RoleModel> roles = userModel.getRoles();
-        assertThat(roles.size()).isEqualTo(1);
+        assertThat(roles).hasSize(1);
         final RoleModel roleModel = roles.iterator().next();
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);

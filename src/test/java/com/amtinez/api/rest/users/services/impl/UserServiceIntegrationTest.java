@@ -79,7 +79,7 @@ public class UserServiceIntegrationTest {
     public void testFindAllUsers() {
         final List<UserModel> users = userService.findAllUsers();
         assertFalse(users.isEmpty());
-        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).hasSize(1);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class UserServiceIntegrationTest {
         assertThat(testUser.getLastAccessDate()).isEqualTo(LocalDate.now());
         assertThat(testUser.getLastPasswordUpdateDate()).isEqualTo(LocalDate.now());
         assertTrue(testUser.getEnabled());
-        assertThat(testUser.getRoles().size()).isEqualTo(1);
+        assertThat(testUser.getRoles()).hasSize(1);
         assertTrue(testUser.getRoles().stream().findFirst().isPresent());
         assertThat(testUser.getRoles().stream().findFirst().get().getName()).isEqualTo(TEST_ROLE_NAME);
     }
