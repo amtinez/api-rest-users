@@ -26,7 +26,6 @@ public class UniqueUserEmailValidatorUnitTest {
 
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
-
     @Mock
     private UserService userService;
 

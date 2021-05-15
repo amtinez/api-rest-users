@@ -6,17 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class RoleUtilsUnitTest {
 
     private static final String TEST_ROLE_NAME = "testRoleName";
@@ -27,12 +23,14 @@ public class RoleUtilsUnitTest {
 
     @BeforeEach
     public void setUp() {
-        when(roleModel.getName()).thenReturn(TEST_ROLE_NAME);
+        roleModel = RoleModel.builder()
+                             .name(TEST_ROLE_NAME)
+                             .build();
     }
 
     @Test
     public void testGetPrefixedName() {
-        assertThat(TEST_ROLE_NAME_UPPER_CASE_FORMATTED).isEqualTo(RoleUtils.getPrefixedName(roleModel));
+        assertThat(RoleUtils.getPrefixedName(roleModel)).isEqualTo(TEST_ROLE_NAME_UPPER_CASE_FORMATTED);
     }
 
 }

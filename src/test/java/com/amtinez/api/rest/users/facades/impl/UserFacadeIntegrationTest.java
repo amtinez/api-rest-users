@@ -77,7 +77,7 @@ public class UserFacadeIntegrationTest {
     public void testFindAllUsers() {
         final List<User> users = userFacade.findAllUsers();
         assertFalse(users.isEmpty());
-        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).hasSize(1);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class UserFacadeIntegrationTest {
         assertNull(testUser.getPassword());
         assertThat(testUser.getBirthdayDate()).isEqualTo(LocalDate.now());
         assertFalse(testUser.getEnabled());
-        assertThat(testUser.getRoles().size()).isEqualTo(1);
+        assertThat(testUser.getRoles()).hasSize(1);
     }
 
     @Test

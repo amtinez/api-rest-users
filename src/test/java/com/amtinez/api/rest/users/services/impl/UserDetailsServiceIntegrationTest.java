@@ -38,7 +38,6 @@ public class UserDetailsServiceIntegrationTest {
 
     @Resource
     private UserDetailsService userDetailsService;
-
     @Resource
     private UserService userService;
 

@@ -6,7 +6,6 @@ import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -18,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
@@ -36,28 +34,28 @@ public class UserDetailsMapperUnitTest {
 
     private static final String ROLE_NAME = "testName";
 
-    @Mock
-    private RoleModel roleModel;
-
-    @Mock
     private UserModel userModel;
 
     private final UserDetailsMapper mapper = new UserDetailsMapperImpl();
 
     @BeforeEach
     public void setUp() {
-        when(userModel.getId()).thenReturn(TEST_USER_ID);
-        when(userModel.getFirstName()).thenReturn(TEST_USER_FIRST_NAME);
-        when(userModel.getLastName()).thenReturn(TEST_USER_LAST_NAME);
-        when(userModel.getPassword()).thenReturn(TEST_USER_PASSWORD);
-        when(userModel.getEmail()).thenReturn(TEST_USER_EMAIL);
-        when(userModel.getEnabled()).thenReturn(Boolean.TRUE);
-        when(userModel.getLocked()).thenReturn(Boolean.FALSE);
-        when(userModel.getLastAccessDate()).thenReturn(LocalDate.now());
-        when(userModel.getLastPasswordUpdateDate()).thenReturn(LocalDate.now());
+        final RoleModel roleModel = RoleModel.builder()
+                                             .name(ROLE_NAME)
+                                             .build();
 
-        when(roleModel.getName()).thenReturn(ROLE_NAME);
-        when(userModel.getRoles()).thenReturn(Collections.singleton(roleModel));
+        userModel = UserModel.builder()
+                             .id(TEST_USER_ID)
+                             .firstName(TEST_USER_FIRST_NAME)
+                             .lastName(TEST_USER_LAST_NAME)
+                             .password(TEST_USER_PASSWORD)
+                             .email(TEST_USER_EMAIL)
+                             .enabled(Boolean.TRUE)
+                             .locked(Boolean.FALSE)
+                             .lastAccessDate(LocalDate.now())
+                             .lastPasswordUpdateDate(LocalDate.now())
+                             .roles(Collections.singleton(roleModel))
+                             .build();
     }
 
     @Test
@@ -69,7 +67,7 @@ public class UserDetailsMapperUnitTest {
         assertThat(userDetails.getPassword()).isEqualTo(TEST_USER_PASSWORD);
         assertThat(userDetails.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertTrue(userDetails.isEnabled());
-        assertThat(userDetails.getAuthorities().size()).isEqualTo(1);
+        assertThat(userDetails.getAuthorities()).hasSize(1);
         assertTrue(userDetails.isAccountNonLocked());
         assertTrue(userDetails.isAccountNonExpired());
         assertTrue(userDetails.isCredentialsNonExpired());
@@ -77,8 +75,8 @@ public class UserDetailsMapperUnitTest {
 
     @Test
     public void userModelToUserDetailsExpired() {
-        when(userModel.getLastAccessDate()).thenReturn(EXPIRED_LOCAL_DATE);
-        when(userModel.getLastPasswordUpdateDate()).thenReturn(EXPIRED_LOCAL_DATE);
+        userModel.setLastAccessDate(EXPIRED_LOCAL_DATE);
+        userModel.setLastPasswordUpdateDate(EXPIRED_LOCAL_DATE);
         final UserDetailsImpl userDetails = mapper.userModelToUserDetails(userModel);
         assertFalse(userDetails.isAccountNonExpired());
         assertFalse(userDetails.isCredentialsNonExpired());
@@ -86,8 +84,8 @@ public class UserDetailsMapperUnitTest {
 
     @Test
     public void userModelToUserDetailsNullExpiredDates() {
-        when(userModel.getLastAccessDate()).thenReturn(null);
-        when(userModel.getLastPasswordUpdateDate()).thenReturn(null);
+        userModel.setLastAccessDate(null);
+        userModel.setLastPasswordUpdateDate(null);
         final UserDetailsImpl userDetails = mapper.userModelToUserDetails(userModel);
         assertFalse(userDetails.isAccountNonExpired());
         assertFalse(userDetails.isCredentialsNonExpired());

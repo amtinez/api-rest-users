@@ -43,28 +43,20 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
 
     @Mock
     private WebRequest webRequest;
-
     @Mock
     private MethodArgumentNotValidException methodArgumentNotValidException;
-
     @Mock
     private BeanPropertyBindingResult beanPropertyBindingResult;
-
     @Mock
     private FieldError fieldError;
-
     @Mock
     private MethodArgumentTypeMismatchException methodArgumentTypeMismatchException;
-
     @Mock
     private ConstraintViolationException constraintViolationException;
-
     @Mock
     private ConstraintViolationImpl<?> constraintViolation;
-
     @Mock
     private PathImpl path;
-
     @Mock
     private NodeImpl node;
 
@@ -87,7 +79,7 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
         assertThat(responseEntity.getBody().getClass()).isEqualTo(ValidationError.class);
         final ValidationError validationError = (ValidationError) responseEntity.getBody();
         assertFalse(validationError.getErrors().isEmpty());
-        assertThat(validationError.getErrors().size()).isEqualTo(1);
+        assertThat(validationError.getErrors()).hasSize(1);
         assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_METHOD_ARGUMENT_MESSAGE);
         assertThat(validationError.getErrors().get(0).getField()).isEqualTo(TEST_FIELD_NAME);
     }
@@ -102,7 +94,7 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
         assertThat(responseEntity.getBody().getClass()).isEqualTo(ValidationError.class);
         final ValidationError validationError = (ValidationError) responseEntity.getBody();
         assertFalse(validationError.getErrors().isEmpty());
-        assertThat(validationError.getErrors().size()).isEqualTo(1);
+        assertThat(validationError.getErrors()).hasSize(1);
         assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_METHOD_ARGUMENT_TYPE_MESSAGE);
         assertThat(validationError.getErrors().get(0).getField()).isEqualTo(TEST_FIELD_NAME);
     }
@@ -121,7 +113,7 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
         assertThat(responseEntity.getBody().getClass()).isEqualTo(ValidationError.class);
         final ValidationError validationError = (ValidationError) responseEntity.getBody();
         assertFalse(validationError.getErrors().isEmpty());
-        assertThat(validationError.getErrors().size()).isEqualTo(1);
+        assertThat(validationError.getErrors()).hasSize(1);
         assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_CONSTRAINT_MESSAGE);
         assertThat(validationError.getErrors().get(0).getField()).isEqualTo(TEST_FIELD_NAME);
     }
