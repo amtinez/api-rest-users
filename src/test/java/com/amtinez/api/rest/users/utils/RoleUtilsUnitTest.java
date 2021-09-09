@@ -4,7 +4,6 @@ import com.amtinez.api.rest.users.models.RoleModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +17,6 @@ public class RoleUtilsUnitTest {
     private static final String TEST_ROLE_NAME = "testRoleName";
     private static final String TEST_ROLE_NAME_UPPER_CASE_FORMATTED = "ROLE_TESTROLENAME";
 
-    @Mock
     private RoleModel roleModel;
 
     @BeforeEach
