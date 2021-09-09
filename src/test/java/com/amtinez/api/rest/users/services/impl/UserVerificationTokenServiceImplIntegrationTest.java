@@ -21,12 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
+ * JUnit test for {@link UserVerificationTokenServiceImpl}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class UserVerificationTokenServiceIntegrationTest {
+public class UserVerificationTokenServiceImplIntegrationTest {
 
     private static final String TEST_CODE = "testCode";
 
