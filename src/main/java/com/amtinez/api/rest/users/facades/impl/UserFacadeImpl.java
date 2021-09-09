@@ -3,7 +3,6 @@ package com.amtinez.api.rest.users.facades.impl;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.mappers.UserMapper;
-import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -41,8 +40,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public User registerUser(final User user) {
-        final UserModel userModel = userMapper.userToUserModelRegisterStep(user, passwordEncoder);
-        return userMapper.userModelToUser(userService.saveUser(userModel));
+        return userMapper.userModelToUser(userService.saveUser(userMapper.userToUserModelRegisterStep(user, passwordEncoder)));
     }
 
     @Override

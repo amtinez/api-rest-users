@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @Service
-public class UserVerificationTokenService implements TokenService<UserVerificationTokenModel> {
+public class UserVerificationTokenServiceImpl implements TokenService<UserVerificationTokenModel> {
 
     @Resource
     private UserVerificationTokenDao userVerificationTokenDao;

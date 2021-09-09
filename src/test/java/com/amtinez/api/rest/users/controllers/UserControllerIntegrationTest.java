@@ -26,6 +26,8 @@ import java.util.Collections;
 import javax.annotation.Resource;
 
 /**
+ * JUnit test for {@link UserController}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @SpringBootTest

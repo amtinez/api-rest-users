@@ -1,6 +1,7 @@
-package com.amtinez.api.rest.users.validators;
+package com.amtinez.api.rest.users.validations;
 
 import com.amtinez.api.rest.users.services.UserService;
+import com.amtinez.api.rest.users.validations.validators.UniqueUserEmailValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
+ * JUnit test for {@link UniqueUserEmailValidator}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)

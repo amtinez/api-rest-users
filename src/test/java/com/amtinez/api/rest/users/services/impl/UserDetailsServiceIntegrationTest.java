@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
+ * JUnit test for {@link UserDetailsService}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @SpringBootTest

@@ -13,6 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
+ * JUnit test for {@link RoleMapperImpl}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
@@ -21,6 +23,7 @@ public class RoleMapperUnitTest {
 
     private static final Long TEST_ROLE_ID = 1L;
     private static final String TEST_ROLE_NAME = "testName";
+    private static final String TEST_ROLE_UPDATED_NAME = "testNameUpdated";
 
     private RoleModel roleModel;
     private Role role;
@@ -62,6 +65,19 @@ public class RoleMapperUnitTest {
     @Test
     public void nullDtoToModel() {
         assertNull(mapper.roleToRoleModel(null));
+    }
+
+    @Test
+    public void dtoToModelUpdate() {
+        role.setName(TEST_ROLE_UPDATED_NAME);
+        mapper.updateRoleModelFromRole(roleModel, role);
+        assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
+        assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_UPDATED_NAME);
+    }
+
+    @Test
+    public void nullDtoToModelUpdate() {
+        assertNull(mapper.updateRoleModelFromRole(roleModel, null));
     }
 
 }

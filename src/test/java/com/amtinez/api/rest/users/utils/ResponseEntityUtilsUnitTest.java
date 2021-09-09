@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * JUnit test for {@link ResponseEntityUtils}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)

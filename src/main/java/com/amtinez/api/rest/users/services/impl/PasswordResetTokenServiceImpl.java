@@ -19,7 +19,6 @@ public class PasswordResetTokenServiceImpl implements TokenService<PasswordReset
     @Resource
     private PasswordResetTokenDao passwordResetTokenDao;
 
-
     @Override
     public Optional<PasswordResetTokenModel> findToken(final Long id) {
         return passwordResetTokenDao.findById(id);

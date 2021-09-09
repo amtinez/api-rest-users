@@ -1,4 +1,4 @@
-package com.amtinez.api.rest.users.validators;
+package com.amtinez.api.rest.users.validations.validators;
 
 import com.amtinez.api.rest.users.annotations.UniqueUserEmail;
 import com.amtinez.api.rest.users.services.UserService;
