@@ -62,9 +62,8 @@ public class UserController {
         if (user.isPresent()) {
             userFacade.deleteUser(id);
             return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PreAuthorize(HAS_ONLY_ROLE_ADMIN)
