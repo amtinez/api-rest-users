@@ -34,6 +34,14 @@ public interface RoleFacade {
     Role saveRole(final Role role);
 
     /**
+     * Update the role
+     *
+     * @param role the role
+     * @return the updated role if found
+     */
+    Optional<Role> updateRole(final Role role);
+
+    /**
      * Delete the role with the given id
      *
      * @param id the id of the role

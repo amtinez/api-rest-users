@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RoleFacadeIntegrationTest {
 
     private static final String TEST_ROLE_NAME = "testName";
+    private static final String TEST_ROLE_UPDATED_NAME = "testNameUpdated";
 
     @Resource
     private RoleFacade roleFacade;
@@ -69,6 +70,27 @@ public class RoleFacadeIntegrationTest {
         final Role roleSaved = roleFacade.saveRole(role);
         assertNotNull(roleSaved);
         assertThat(roleSaved.getName()).isEqualTo(TEST_ROLE_NAME);
+    }
+
+    @Test
+    public void testUpdateRole() {
+        final Role role = Role.builder()
+                              .id(testRole.getId())
+                              .name(TEST_ROLE_UPDATED_NAME)
+                              .build();
+        final Optional<Role> roleUpdated = roleFacade.updateRole(role);
+        assertTrue(roleUpdated.isPresent());
+        assertThat(roleUpdated.get().getName()).isEqualTo(TEST_ROLE_UPDATED_NAME);
+    }
+
+    @Test
+    public void testUpdateRoleNotFound() {
+        final Role role = Role.builder()
+                              .id(Long.MAX_VALUE)
+                              .name(TEST_ROLE_UPDATED_NAME)
+                              .build();
+        final Optional<Role> roleUpdated = roleFacade.updateRole(role);
+        assertTrue(roleUpdated.isEmpty());
     }
 
     @Test
