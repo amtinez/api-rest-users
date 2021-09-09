@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.annotations;
 
-import com.amtinez.api.rest.users.validators.UniqueUserEmailValidator;
+import com.amtinez.api.rest.users.validations.validators.UniqueUserEmailValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
