@@ -1,12 +1,16 @@
 package com.amtinez.api.rest.users.facades.impl;
 
+import com.amtinez.api.rest.users.annotations.WithMockAdminUser;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.facades.UserFacade;
+import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +71,26 @@ public class UserFacadeIntegrationTest {
         assertTrue(userFound.isPresent());
         assertThat(userFound.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
         assertThat(userFound.get().getLastName()).isEqualTo(TEST_USER_LAST_NAME);
+    }
+
+    @Test
+    @WithMockAdminUser
+    public void testGetCurrentUser() {
+        Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getPrincipal)
+                .filter(UserDetailsImpl.class::isInstance)
+                .map(UserDetailsImpl.class::cast)
+                .ifPresent(userDetails -> userDetails.setId(testUser.getId()));
+        final Optional<User> userFound = userFacade.getCurrentUser();
+        assertTrue(userFound.isPresent());
+        assertThat(userFound.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
+        assertThat(userFound.get().getLastName()).isEqualTo(TEST_USER_LAST_NAME);
+    }
+
+    @Test
+    public void testGetCurrentUserNotExists() {
+        final Optional<User> userFound = userFacade.getCurrentUser();
+        assertTrue(userFound.isEmpty());
     }
 
     @Test
