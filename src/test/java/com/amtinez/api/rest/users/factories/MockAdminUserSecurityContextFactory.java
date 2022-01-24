@@ -26,7 +26,7 @@ public class MockAdminUserSecurityContextFactory implements WithSecurityContextF
     private static final String MOCK_USER_ADMIN_ROLE = "ROLE_ADMIN";
 
     @Override
-    public SecurityContext createSecurityContext(WithMockAdminUser withMockAdminUser) {
+    public SecurityContext createSecurityContext(final WithMockAdminUser withMockAdminUser) {
         final SecurityContext context = SecurityContextHolder.createEmptyContext();
         final UserDetailsImpl userDetails = UserDetailsImpl.builder()
                                                            .firstName(MOCK_USER_FIRST_NAME)

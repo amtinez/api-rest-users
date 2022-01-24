@@ -19,6 +19,13 @@ public interface UserFacade {
     Optional<User> findUser(final Long id);
 
     /**
+     * Retrieves the current user
+     *
+     * @return the current user if found
+     */
+    Optional<User> getCurrentUser();
+
+    /**
      * Retrieves the list of all users
      *
      * @return the list of all users

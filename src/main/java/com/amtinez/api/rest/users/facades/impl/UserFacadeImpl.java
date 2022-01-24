@@ -3,7 +3,10 @@ package com.amtinez.api.rest.users.facades.impl;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.mappers.UserMapper;
+import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import com.amtinez.api.rest.users.services.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -30,12 +33,26 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public Optional<User> findUser(final Long id) {
-        return userService.findUser(id).map(model -> userMapper.userModelToUser(model));
+        return userService.findUser(id)
+                          .map(userMapper::userModelToUser);
+    }
+
+    @Override
+    public Optional<User> getCurrentUser() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                       .map(Authentication::getPrincipal)
+                       .filter(UserDetailsImpl.class::isInstance)
+                       .map(UserDetailsImpl.class::cast)
+                       .map(UserDetailsImpl::getId)
+                       .flatMap(this::findUser);
     }
 
     @Override
     public List<User> findAllUsers() {
-        return userService.findAllUsers().stream().map(userMapper::userModelToUser).collect(Collectors.toList());
+        return userService.findAllUsers()
+                          .stream()
+                          .map(userMapper::userModelToUser)
+                          .collect(Collectors.toList());
     }
 
     @Override
