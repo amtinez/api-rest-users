@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * JUnit test for {@link RoleMapperImpl}
+ * Unit test for {@link RoleMapperImpl}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */

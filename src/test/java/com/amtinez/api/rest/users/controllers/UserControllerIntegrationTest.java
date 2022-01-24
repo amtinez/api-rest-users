@@ -30,7 +30,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 /**
- * JUnit test for {@link UserController}
+ * Integration test for {@link UserController}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */

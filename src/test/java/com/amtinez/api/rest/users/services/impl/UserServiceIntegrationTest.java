@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * JUnit test for {@link UserServiceImpl}
+ * Integration test for {@link UserServiceImpl}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */

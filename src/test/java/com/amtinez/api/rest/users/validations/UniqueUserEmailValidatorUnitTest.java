@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * JUnit test for {@link UniqueUserEmailValidator}
+ * Unit test for {@link UniqueUserEmailValidator}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
