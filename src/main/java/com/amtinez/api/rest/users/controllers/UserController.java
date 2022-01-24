@@ -48,11 +48,19 @@ public class UserController {
         return ResponseEntity.ok(userFacade.registerUser(user));
     }
 
-    @PreAuthorize(HAS_ANY_ROLE)
+    @PreAuthorize(HAS_ONLY_ROLE_ADMIN)
     @GetMapping("/{id}")
     public ResponseEntity<User> findUser(@PathVariable final Long id) {
         final Optional<User> user = userFacade.findUser(id);
         return user.map(userFound -> ResponseEntity.ok().body(userFound)).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize(HAS_ANY_ROLE)
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser() {
+        final Optional<User> currentUser = userFacade.getCurrentUser();
+        return currentUser.map(currentUserFound -> ResponseEntity.ok().body(currentUserFound))
+                          .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PreAuthorize(HAS_ONLY_ROLE_ADMIN)

@@ -6,6 +6,7 @@ import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
+import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import com.amtinez.api.rest.users.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -145,6 +149,38 @@ public class UserControllerIntegrationTest {
     @Test
     public void testFindUserUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/" + testUser.getId()))
+               .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockAdminUser
+    public void testGetCurrentUser() throws Exception {
+        Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getPrincipal)
+                .filter(UserDetailsImpl.class::isInstance)
+                .map(UserDetailsImpl.class::cast)
+                .ifPresent(userDetails -> userDetails.setId(testUser.getId()));
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockAdminUser
+    public void testGetCurrentUserNotExists() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = TEST_NOT_EXISTS_ROLE_NAME)
+    public void testGetCurrentUserForbidden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
+               .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    public void testGetCurrentUserUnauthorized() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 

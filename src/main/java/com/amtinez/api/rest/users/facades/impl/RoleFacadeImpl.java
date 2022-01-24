@@ -27,12 +27,16 @@ public class RoleFacadeImpl implements RoleFacade {
 
     @Override
     public Optional<Role> findRole(final Long id) {
-        return roleService.findRole(id).map(model -> roleMapper.roleModelToRole(model));
+        return roleService.findRole(id)
+                          .map(roleMapper::roleModelToRole);
     }
 
     @Override
     public List<Role> findAllRoles() {
-        return roleService.findAllRoles().stream().map(roleMapper::roleModelToRole).collect(Collectors.toList());
+        return roleService.findAllRoles()
+                          .stream()
+                          .map(roleMapper::roleModelToRole)
+                          .collect(Collectors.toList());
     }
 
     @Override
