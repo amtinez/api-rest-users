@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * JUnit test for {@link UserFacadeImpl}
+ * Integration test for {@link UserFacadeImpl}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */

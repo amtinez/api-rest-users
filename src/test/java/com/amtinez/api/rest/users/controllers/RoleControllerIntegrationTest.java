@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
- * JUnit test for {@link RoleController}
+ * Integration test for {@link RoleController}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
