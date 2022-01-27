@@ -27,6 +27,7 @@ do
 			docker rm $PROJECT_ACRONYM-mysql -f
 			docker rm $PROJECT_ACRONYM-mysql-test -f
 			docker rm $PROJECT_ACRONYM-sonarqube -f
+			docker rm $PROJECT_ACRONYM-mailhog -f
 			break
 			;;
 		2)
