@@ -1,4 +1,4 @@
-package com.amtinez.api.rest.users.services.impl;
+package com.amtinez.api.rest.users.security.impl;
 
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.models.RoleModel;
