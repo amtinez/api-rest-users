@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.controllers;
 
-import com.amtinez.api.rest.users.annotations.WithMockAdminUser;
+import com.amtinez.api.rest.users.annotations.WithMockUser;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,10 +23,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
+
+import static com.amtinez.api.rest.users.constants.SecurityConstants.ROLE_ADMIN;
 
 /**
  * Integration test for {@link UserController}
@@ -46,6 +48,8 @@ public class UserControllerIntegrationTest {
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
+
+    private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
 
     private static final String TEST_USER_REGISTER_FIRST_NAME = "testUserRegisterFirstName";
     private static final String TEST_USER_REGISTER_LAST_NAME = "testUserRegisterLastName";
@@ -74,14 +78,15 @@ public class UserControllerIntegrationTest {
                                                  .lastPasswordUpdateDate(LocalDate.now())
                                                  .enabled(Boolean.TRUE)
                                                  .locked(Boolean.FALSE)
-                                                 .roles(Collections.singleton(RoleModel.builder()
-                                                                                       .name(TEST_ROLE_NAME)
-                                                                                       .build()))
+                                                 .roles(Stream.of(RoleModel.builder()
+                                                                           .name(TEST_ROLE_NAME)
+                                                                           .build())
+                                                              .collect(Collectors.toSet()))
                                                  .build());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testFindAllUsers() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL))
                .andExpect(MockMvcResultMatchers.status().isOk());
@@ -108,9 +113,10 @@ public class UserControllerIntegrationTest {
                               .email(TEST_USER_REGISTER_EMAIL)
                               .password(TEST_USER_REGISTER_PASSWORD)
                               .birthdayDate(LocalDate.now())
-                              .roles(Collections.singleton(Role.builder()
-                                                               .name(TEST_ROLE_NAME)
-                                                               .build()))
+                              .roles(Stream.of(Role.builder()
+                                                   .name(TEST_ROLE_NAME)
+                                                   .build())
+                                           .collect(Collectors.toSet()))
                               .build();
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
@@ -126,21 +132,107 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser
+    public void testUpdateUser() throws Exception {
+        setLoggedInUserId(testUser.getId());
+        final User user = User.builder()
+                              .id(testUser.getId())
+                              .firstName(TEST_USER_FIRST_NAME_UPDATED)
+                              .build();
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(user)))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    public void testUpdateUserNotExists() throws Exception {
+        final User user = User.builder()
+                              .id(Long.MAX_VALUE)
+                              .build();
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(user)))
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    public void testUpdateUserAdminLoggedInUser() throws Exception {
+        setLoggedInUserId(Long.MAX_VALUE);
+        final User user = User.builder()
+                              .id(testUser.getId())
+                              .build();
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(user)))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    public void testUpdateUserOtherLoggedInUser() throws Exception {
+        setLoggedInUserId(Long.MAX_VALUE);
+        final User user = User.builder()
+                              .id(testUser.getId())
+                              .build();
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(user)))
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    public void testUpdateUserWithInvalidUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(authorities = TEST_NOT_EXISTS_ROLE_NAME)
+    public void testUpdateUserForbidden() throws Exception {
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(User.builder()
+                                                                                     .id(testUser.getId())
+                                                                                     .build())))
+               .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    public void testUpdateUserUnauthorized() throws Exception {
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(User.builder()
+                                                                                     .id(testUser.getId())
+                                                                                     .build())))
+               .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testFindUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/" + testUser.getId()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testFindUserNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    @WithMockUser(roles = TEST_NOT_EXISTS_ROLE_NAME)
+    @WithMockUser(authorities = TEST_NOT_EXISTS_ROLE_NAME)
     public void testFindUserForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/" + testUser.getId()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -153,26 +245,22 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testGetCurrentUser() throws Exception {
-        Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getPrincipal)
-                .filter(UserDetailsImpl.class::isInstance)
-                .map(UserDetailsImpl.class::cast)
-                .ifPresent(userDetails -> userDetails.setId(testUser.getId()));
+        setLoggedInUserId(testUser.getId());
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testGetCurrentUserNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    @WithMockUser(roles = TEST_NOT_EXISTS_ROLE_NAME)
+    @WithMockUser(authorities = TEST_NOT_EXISTS_ROLE_NAME)
     public void testGetCurrentUserForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/current"))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -185,14 +273,14 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testDeleteUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testDeleteUserNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -212,14 +300,14 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testEnableUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable"))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testEnableNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/enable"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -239,14 +327,14 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testDisableUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable"))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testDisableNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/disable"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -266,14 +354,14 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testLockUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock"))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testLockNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/lock"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -293,14 +381,14 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testUnlockUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock"))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testUnlockNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/unlock"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -317,6 +405,14 @@ public class UserControllerIntegrationTest {
     public void testUnlockUserUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock"))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    private void setLoggedInUserId(final Long id) {
+        Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getPrincipal)
+                .filter(UserDetailsImpl.class::isInstance)
+                .map(UserDetailsImpl.class::cast)
+                .ifPresent(userDetails -> userDetails.setId(id));
     }
 
 }

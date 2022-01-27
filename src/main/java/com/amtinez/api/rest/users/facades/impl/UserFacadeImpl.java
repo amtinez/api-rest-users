@@ -3,6 +3,7 @@ package com.amtinez.api.rest.users.facades.impl;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.mappers.UserMapper;
+import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import com.amtinez.api.rest.users.services.UserService;
 import org.springframework.security.core.Authentication;
@@ -76,8 +77,9 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public User updateUser(final User user) {
-        return userMapper.userModelToUser(userService.saveUser(userMapper.userToUserModel(user)));
+    public Optional<User> updateUser(final User user) {
+        final Optional<UserModel> userModel = userService.findUser(user.getId());
+        return userModel.map(model -> userMapper.userModelToUser(userService.saveUser(userMapper.updateUserModelFromUser(model, user))));
     }
 
     @Override

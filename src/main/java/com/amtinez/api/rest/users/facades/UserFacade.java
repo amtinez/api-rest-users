@@ -68,9 +68,9 @@ public interface UserFacade {
      * Update the user
      *
      * @param user the user
-     * @return the updated user
+     * @return the updated user if found
      */
-    User updateUser(final User user);
+    Optional<User> updateUser(final User user);
 
     /**
      * Locks the user

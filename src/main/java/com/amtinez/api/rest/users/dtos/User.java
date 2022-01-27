@@ -1,6 +1,7 @@
 package com.amtinez.api.rest.users.dtos;
 
 import com.amtinez.api.rest.users.annotations.UniqueUserEmail;
+import com.amtinez.api.rest.users.validations.groups.Update;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 import static com.amtinez.api.rest.users.constants.ValidationConstants.User.EMAIL_MAX_FIELD_LENGTH;
 import static com.amtinez.api.rest.users.constants.ValidationConstants.User.FIRST_NAME_MAX_FIELD_LENGTH;
@@ -32,24 +34,25 @@ import static com.amtinez.api.rest.users.constants.ValidationConstants.User.PASS
 @Setter
 public class User {
 
+    @NotNull(groups = Update.class)
     private Long id;
 
     @NotBlank
-    @Size(max = FIRST_NAME_MAX_FIELD_LENGTH)
+    @Size(max = FIRST_NAME_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
     private String firstName;
 
     @NotBlank
-    @Size(max = LAST_NAME_MAX_FIELD_LENGTH)
+    @Size(max = LAST_NAME_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
     private String lastName;
 
     @Email
     @NotBlank
-    @Size(max = EMAIL_MAX_FIELD_LENGTH)
-    @UniqueUserEmail
+    @Size(max = EMAIL_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
+    @UniqueUserEmail(groups = {Update.class})
     private String email;
 
     @NotBlank
-    @Size(max = PASSWORD_MAX_FIELD_LENGTH)
+    @Size(max = PASSWORD_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
     private String password;
 
     @NotNull

@@ -3,8 +3,6 @@ package com.amtinez.api.rest.users.utils;
 import com.amtinez.api.rest.users.models.RoleModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-@ExtendWith(MockitoExtension.class)
 public class RoleUtilsUnitTest {
 
     private static final String TEST_ROLE_NAME = "testRoleName";

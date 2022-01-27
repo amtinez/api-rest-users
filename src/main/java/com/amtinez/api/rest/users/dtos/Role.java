@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 import static com.amtinez.api.rest.users.constants.ValidationConstants.Role.NAME_MAX_FIELD_LENGTH;
 
@@ -21,11 +22,11 @@ import static com.amtinez.api.rest.users.constants.ValidationConstants.Role.NAME
 @Setter
 public class Role {
 
-    @NotNull(groups = {Update.class})
+    @NotNull(groups = Update.class)
     private Long id;
 
     @NotBlank
-    @Size(max = NAME_MAX_FIELD_LENGTH)
+    @Size(max = NAME_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
     private String name;
 
 }
