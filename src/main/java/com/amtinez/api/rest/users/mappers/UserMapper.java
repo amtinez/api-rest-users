@@ -50,8 +50,11 @@ public interface UserMapper {
     @Named(ROLE_TO_ROLE_MODEL)
     RoleModel roleToRoleModel(final Role role);
 
+    @Mapping(target = PASSWORD_PROPERTY, source = PASSWORD_PROPERTY, qualifiedByName = ENCRYPT_PASSWORD)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    UserModel updateUserModelFromUser(@MappingTarget final UserModel userModel, final User user);
+    UserModel updateUserModelFromUser(@MappingTarget final UserModel userModel,
+                                      final User user,
+                                      @Context final PasswordEncoder passwordEncoder);
 
     @Mapping(target = ENABLED_PROPERTY, expression = DISABLE_USER_BY_DEFAULT)
     @Mapping(target = LOCKED_PROPERTY, expression = UNLOCK_USER_BY_DEFAULT)

@@ -182,9 +182,10 @@ public class UserMapperUnitTest {
         user.setFirstName(TEST_USER_FIRST_NAME_UPDATED);
         user.setEnabled(Boolean.TRUE);
         user.setLocked(Boolean.TRUE);
-        mapper.updateUserModelFromUser(userModel, user);
+        mapper.updateUserModelFromUser(userModel, user, passwordEncoder);
         assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME_UPDATED);
+        assertThat(userModel.getPassword()).isNotEqualTo(TEST_USER_PASSWORD);
         assertTrue(userModel.getEnabled());
         assertTrue(userModel.getLocked());
     }
@@ -192,14 +193,21 @@ public class UserMapperUnitTest {
     @Test
     public void dtoToModelUpdateNullRoles() {
         userModel.setRoles(null);
-        mapper.updateUserModelFromUser(userModel, user);
+        mapper.updateUserModelFromUser(userModel, user, passwordEncoder);
         assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(userModel.getRoles()).hasSize(1);
     }
 
     @Test
     public void nullDtoToModelUpdate() {
-        assertNull(mapper.updateUserModelFromUser(userModel, null));
+        assertNull(mapper.updateUserModelFromUser(userModel, null, passwordEncoder));
+    }
+
+    @Test
+    public void dtoToModelUpdateNullPasswordEncoder() {
+        mapper.updateUserModelFromUser(userModel, user, null);
+        assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
+        assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);
     }
 
 }
