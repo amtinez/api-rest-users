@@ -79,7 +79,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public Optional<User> updateUser(final User user) {
         final Optional<UserModel> userModel = userService.findUser(user.getId());
-        return userModel.map(model -> userMapper.userModelToUser(userService.saveUser(userMapper.updateUserModelFromUser(model, user))));
+        return userModel.map(model -> userMapper.userModelToUser(userService.saveUser(userMapper.updateUserModelFromUser(model,
+                                                                                                                         user,
+                                                                                                                         passwordEncoder))));
     }
 
     @Override
