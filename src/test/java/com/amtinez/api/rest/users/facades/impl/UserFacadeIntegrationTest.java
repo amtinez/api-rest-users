@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.facades.impl;
 
-import com.amtinez.api.rest.users.annotations.WithMockAdminUser;
+import com.amtinez.api.rest.users.annotations.WithMockUser;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import static com.amtinez.api.rest.users.constants.SecurityConstants.ROLE_ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -74,7 +75,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    @WithMockAdminUser
+    @WithMockUser(authorities = ROLE_ADMIN)
     public void testGetCurrentUser() {
         Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getPrincipal)
@@ -155,8 +156,12 @@ public class UserFacadeIntegrationTest {
                               .id(testUser.getId())
                               .firstName(TEST_USER_FIRST_NAME_UPDATED)
                               .build();
-        final User userUpdated = userFacade.updateUser(user);
-        assertThat(userUpdated.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME_UPDATED);
+        final Optional<User> userUpdated = userFacade.updateUser(user);
+        assertTrue(userUpdated.isPresent());
+        assertThat(userUpdated.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME_UPDATED);
+        assertThat(userUpdated.get().getLastName()).isEqualTo(TEST_USER_LAST_NAME);
+        assertThat(userUpdated.get().getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(userUpdated.get().getRoles()).hasSize(1);
     }
 
     @Test
