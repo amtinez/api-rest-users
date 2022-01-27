@@ -20,7 +20,6 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 
 import static com.amtinez.api.rest.users.constants.SecurityConstants.HAS_ONLY_ROLE_ADMIN;
 
@@ -49,7 +48,7 @@ public class RoleController {
 
     @PreAuthorize(HAS_ONLY_ROLE_ADMIN)
     @PutMapping
-    public ResponseEntity<Role> updateRole(@Validated({Update.class, Default.class}) @RequestBody final Role role) {
+    public ResponseEntity<Role> updateRole(@Validated(Update.class) @RequestBody final Role role) {
         final Optional<Role> roleFound = roleFacade.updateRole(role);
         return roleFound.isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
