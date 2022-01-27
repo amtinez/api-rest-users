@@ -4,11 +4,14 @@ import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -46,6 +49,9 @@ public interface UserMapper {
 
     @Named(ROLE_TO_ROLE_MODEL)
     RoleModel roleToRoleModel(final Role role);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    UserModel updateUserModelFromUser(@MappingTarget final UserModel userModel, final User user);
 
     @Mapping(target = ENABLED_PROPERTY, expression = DISABLE_USER_BY_DEFAULT)
     @Mapping(target = LOCKED_PROPERTY, expression = UNLOCK_USER_BY_DEFAULT)
