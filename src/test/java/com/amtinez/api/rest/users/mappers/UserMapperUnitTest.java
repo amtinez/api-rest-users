@@ -6,28 +6,25 @@ import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit test for {@link UserMapperImpl}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserMapperUnitTest {
 
     private static final Long TEST_USER_ID = 1L;
@@ -36,6 +33,7 @@ public class UserMapperUnitTest {
     private static final String TEST_USER_PASSWORD = "testUserPassword";
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final LocalDate TEST_USER_BIRTHDAY_DATE = LocalDate.now();
+    private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
 
     private static final Long TEST_ROLE_ID = 1L;
     private static final String TEST_ROLE_NAME = "testRoleName";
@@ -59,7 +57,8 @@ public class UserMapperUnitTest {
                              .lastName(TEST_USER_LAST_NAME)
                              .email(TEST_USER_EMAIL)
                              .birthdayDate(TEST_USER_BIRTHDAY_DATE)
-                             .roles(Collections.singleton(roleModel))
+                             .roles(Stream.of((roleModel))
+                                          .collect(Collectors.toSet()))
                              .build();
 
         final Role role = Role.builder()
@@ -74,7 +73,8 @@ public class UserMapperUnitTest {
                    .password(TEST_USER_PASSWORD)
                    .email(TEST_USER_EMAIL)
                    .birthdayDate(TEST_USER_BIRTHDAY_DATE)
-                   .roles(Collections.singleton(role))
+                   .roles(Stream.of(role)
+                                .collect(Collectors.toSet()))
                    .build();
     }
 
@@ -175,6 +175,31 @@ public class UserMapperUnitTest {
     public void dtoToModelRegisterStepNullPasswordEncoder() {
         UserModel userModel = mapper.userToUserModelRegisterStep(user, null);
         assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);
+    }
+
+    @Test
+    public void dtoToModelUpdate() {
+        user.setFirstName(TEST_USER_FIRST_NAME_UPDATED);
+        user.setEnabled(Boolean.TRUE);
+        user.setLocked(Boolean.TRUE);
+        mapper.updateUserModelFromUser(userModel, user);
+        assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
+        assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME_UPDATED);
+        assertTrue(userModel.getEnabled());
+        assertTrue(userModel.getLocked());
+    }
+
+    @Test
+    public void dtoToModelUpdateNullRoles() {
+        userModel.setRoles(null);
+        mapper.updateUserModelFromUser(userModel, user);
+        assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
+        assertThat(userModel.getRoles()).hasSize(1);
+    }
+
+    @Test
+    public void nullDtoToModelUpdate() {
+        assertNull(mapper.updateUserModelFromUser(userModel, null));
     }
 
 }
