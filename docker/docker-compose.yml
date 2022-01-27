@@ -54,3 +54,11 @@ services:
     volumes:
       - ../docker-data/sonarqube/data:/opt/sonarqube/data
       - ../docker-data/sonarqube/extensions:/opt/sonarqube/extensions
+
+  mailhog:
+    container_name: aru-mailhog
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
