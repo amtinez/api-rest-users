@@ -3,6 +3,7 @@ package com.amtinez.api.rest.users.daos;
 import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -26,5 +27,13 @@ public interface PasswordResetTokenDao extends JpaRepository<PasswordResetTokenM
      * @return the password reset token if found
      */
     Optional<PasswordResetTokenModel> findByUser(final UserModel userModel);
+
+    /**
+     * Deletes the password reset token with the given user id
+     *
+     * @param id the user id of the password reset token
+     */
+    @Transactional
+    void deleteByUserId(final Long id);
 
 }
