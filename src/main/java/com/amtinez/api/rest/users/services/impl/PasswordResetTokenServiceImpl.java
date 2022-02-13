@@ -40,8 +40,18 @@ public class PasswordResetTokenServiceImpl implements TokenService<PasswordReset
     }
 
     @Override
+    public void deleteToken(final PasswordResetTokenModel token) {
+        passwordResetTokenDao.delete(token);
+    }
+
+    @Override
     public void deleteToken(final Long id) {
         passwordResetTokenDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteTokenByUserId(final Long id) {
+        passwordResetTokenDao.deleteByUserId(id);
     }
 
 }

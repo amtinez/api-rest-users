@@ -42,22 +42,23 @@ public class PasswordResetTokenServiceIntegrationTest {
     @Resource
     private UserService userService;
 
+    private UserModel testUser;
     private PasswordResetTokenModel testPasswordResetToken;
 
     @BeforeEach
     public void setUp() {
-        final UserModel userModel = userService.saveUser(UserModel.builder()
-                                                                  .firstName(TEST_USER_FIRST_NAME)
-                                                                  .lastName(TEST_USER_LAST_NAME)
-                                                                  .email(TEST_USER_EMAIL)
-                                                                  .password(TEST_USER_PASSWORD)
-                                                                  .birthdayDate(LocalDate.now())
-                                                                  .build());
+        testUser = userService.saveUser(UserModel.builder()
+                                                 .firstName(TEST_USER_FIRST_NAME)
+                                                 .lastName(TEST_USER_LAST_NAME)
+                                                 .email(TEST_USER_EMAIL)
+                                                 .password(TEST_USER_PASSWORD)
+                                                 .birthdayDate(LocalDate.now())
+                                                 .build());
         testPasswordResetToken = passwordResetTokenService.saveToken(PasswordResetTokenModel.builder()
                                                                                             .code(TEST_TOKEN_CODE)
                                                                                             .creationDate(LocalDate.now())
                                                                                             .expiryDate(LocalDate.now())
-                                                                                            .user(userModel)
+                                                                                            .user(testUser)
                                                                                             .build());
     }
 
@@ -97,6 +98,18 @@ public class PasswordResetTokenServiceIntegrationTest {
     @Test
     public void testDeleteToken() {
         passwordResetTokenService.deleteToken(testPasswordResetToken.getId());
+        assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
+    }
+
+    @Test
+    public void testDeleteTokenByToken() {
+        passwordResetTokenService.deleteToken(testPasswordResetToken);
+        assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
+    }
+
+    @Test
+    public void testDeleteTokenByUserId() {
+        passwordResetTokenService.deleteTokenByUserId(testUser.getId());
         assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
     }
 
