@@ -44,6 +44,23 @@ public final class MapperConstants {
         }
     }
 
+    public static final class Token {
+
+        public static final String ID_PROPERTY = "id";
+        public static final String CODE_PROPERTY = "code";
+        public static final String CREATION_DATE_PROPERTY = "creationDate";
+        public static final String EXPIRY_DATE_PROPERTY = "expiryDate";
+        public static final String USER_PROPERTY = "user";
+        public static final String USER_OBJECT = "user";
+
+        public static final String GENERATE_UUID = "java(UUID.randomUUID().toString())";
+        public static final String CREATION_DATE = "java(LocalDate.now())";
+        public static final String EXPIRY_DATE = "java(LocalDate.now().plusDays(1))";
+
+        private Token() {
+        }
+    }
+
     private MapperConstants() {
     }
 
