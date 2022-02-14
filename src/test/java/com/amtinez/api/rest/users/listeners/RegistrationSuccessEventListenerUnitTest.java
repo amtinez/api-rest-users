@@ -34,7 +34,7 @@ public class RegistrationSuccessEventListenerUnitTest {
     private static final String EMAIL_SUBJECT = "Registration Confirmation";
     private static final String REGISTRATION_CONFIRMATION_MESSAGE = "Please visit the following URL to confirm your registration";
 
-    private static final String TEST_USER_EMAIL = "user@test.com";
+    private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_TOKEN_CODE = "testTokenCode";
 
     @Mock
