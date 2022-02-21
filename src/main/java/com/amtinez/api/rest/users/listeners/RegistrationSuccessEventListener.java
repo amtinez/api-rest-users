@@ -2,7 +2,7 @@ package com.amtinez.api.rest.users.listeners;
 
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.events.RegistrationSuccessEvent;
-import com.amtinez.api.rest.users.mappers.UserVerificationTokenModelMapper;
+import com.amtinez.api.rest.users.mappers.UserVerificationTokenMapper;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.services.EmailService;
 import com.amtinez.api.rest.users.services.TokenService;
@@ -31,7 +31,7 @@ public class RegistrationSuccessEventListener implements ApplicationListener<Reg
     private EmailService emailService;
 
     @Resource
-    private UserVerificationTokenModelMapper userVerificationTokenModelMapper;
+    private UserVerificationTokenMapper userVerificationTokenMapper;
 
     @Override
     public void onApplicationEvent(final RegistrationSuccessEvent event) {
@@ -39,7 +39,7 @@ public class RegistrationSuccessEventListener implements ApplicationListener<Reg
                 .filter(User.class::isInstance)
                 .map(User.class::cast)
                 .ifPresent(user -> {
-                    final UserVerificationTokenModel token = userVerificationTokenModelMapper.userToUserVerificationTokenModel(user);
+                    final UserVerificationTokenModel token = userVerificationTokenMapper.userToTokenModel(user);
                     userVerificationTokenService.saveToken(token);
                     final String appBaseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
                     emailService.sendEmail(user.getEmail(),

@@ -1,5 +1,6 @@
 package com.amtinez.api.rest.users.mappers;
 
+import com.amtinez.api.rest.users.dtos.Token;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
@@ -19,22 +20,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * Unit test for {@link UserVerificationTokenModelMapper}
+ * Unit test for {@link UserVerificationTokenMapper}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class UserVerificationTokenModelMapperUnitTest {
+public class UserVerificationTokenMapperUnitTest {
+
+    private static final Long TEST_TOKEN_ID = 1L;
+    private static final String TEST_TOKEN_CODE = "testTokenCode";
 
     @Mock
     private UserMapper userMapper;
 
     @InjectMocks
-    private UserVerificationTokenModelMapperImpl mapper;
+    private UserVerificationTokenMapperImpl mapper;
 
     private User user;
     private UserModel userModel;
+    private UserVerificationTokenModel userVerificationTokenModel;
 
     @BeforeEach
     public void setUp() {
@@ -42,12 +47,31 @@ public class UserVerificationTokenModelMapperUnitTest {
                    .build();
         userModel = UserModel.builder()
                              .build();
+        userVerificationTokenModel = UserVerificationTokenModel.builder()
+                                                               .id(TEST_TOKEN_ID)
+                                                               .code(TEST_TOKEN_CODE)
+                                                               .user(userModel)
+                                                               .build();
         Mockito.when(userMapper.userToUserModel(user)).thenReturn(userModel);
+        Mockito.when(userMapper.userModelToUser(userModel)).thenReturn(user);
     }
 
     @Test
-    public void userToUserVerificationTokenModel() {
-        final UserVerificationTokenModel userVerificationToken = mapper.userToUserVerificationTokenModel(user);
+    public void tokenModelToToken() {
+        final Token token = mapper.tokenModelToToken(userVerificationTokenModel);
+        assertThat(token.getId()).isEqualTo(TEST_TOKEN_ID);
+        assertThat(token.getCode()).isEqualTo(TEST_TOKEN_CODE);
+        assertThat(token.getUser()).isEqualTo(user);
+    }
+
+    @Test
+    public void nullTokenModelToToken() {
+        assertNull(mapper.tokenModelToToken(null));
+    }
+
+    @Test
+    public void userToTokenModel() {
+        final UserVerificationTokenModel userVerificationToken = mapper.userToTokenModel(user);
         assertThat(userVerificationToken.getUser()).isEqualTo(userModel);
         assertThat(userVerificationToken.getCode()).isNotBlank();
         assertThat(userVerificationToken.getCreationDate()).isEqualTo(LocalDate.now());
@@ -55,8 +79,8 @@ public class UserVerificationTokenModelMapperUnitTest {
     }
 
     @Test
-    public void nullUserToUserVerificationTokenModel() {
-        assertNull(mapper.userToUserVerificationTokenModel(null));
+    public void nullUserToTokenModel() {
+        assertNull(mapper.userToTokenModel(null));
     }
 
 }

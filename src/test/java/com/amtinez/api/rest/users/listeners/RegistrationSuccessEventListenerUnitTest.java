@@ -2,7 +2,7 @@ package com.amtinez.api.rest.users.listeners;
 
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.events.RegistrationSuccessEvent;
-import com.amtinez.api.rest.users.mappers.UserVerificationTokenModelMapper;
+import com.amtinez.api.rest.users.mappers.UserVerificationTokenMapper;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.services.EmailService;
 import com.amtinez.api.rest.users.services.TokenService;
@@ -42,7 +42,7 @@ public class RegistrationSuccessEventListenerUnitTest {
     @Mock
     private EmailService emailService;
     @Mock
-    private UserVerificationTokenModelMapper userVerificationTokenModelMapper;
+    private UserVerificationTokenMapper userVerificationTokenMapper;
 
     @Captor
     private ArgumentCaptor<String> userEmailArgumentCaptor;
@@ -74,7 +74,7 @@ public class RegistrationSuccessEventListenerUnitTest {
 
     @Test
     public void testOnApplicationEvent() {
-        Mockito.when(userVerificationTokenModelMapper.userToUserVerificationTokenModel(testUser))
+        Mockito.when(userVerificationTokenMapper.userToTokenModel(testUser))
                .thenReturn(userVerificationTokenModel);
         registrationSuccessEventListener.onApplicationEvent(registrationSuccessEvent);
         Mockito.verify(userVerificationTokenService)
