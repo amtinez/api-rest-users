@@ -123,7 +123,7 @@ public class UserFacadeIntegrationTest {
     @Test
     public void testEnableUser() {
         final int affectedUsers = userFacade.enableUser(testUser.getId());
-        assertThat(affectedUsers).isEqualTo(1);
+        assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertTrue(userFound.get().getEnabled());
@@ -138,7 +138,7 @@ public class UserFacadeIntegrationTest {
     @Test
     public void testDisableUser() {
         final int affectedUsers = userFacade.disableUser(testUser.getId());
-        assertThat(affectedUsers).isEqualTo(1);
+        assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertFalse(userFound.get().getEnabled());
@@ -167,7 +167,7 @@ public class UserFacadeIntegrationTest {
     @Test
     public void testLockUser() {
         final int affectedUsers = userFacade.lockUser(testUser.getId());
-        assertThat(affectedUsers).isEqualTo(1);
+        assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertTrue(userFound.get().getLocked());
@@ -182,7 +182,7 @@ public class UserFacadeIntegrationTest {
     @Test
     public void testUnlockUser() {
         final int affectedUsers = userFacade.unlockUser(testUser.getId());
-        assertThat(affectedUsers).isEqualTo(1);
+        assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertFalse(userFound.get().getLocked());

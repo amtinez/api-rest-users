@@ -119,7 +119,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateUserEnabledStatusEnable() {
-        assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.TRUE)).isEqualTo(1);
+        assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.TRUE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertTrue(userFound.get().getEnabled());
@@ -127,7 +127,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateUserEnabledStatusDisable() {
-        assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.FALSE)).isEqualTo(1);
+        assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.FALSE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertFalse(userFound.get().getEnabled());
@@ -140,7 +140,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateLockedStatusByIdLocked() {
-        assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.TRUE)).isEqualTo(1);
+        assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.TRUE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertTrue(userFound.get().getLocked());
@@ -148,7 +148,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testUpdateLockedStatusByIdUnlocked() {
-        assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.FALSE)).isEqualTo(1);
+        assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.FALSE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertFalse(userFound.get().getLocked());
