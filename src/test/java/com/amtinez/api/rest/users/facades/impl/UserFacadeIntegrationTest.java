@@ -12,7 +12,10 @@ import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import com.amtinez.api.rest.users.services.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
@@ -39,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SpringBootTest
 @ActiveProfiles(ConfigurationConstants.Profiles.TEST)
+@ExtendWith(OutputCaptureExtension.class)
 @Transactional
 public class UserFacadeIntegrationTest {
 
@@ -50,6 +54,8 @@ public class UserFacadeIntegrationTest {
     private static final String TEST_ROLE_NAME = "testRoleName";
 
     private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
+
+    private static final String TEST_TOKEN_CODE = "testTokenCode";
 
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
@@ -132,20 +138,20 @@ public class UserFacadeIntegrationTest {
 
     @Test
     public void testConfirmRegisterUser() {
-        assertThat(userFacade.confirmRegisterUser(Token.builder()
-                                                       .user(testUser)
-                                                       .build()))
-            .isOne();
+        userFacade.confirmRegisterUser(Token.builder()
+                                            .user(testUser)
+                                            .build());
         final Optional<User> testUserRegistered = userFacade.findUser(testUser.getId());
         assertTrue(testUserRegistered.isPresent());
         assertTrue(testUserRegistered.get().getEnabled());
     }
 
     @Test
-    public void testConfirmRegisterUserNotExists() {
-        assertThat(userFacade.confirmRegisterUser(Token.builder()
-                                                       .build()))
-            .isZero();
+    public void testConfirmRegisterUserNotExists(final CapturedOutput output) {
+        userFacade.confirmRegisterUser(Token.builder()
+                                            .code(TEST_TOKEN_CODE)
+                                            .build());
+        assertThat(output.getOut()).contains("Token with code " + TEST_TOKEN_CODE + " has no user");
     }
 
     @Test

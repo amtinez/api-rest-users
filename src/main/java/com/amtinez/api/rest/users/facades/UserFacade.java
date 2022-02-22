@@ -46,7 +46,7 @@ public interface UserFacade {
      *
      * @param token the token
      */
-    int confirmRegisterUser(final Token token);
+    void confirmRegisterUser(final Token token);
 
     /**
      * Enables the user

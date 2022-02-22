@@ -10,7 +10,8 @@ import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import com.amtinez.api.rest.users.services.TokenService;
 import com.amtinez.api.rest.users.services.UserService;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,8 @@ import javax.annotation.Resource;
  */
 @Component
 public class UserFacadeImpl implements UserFacade {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserFacadeImpl.class);
 
     @Resource
     private UserMapper userMapper;
@@ -77,14 +80,16 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public int confirmRegisterUser(final Token token) {
-        return Optional.ofNullable(token.getUser())
-                       .map(User::getId)
-                       .map(id -> {
-                           userVerificationTokenService.deleteTokenByUserId(id);
-                           return userService.updateUserEnabledStatus(id, Boolean.TRUE);
-                       })
-                       .orElse(NumberUtils.INTEGER_ZERO);
+    public void confirmRegisterUser(final Token token) {
+        Optional.ofNullable(token.getUser())
+                .map(User::getId)
+                .ifPresentOrElse(
+                    id -> {
+                        userVerificationTokenService.deleteTokenByUserId(id);
+                        userService.updateUserEnabledStatus(id, Boolean.TRUE);
+                    },
+                    () -> LOG.error("Token with code {} has no user", token.getCode())
+                );
     }
 
     @Override
