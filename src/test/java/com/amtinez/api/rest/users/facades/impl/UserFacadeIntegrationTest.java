@@ -53,7 +53,6 @@ public class UserFacadeIntegrationTest {
 
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
-
     @Resource
     private UserFacade userFacade;
 
