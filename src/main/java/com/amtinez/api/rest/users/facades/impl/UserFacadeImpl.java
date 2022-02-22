@@ -1,11 +1,17 @@
 package com.amtinez.api.rest.users.facades.impl;
 
+import com.amtinez.api.rest.users.dtos.Token;
 import com.amtinez.api.rest.users.dtos.User;
+import com.amtinez.api.rest.users.events.RegistrationSuccessEvent;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.mappers.UserMapper;
 import com.amtinez.api.rest.users.models.UserModel;
+import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
+import com.amtinez.api.rest.users.services.TokenService;
 import com.amtinez.api.rest.users.services.UserService;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +36,13 @@ public class UserFacadeImpl implements UserFacade {
     private UserService userService;
 
     @Resource
+    private TokenService<UserVerificationTokenModel> userVerificationTokenService;
+
+    @Resource
     private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public Optional<User> findUser(final Long id) {
@@ -58,7 +70,21 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public User registerUser(final User user) {
-        return userMapper.userModelToUser(userService.saveUser(userMapper.userToUserModelRegisterStep(user, passwordEncoder)));
+        final User registeredUser = userMapper.userModelToUser(userService.saveUser(userMapper.userToUserModelRegisterStep(user,
+                                                                                                                           passwordEncoder)));
+        applicationEventPublisher.publishEvent(new RegistrationSuccessEvent(registeredUser));
+        return registeredUser;
+    }
+
+    @Override
+    public int confirmRegisterUser(final Token token) {
+        return Optional.ofNullable(token.getUser())
+                       .map(User::getId)
+                       .map(id -> {
+                           userVerificationTokenService.deleteTokenByUserId(id);
+                           return userService.updateUserEnabledStatus(id, Boolean.TRUE);
+                       })
+                       .orElse(NumberUtils.INTEGER_ZERO);
     }
 
     @Override
@@ -73,6 +99,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public void deleteUser(final Long id) {
+        userVerificationTokenService.deleteTokenByUserId(id);
         userService.deleteUser(id);
     }
 

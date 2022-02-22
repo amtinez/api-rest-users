@@ -1,5 +1,6 @@
 package com.amtinez.api.rest.users.facades;
 
+import com.amtinez.api.rest.users.dtos.Token;
 import com.amtinez.api.rest.users.dtos.User;
 
 import java.util.List;
@@ -32,7 +33,6 @@ public interface UserFacade {
      */
     List<User> findAllUsers();
 
-
     /**
      * Register the user
      *
@@ -40,6 +40,13 @@ public interface UserFacade {
      * @return the registered user
      */
     User registerUser(final User user);
+
+    /**
+     * Confirm register the user
+     *
+     * @param token the token
+     */
+    int confirmRegisterUser(final Token token);
 
     /**
      * Enables the user
