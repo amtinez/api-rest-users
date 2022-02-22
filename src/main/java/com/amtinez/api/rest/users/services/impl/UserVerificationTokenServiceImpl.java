@@ -40,8 +40,18 @@ public class UserVerificationTokenServiceImpl implements TokenService<UserVerifi
     }
 
     @Override
+    public void deleteToken(final UserVerificationTokenModel token) {
+        userVerificationTokenDao.delete(token);
+    }
+
+    @Override
     public void deleteToken(final Long id) {
         userVerificationTokenDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteTokenByUserId(final Long id) {
+        userVerificationTokenDao.deleteByUserId(id);
     }
 
 }

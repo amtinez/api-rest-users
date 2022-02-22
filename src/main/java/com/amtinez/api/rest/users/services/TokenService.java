@@ -42,10 +42,24 @@ public interface TokenService<T> {
     T saveToken(final T token);
 
     /**
+     * Delete the given token model
+     *
+     * @param token the model
+     */
+    void deleteToken(final T token);
+
+    /**
      * Delete the token model with the given id
      *
      * @param id the id of the token model
      */
     void deleteToken(final Long id);
+
+    /**
+     * Delete the token model with the given user id
+     *
+     * @param id the id of the user id
+     */
+    void deleteTokenByUserId(final Long id);
 
 }

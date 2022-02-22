@@ -42,22 +42,23 @@ public class UserVerificationTokenServiceImplIntegrationTest {
     @Resource
     private UserService userService;
 
+    private UserModel testUser;
     private UserVerificationTokenModel testUserVerificationToken;
 
     @BeforeEach
     public void setUp() {
-        final UserModel userModel = userService.saveUser(UserModel.builder()
-                                                                  .firstName(TEST_USER_FIRST_NAME)
-                                                                  .lastName(TEST_USER_LAST_NAME)
-                                                                  .email(TEST_USER_EMAIL)
-                                                                  .password(TEST_USER_PASSWORD)
-                                                                  .birthdayDate(LocalDate.now())
-                                                                  .build());
+        testUser = userService.saveUser(UserModel.builder()
+                                                 .firstName(TEST_USER_FIRST_NAME)
+                                                 .lastName(TEST_USER_LAST_NAME)
+                                                 .email(TEST_USER_EMAIL)
+                                                 .password(TEST_USER_PASSWORD)
+                                                 .birthdayDate(LocalDate.now())
+                                                 .build());
         testUserVerificationToken = userVerificationTokenService.saveToken(UserVerificationTokenModel.builder()
                                                                                                      .code(TEST_CODE)
                                                                                                      .creationDate(LocalDate.now())
                                                                                                      .expiryDate(LocalDate.now())
-                                                                                                     .user(userModel)
+                                                                                                     .user(testUser)
                                                                                                      .build());
     }
 
@@ -97,6 +98,18 @@ public class UserVerificationTokenServiceImplIntegrationTest {
     @Test
     public void testDeleteToken() {
         userVerificationTokenService.deleteToken(testUserVerificationToken.getId());
+        assertTrue(userVerificationTokenService.findToken(testUserVerificationToken.getId()).isEmpty());
+    }
+
+    @Test
+    public void testDeleteTokenByToken() {
+        userVerificationTokenService.deleteToken(testUserVerificationToken);
+        assertTrue(userVerificationTokenService.findToken(testUserVerificationToken.getId()).isEmpty());
+    }
+
+    @Test
+    public void testDeleteTokenByUserId() {
+        userVerificationTokenService.deleteTokenByUserId(testUser.getId());
         assertTrue(userVerificationTokenService.findToken(testUserVerificationToken.getId()).isEmpty());
     }
 
