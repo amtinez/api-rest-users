@@ -1,10 +1,13 @@
 package com.amtinez.api.rest.users.controllers;
 
+import com.amtinez.api.rest.users.dtos.Token;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.facades.UserFacade;
+import com.amtinez.api.rest.users.facades.impl.UserVerificationTokenFacadeImpl;
 import com.amtinez.api.rest.users.utils.ResponseEntityUtils;
 import com.amtinez.api.rest.users.utils.SecurityUtils;
 import com.amtinez.api.rest.users.validations.groups.Update;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +42,9 @@ public class UserController {
     @Resource
     private UserFacade userFacade;
 
+    @Resource
+    private UserVerificationTokenFacadeImpl userVerificationTokenFacade;
+
     @PreAuthorize(HAS_ONLY_ROLE_ADMIN)
     @GetMapping
     public ResponseEntity<List<User>> findAllUsers() {
@@ -51,6 +57,17 @@ public class UserController {
         return ResponseEntity.ok(userFacade.registerUser(user));
     }
 
+    @PreAuthorize(PERMIT_ALL)
+    @GetMapping("/confirm/{code}")
+    public ResponseEntity<Void> confirmRegisterUser(@PathVariable final String code) {
+        final Optional<Token> token = userVerificationTokenFacade.getUnexpiredToken(code);
+        if (token.isPresent()) {
+            userFacade.confirmRegisterUser(token.get());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @PreAuthorize(HAS_ANY_ROLE)
     @PutMapping
     public ResponseEntity<User> updateUser(@Validated(Update.class) @RequestBody final User user) {
@@ -58,7 +75,7 @@ public class UserController {
             final Optional<User> userFound = userFacade.updateUser(user);
             return userFound.isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PreAuthorize(HAS_ONLY_ROLE_ADMIN)
