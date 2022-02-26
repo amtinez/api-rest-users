@@ -76,8 +76,3 @@ task dockerRemove(type: Exec) {
     workingDir "${workingDir}/docker"
     commandLine 'docker-compose', 'rm', '-f'
 }
-
-task dockerClean(type: Exec) {
-    description 'Remove docker data directory'
-    commandLine 'rm', '-r', 'docker-data'
-}
