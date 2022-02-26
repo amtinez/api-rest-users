@@ -4,11 +4,15 @@ import com.amtinez.api.rest.users.annotations.WithMockUser;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
+import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
+import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
+import com.amtinez.api.rest.users.services.TokenService;
 import com.amtinez.api.rest.users.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -62,7 +66,11 @@ public class UserControllerIntegrationTest {
     @Resource
     private MockMvc mockMvc;
     @Resource
+    private UserFacade userFacade;
+    @Resource
     private UserService userService;
+    @Resource
+    private TokenService<UserVerificationTokenModel> userVerificationTokenService;
 
     private UserModel testUser;
 
@@ -107,17 +115,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void testRegisterUser() throws Exception {
-        final User user = User.builder()
-                              .firstName(TEST_USER_REGISTER_FIRST_NAME)
-                              .lastName(TEST_USER_REGISTER_LAST_NAME)
-                              .email(TEST_USER_REGISTER_EMAIL)
-                              .password(TEST_USER_REGISTER_PASSWORD)
-                              .birthdayDate(LocalDate.now())
-                              .roles(Stream.of(Role.builder()
-                                                   .name(TEST_ROLE_NAME)
-                                                   .build())
-                                           .collect(Collectors.toSet()))
-                              .build();
+        final User user = createUser();
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
@@ -129,6 +127,36 @@ public class UserControllerIntegrationTest {
     public void testRegisterUserWithInvalidUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL))
                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void testConfirmRegisterUser() throws Exception {
+        final User registeredUser = userFacade.registerUser(createUser());
+        final Optional<UserVerificationTokenModel> userVerificationTokenModel = userVerificationTokenService.findToken(UserModel.builder()
+                                                                                                                                .id(registeredUser.getId())
+                                                                                                                                .build());
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL
+                                                       + "/confirm/"
+                                                       + userVerificationTokenModel.map(UserVerificationTokenModel::getCode)
+                                                                                   .orElse(StringUtils.EMPTY)))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testConfirmRegisterUserExpiredToken() throws Exception {
+        final User registeredUser = userFacade.registerUser(createUser());
+        final Optional<UserVerificationTokenModel> userVerificationTokenModel = userVerificationTokenService.findToken(UserModel.builder()
+                                                                                                                                .id(registeredUser.getId())
+                                                                                                                                .build());
+        userVerificationTokenModel.ifPresent(tokenModel -> {
+            tokenModel.setExpiryDate(LocalDate.now().minusDays(1));
+            userVerificationTokenService.saveToken(tokenModel);
+        });
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL
+                                                       + "/confirm/"
+                                                       + userVerificationTokenModel.map(UserVerificationTokenModel::getCode)
+                                                                                   .orElse(StringUtils.EMPTY)))
+               .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
@@ -184,7 +212,7 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(mapper.writeValueAsString(user)))
-               .andExpect(MockMvcResultMatchers.status().isNotFound());
+               .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
@@ -413,6 +441,20 @@ public class UserControllerIntegrationTest {
                 .filter(UserDetailsImpl.class::isInstance)
                 .map(UserDetailsImpl.class::cast)
                 .ifPresent(userDetails -> userDetails.setId(id));
+    }
+
+    private User createUser() {
+        return User.builder()
+                   .firstName(TEST_USER_REGISTER_FIRST_NAME)
+                   .lastName(TEST_USER_REGISTER_LAST_NAME)
+                   .email(TEST_USER_REGISTER_EMAIL)
+                   .password(TEST_USER_REGISTER_PASSWORD)
+                   .birthdayDate(LocalDate.now())
+                   .roles(Stream.of(Role.builder()
+                                        .name(TEST_ROLE_NAME)
+                                        .build())
+                                .collect(Collectors.toSet()))
+                   .build();
     }
 
 }
