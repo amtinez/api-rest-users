@@ -1,7 +1,9 @@
 package com.amtinez.api.rest.users.facades.impl;
 
-import com.amtinez.api.rest.users.dtos.Token;
+import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.User;
+import com.amtinez.api.rest.users.dtos.UserVerificationToken;
+import com.amtinez.api.rest.users.events.PasswordResetEvent;
 import com.amtinez.api.rest.users.events.RegistrationSuccessEvent;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.mappers.UserMapper;
@@ -80,15 +82,35 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public void confirmRegisterUser(final Token token) {
-        Optional.ofNullable(token.getUser())
+    public void confirmRegisterUser(final UserVerificationToken userVerificationToken) {
+        Optional.ofNullable(userVerificationToken.getUser())
                 .map(User::getId)
                 .ifPresentOrElse(
                     id -> {
                         userVerificationTokenService.deleteTokenByUserId(id);
                         userService.updateUserEnabledStatus(id, Boolean.TRUE);
                     },
-                    () -> LOG.error("Token with code {} has no user", token.getCode())
+                    () -> LOG.error("Token with code {} has no user", userVerificationToken.getCode())
+                );
+    }
+
+    @Override
+    public void sendUserPasswordResetEmail(final User user) {
+        userService.findUser(user.getEmail())
+                   .map(userMapper::userModelToUser)
+                   .ifPresent(userFound -> applicationEventPublisher.publishEvent(new PasswordResetEvent(userFound)));
+    }
+
+    @Override
+    public void updatePasswordUser(final PasswordResetToken passwordResetToken) {
+        Optional.ofNullable(passwordResetToken.getUser())
+                .map(User::getId)
+                .ifPresentOrElse(
+                    id -> {
+                        userVerificationTokenService.deleteTokenByUserId(id);
+                        userService.updateUserPassword(id, passwordResetToken.getPassword());
+                    },
+                    () -> LOG.error("Token with code {} has no user", passwordResetToken.getCode())
                 );
     }
 

@@ -2,10 +2,12 @@ package com.amtinez.api.rest.users.facades.impl;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants;
+import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
-import com.amtinez.api.rest.users.dtos.Token;
 import com.amtinez.api.rest.users.dtos.User;
+import com.amtinez.api.rest.users.dtos.UserVerificationToken;
 import com.amtinez.api.rest.users.facades.UserFacade;
+import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
@@ -50,6 +52,7 @@ public class UserFacadeIntegrationTest {
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
+    private static final String TEST_USER_NEW_PASSWORD = "testUserNewPassword";
 
     private static final String TEST_ROLE_NAME = "testRoleName";
 
@@ -59,6 +62,8 @@ public class UserFacadeIntegrationTest {
 
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
+    @Resource
+    private TokenService<PasswordResetTokenModel> passwordResetTokenService;
     @Resource
     private UserFacade userFacade;
 
@@ -138,9 +143,9 @@ public class UserFacadeIntegrationTest {
 
     @Test
     public void testConfirmRegisterUser() {
-        userFacade.confirmRegisterUser(Token.builder()
-                                            .user(testUser)
-                                            .build());
+        userFacade.confirmRegisterUser(UserVerificationToken.builder()
+                                                            .user(testUser)
+                                                            .build());
         final Optional<User> testUserRegistered = userFacade.findUser(testUser.getId());
         assertTrue(testUserRegistered.isPresent());
         assertTrue(testUserRegistered.get().getEnabled());
@@ -148,9 +153,37 @@ public class UserFacadeIntegrationTest {
 
     @Test
     public void testConfirmRegisterUserNotExists(final CapturedOutput output) {
-        userFacade.confirmRegisterUser(Token.builder()
-                                            .code(TEST_TOKEN_CODE)
-                                            .build());
+        userFacade.confirmRegisterUser(UserVerificationToken.builder()
+                                                            .code(TEST_TOKEN_CODE)
+                                                            .build());
+        assertThat(output.getOut()).contains("Token with code " + TEST_TOKEN_CODE + " has no user");
+    }
+
+    @Test
+    public void testSendUserPasswordResetEmail() {
+        userFacade.sendUserPasswordResetEmail(testUser);
+        assertTrue(passwordResetTokenService.findToken(UserModel.builder()
+                                                                .id(testUser.getId())
+                                                                .build())
+                                            .isPresent());
+    }
+
+    @Test
+    public void testUpdatePasswordUser() {
+        userFacade.updatePasswordUser(PasswordResetToken.builder()
+                                                        .password(TEST_USER_NEW_PASSWORD)
+                                                        .user(testUser)
+                                                        .build());
+        final Optional<User> testUserRegistered = userFacade.findUser(testUser.getId());
+        assertTrue(testUserRegistered.isPresent());
+        assertNull(testUser.getPassword());
+    }
+
+    @Test
+    public void testUpdatePasswordUserUserNotExists(final CapturedOutput output) {
+        userFacade.updatePasswordUser(PasswordResetToken.builder()
+                                                        .code(TEST_TOKEN_CODE)
+                                                        .build());
         assertThat(output.getOut()).contains("Token with code " + TEST_TOKEN_CODE + " has no user");
     }
 
