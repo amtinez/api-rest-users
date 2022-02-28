@@ -1,6 +1,7 @@
 package com.amtinez.api.rest.users.dtos;
 
 import com.amtinez.api.rest.users.annotations.UniqueUserEmail;
+import com.amtinez.api.rest.users.validations.groups.PasswordResetEmail;
 import com.amtinez.api.rest.users.validations.groups.Update;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,8 +48,8 @@ public class User {
 
     @Email
     @NotBlank
-    @Size(max = EMAIL_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
-    @UniqueUserEmail(groups = {Update.class})
+    @UniqueUserEmail(groups = {Default.class, Update.class})
+    @Size(max = EMAIL_MAX_FIELD_LENGTH, groups = {Default.class, Update.class, PasswordResetEmail.class})
     private String email;
 
     @NotBlank

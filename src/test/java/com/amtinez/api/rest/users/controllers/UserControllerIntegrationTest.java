@@ -2,9 +2,11 @@ package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
+import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.facades.UserFacade;
+import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
@@ -52,6 +54,7 @@ public class UserControllerIntegrationTest {
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
+    private static final String TEST_USER_NEW_PASSWORD = "testUserNewPassword";
 
     private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
 
@@ -71,6 +74,8 @@ public class UserControllerIntegrationTest {
     private UserService userService;
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
+    @Resource
+    private TokenService<PasswordResetTokenModel> passwordResetTokenService;
 
     private UserModel testUser;
 
@@ -132,30 +137,84 @@ public class UserControllerIntegrationTest {
     @Test
     public void testConfirmRegisterUser() throws Exception {
         final User registeredUser = userFacade.registerUser(createUser());
-        final Optional<UserVerificationTokenModel> userVerificationTokenModel = userVerificationTokenService.findToken(UserModel.builder()
-                                                                                                                                .id(registeredUser.getId())
-                                                                                                                                .build());
+        final Optional<UserVerificationTokenModel> tokenModel = userVerificationTokenService.findToken(UserModel.builder()
+                                                                                                                .id(registeredUser.getId())
+                                                                                                                .build());
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL
                                                        + "/confirm/"
-                                                       + userVerificationTokenModel.map(UserVerificationTokenModel::getCode)
-                                                                                   .orElse(StringUtils.EMPTY)))
+                                                       + tokenModel.map(UserVerificationTokenModel::getCode)
+                                                                   .orElse(StringUtils.EMPTY)))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testConfirmRegisterUserExpiredToken() throws Exception {
         final User registeredUser = userFacade.registerUser(createUser());
-        final Optional<UserVerificationTokenModel> userVerificationTokenModel = userVerificationTokenService.findToken(UserModel.builder()
-                                                                                                                                .id(registeredUser.getId())
-                                                                                                                                .build());
-        userVerificationTokenModel.ifPresent(tokenModel -> {
-            tokenModel.setExpiryDate(LocalDate.now().minusDays(1));
-            userVerificationTokenService.saveToken(tokenModel);
+        final Optional<UserVerificationTokenModel> tokenModel = userVerificationTokenService.findToken(UserModel.builder()
+                                                                                                                .id(registeredUser.getId())
+                                                                                                                .build());
+        tokenModel.ifPresent(tokenModelFound -> {
+            tokenModelFound.setExpiryDate(LocalDate.now().minusDays(1));
+            userVerificationTokenService.saveToken(tokenModelFound);
         });
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL
                                                        + "/confirm/"
-                                                       + userVerificationTokenModel.map(UserVerificationTokenModel::getCode)
-                                                                                   .orElse(StringUtils.EMPTY)))
+                                                       + tokenModel.map(UserVerificationTokenModel::getCode)
+                                                                   .orElse(StringUtils.EMPTY)))
+               .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    public void testSendUserPasswordResetEmail() throws Exception {
+        final User user = createUser();
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL + "/reset")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(user)))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testResetUserPassword() throws Exception {
+        final User registeredUser = userFacade.registerUser(createUser());
+        userFacade.sendUserPasswordResetEmail(registeredUser);
+        final Optional<PasswordResetTokenModel> tokenModel = passwordResetTokenService.findToken(UserModel.builder()
+                                                                                                          .id(registeredUser.getId())
+                                                                                                          .build());
+        final PasswordResetToken token = tokenModel.map(tokenModelFound -> PasswordResetToken.builder()
+                                                                                             .code(tokenModelFound.getCode())
+                                                                                             .password(TEST_USER_NEW_PASSWORD)
+                                                                                             .repeatedPassword(TEST_USER_NEW_PASSWORD)
+                                                                                             .build())
+                                                   .orElse(null);
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL + "/reset/")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(token)))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testResetUserPasswordExpiredToken() throws Exception {
+        final User registeredUser = userFacade.registerUser(createUser());
+        userFacade.sendUserPasswordResetEmail(registeredUser);
+        final Optional<PasswordResetTokenModel> tokenModel = passwordResetTokenService.findToken(UserModel.builder()
+                                                                                                          .id(registeredUser.getId())
+                                                                                                          .build());
+        tokenModel.ifPresent(tokenModelFound -> {
+            tokenModelFound.setExpiryDate(LocalDate.now().minusDays(1));
+            passwordResetTokenService.saveToken(tokenModelFound);
+        });
+        final PasswordResetToken token = tokenModel.map(tokenModelFound -> PasswordResetToken.builder()
+                                                                                             .code(tokenModelFound.getCode())
+                                                                                             .password(TEST_USER_NEW_PASSWORD)
+                                                                                             .repeatedPassword(TEST_USER_NEW_PASSWORD)
+                                                                                             .build())
+                                                   .orElse(null);
+        final ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL + "/reset/")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(mapper.writeValueAsString(token)))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 

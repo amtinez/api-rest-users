@@ -1,7 +1,8 @@
 package com.amtinez.api.rest.users.facades;
 
-import com.amtinez.api.rest.users.dtos.Token;
+import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.User;
+import com.amtinez.api.rest.users.dtos.UserVerificationToken;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +45,23 @@ public interface UserFacade {
     /**
      * Confirm register the user
      *
-     * @param token the token
+     * @param userVerificationToken the user verification token
      */
-    void confirmRegisterUser(final Token token);
+    void confirmRegisterUser(final UserVerificationToken userVerificationToken);
+
+    /**
+     * Sends the user password reset e-mail
+     *
+     * @param user the user
+     */
+    void sendUserPasswordResetEmail(final User user);
+
+    /**
+     * Updates the user password
+     *
+     * @param passwordResetToken the password reset token
+     */
+    void updatePasswordUser(final PasswordResetToken passwordResetToken);
 
     /**
      * Enables the user

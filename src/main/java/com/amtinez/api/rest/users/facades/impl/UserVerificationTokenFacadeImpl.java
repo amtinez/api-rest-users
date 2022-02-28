@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.facades.impl;
 
-import com.amtinez.api.rest.users.dtos.Token;
+import com.amtinez.api.rest.users.dtos.UserVerificationToken;
 import com.amtinez.api.rest.users.facades.TokenFacade;
 import com.amtinez.api.rest.users.mappers.UserVerificationTokenMapper;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @Service
-public class UserVerificationTokenFacadeImpl implements TokenFacade<UserVerificationTokenModel> {
+public class UserVerificationTokenFacadeImpl implements TokenFacade<UserVerificationTokenModel, UserVerificationToken> {
 
     @Resource
     private UserVerificationTokenMapper userVerificationTokenMapper;
@@ -24,7 +24,7 @@ public class UserVerificationTokenFacadeImpl implements TokenFacade<UserVerifica
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
 
     @Override
-    public Optional<Token> getUnexpiredToken(final String code) {
+    public Optional<UserVerificationToken> getUnexpiredToken(final String code) {
         return userVerificationTokenService.findToken(code)
                                            .filter(token -> this.isUnexpiredToken(userVerificationTokenService, token))
                                            .map(userVerificationTokenMapper::tokenModelToToken);

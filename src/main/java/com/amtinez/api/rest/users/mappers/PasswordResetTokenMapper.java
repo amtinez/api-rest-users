@@ -1,7 +1,7 @@
 package com.amtinez.api.rest.users.mappers;
 
-import com.amtinez.api.rest.users.dtos.UserVerificationToken;
-import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
+import com.amtinez.api.rest.users.dtos.PasswordResetToken;
+import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -17,6 +17,6 @@ import static com.amtinez.api.rest.users.constants.MapperConstants.SPRING_COMPON
         componentModel = SPRING_COMPONENT_MODEL,
         uses = UserMapper.class,
         imports = {LocalDate.class, UUID.class})
-public interface UserVerificationTokenMapper extends TokenMapper<UserVerificationToken, UserVerificationTokenModel> {
+public interface PasswordResetTokenMapper extends TokenMapper<PasswordResetToken, PasswordResetTokenModel> {
 
 }
