@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class RoleFacadeIntegrationTest {
+class RoleFacadeIntegrationTest {
 
     private static final String TEST_ROLE_NAME = "testName";
     private static final String TEST_ROLE_UPDATED_NAME = "testNameUpdated";
@@ -45,27 +45,27 @@ public class RoleFacadeIntegrationTest {
     }
 
     @Test
-    public void testFindRole() {
+    void testFindRole() {
         final Optional<Role> roleFound = roleFacade.findRole(testRole.getId());
         assertTrue(roleFound.isPresent());
         assertThat(roleFound.get().getName()).isEqualTo(TEST_ROLE_NAME);
     }
 
     @Test
-    public void testFindRoleNotExists() {
+    void testFindRoleNotExists() {
         final Optional<Role> roleFound = roleFacade.findRole(Long.MAX_VALUE);
         assertFalse(roleFound.isPresent());
     }
 
     @Test
-    public void testFindAllRoles() {
+    void testFindAllRoles() {
         final List<Role> roles = roleFacade.findAllRoles();
         assertFalse(roles.isEmpty());
         assertThat(roles).hasSize(1);
     }
 
     @Test
-    public void testSaveRole() {
+    void testSaveRole() {
         final Role role = Role.builder()
                               .name(TEST_ROLE_NAME)
                               .build();
@@ -75,7 +75,7 @@ public class RoleFacadeIntegrationTest {
     }
 
     @Test
-    public void testUpdateRole() {
+    void testUpdateRole() {
         final Role role = Role.builder()
                               .id(testRole.getId())
                               .name(TEST_ROLE_UPDATED_NAME)
@@ -86,7 +86,7 @@ public class RoleFacadeIntegrationTest {
     }
 
     @Test
-    public void testUpdateRoleNotFound() {
+    void testUpdateRoleNotFound() {
         final Role role = Role.builder()
                               .id(Long.MAX_VALUE)
                               .name(TEST_ROLE_UPDATED_NAME)
@@ -96,7 +96,7 @@ public class RoleFacadeIntegrationTest {
     }
 
     @Test
-    public void testDeleteRole() {
+    void testDeleteRole() {
         roleFacade.deleteRole(testRole.getId());
         assertTrue(roleFacade.findRole(testRole.getId()).isEmpty());
     }

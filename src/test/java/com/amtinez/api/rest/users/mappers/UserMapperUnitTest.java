@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public class UserMapperUnitTest {
+class UserMapperUnitTest {
 
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
@@ -79,7 +79,7 @@ public class UserMapperUnitTest {
     }
 
     @Test
-    public void modelToDto() {
+    void modelToDto() {
         final User user = mapper.userModelToUser(userModel);
         assertThat(user.getId()).isEqualTo(TEST_USER_ID);
         assertThat(user.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -95,26 +95,26 @@ public class UserMapperUnitTest {
     }
 
     @Test
-    public void modelToDtoNullRoles() {
+    void modelToDtoNullRoles() {
         userModel.setRoles(null);
         final User user = mapper.userModelToUser(userModel);
         assertNull(user.getRoles());
     }
 
     @Test
-    public void modelToDtoNullRole() {
+    void modelToDtoNullRole() {
         userModel.setRoles(Collections.singleton(null));
         final User user = mapper.userModelToUser(userModel);
         assertNull(user.getRoles().iterator().next());
     }
 
     @Test
-    public void nullModelToDto() {
+    void nullModelToDto() {
         assertNull(mapper.userModelToUser(null));
     }
 
     @Test
-    public void dtoToModel() {
+    void dtoToModel() {
         final UserModel userModel = mapper.userToUserModel(user);
         assertThat(userModel.getId()).isEqualTo(TEST_USER_ID);
         assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -130,26 +130,26 @@ public class UserMapperUnitTest {
     }
 
     @Test
-    public void dtoToModelNullRoles() {
+    void dtoToModelNullRoles() {
         user.setRoles(null);
         final UserModel userModel = mapper.userToUserModel(user);
         assertNull(userModel.getRoles());
     }
 
     @Test
-    public void dtoToModelNullRole() {
+    void dtoToModelNullRole() {
         user.setRoles(Collections.singleton(null));
         final UserModel userModel = mapper.userToUserModel(user);
         assertNull(userModel.getRoles().iterator().next());
     }
 
     @Test
-    public void nullDtoToModel() {
+    void nullDtoToModel() {
         assertNull(mapper.userToUserModel(null));
     }
 
     @Test
-    public void dtoToModelRegisterStep() {
+    void dtoToModelRegisterStep() {
         final UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder);
         assertThat(userModel.getId()).isEqualTo(TEST_USER_ID);
         assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -167,18 +167,18 @@ public class UserMapperUnitTest {
     }
 
     @Test
-    public void nullDtoToModelRegisterStep() {
+    void nullDtoToModelRegisterStep() {
         assertNull(mapper.userToUserModelRegisterStep(null, passwordEncoder));
     }
 
     @Test
-    public void dtoToModelRegisterStepNullPasswordEncoder() {
+    void dtoToModelRegisterStepNullPasswordEncoder() {
         UserModel userModel = mapper.userToUserModelRegisterStep(user, null);
         assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);
     }
 
     @Test
-    public void dtoToModelUpdate() {
+    void dtoToModelUpdate() {
         user.setFirstName(TEST_USER_FIRST_NAME_UPDATED);
         user.setEnabled(Boolean.TRUE);
         user.setLocked(Boolean.TRUE);
@@ -191,7 +191,7 @@ public class UserMapperUnitTest {
     }
 
     @Test
-    public void dtoToModelUpdateNullRoles() {
+    void dtoToModelUpdateNullRoles() {
         userModel.setRoles(null);
         mapper.updateUserModelFromUser(userModel, user, passwordEncoder);
         assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
@@ -199,12 +199,12 @@ public class UserMapperUnitTest {
     }
 
     @Test
-    public void nullDtoToModelUpdate() {
+    void nullDtoToModelUpdate() {
         assertNull(mapper.updateUserModelFromUser(userModel, null, passwordEncoder));
     }
 
     @Test
-    public void dtoToModelUpdateNullPasswordEncoder() {
+    void dtoToModelUpdateNullPasswordEncoder() {
         mapper.updateUserModelFromUser(userModel, user, null);
         assertThat(userModel.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);

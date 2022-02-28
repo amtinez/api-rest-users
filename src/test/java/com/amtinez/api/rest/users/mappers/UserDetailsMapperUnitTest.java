@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public class UserDetailsMapperUnitTest {
+class UserDetailsMapperUnitTest {
 
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
@@ -55,7 +55,7 @@ public class UserDetailsMapperUnitTest {
     }
 
     @Test
-    public void userModelToUserDetails() {
+    void userModelToUserDetails() {
         final UserDetailsImpl userDetails = mapper.userModelToUserDetails(userModel);
         assertThat(userDetails.getId()).isEqualTo(TEST_USER_ID);
         assertThat(userDetails.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -70,7 +70,7 @@ public class UserDetailsMapperUnitTest {
     }
 
     @Test
-    public void userModelToUserDetailsExpired() {
+    void userModelToUserDetailsExpired() {
         userModel.setLastAccessDate(EXPIRED_LOCAL_DATE);
         userModel.setLastPasswordUpdateDate(EXPIRED_LOCAL_DATE);
         final UserDetailsImpl userDetails = mapper.userModelToUserDetails(userModel);
@@ -79,7 +79,7 @@ public class UserDetailsMapperUnitTest {
     }
 
     @Test
-    public void userModelToUserDetailsNullExpiredDates() {
+    void userModelToUserDetailsNullExpiredDates() {
         userModel.setLastAccessDate(null);
         userModel.setLastPasswordUpdateDate(null);
         final UserDetailsImpl userDetails = mapper.userModelToUserDetails(userModel);
@@ -88,7 +88,7 @@ public class UserDetailsMapperUnitTest {
     }
 
     @Test
-    public void nullUserModelToUserDetails() {
+    void nullUserModelToUserDetails() {
         assertNull(mapper.userModelToUserDetails(null));
     }
 

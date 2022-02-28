@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class CustomResponseEntityExceptionHandlerUnitTest {
+class CustomResponseEntityExceptionHandlerUnitTest {
 
     private static final String TEST_FIELD_NAME = "testFieldName";
     private static final String TEST_CONSTRAINT_MESSAGE = "testConstraintMessage";
@@ -66,7 +66,7 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
     private CustomResponseEntityExceptionHandler customResponseEntityExceptionHandler;
 
     @Test
-    public void testHandleMethodArgumentNotValid() {
+    void testHandleMethodArgumentNotValid() {
         when(fieldError.getField()).thenReturn(TEST_FIELD_NAME);
         when(fieldError.getDefaultMessage()).thenReturn(TEST_METHOD_ARGUMENT_MESSAGE);
         when(beanPropertyBindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
@@ -87,7 +87,7 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
     }
 
     @Test
-    public void testHandleMethodArgumentTypeMismatch() {
+    void testHandleMethodArgumentTypeMismatch() {
         when(methodArgumentTypeMismatchException.getName()).thenReturn(TEST_FIELD_NAME);
         final ResponseEntity<Object> responseEntity =
             customResponseEntityExceptionHandler.handleMethodArgumentTypeMismatch(methodArgumentTypeMismatchException);
@@ -102,7 +102,7 @@ public class CustomResponseEntityExceptionHandlerUnitTest {
     }
 
     @Test
-    public void testHandleConstraintViolation() {
+    void testHandleConstraintViolation() {
         when(node.getName()).thenReturn(TEST_FIELD_NAME);
         when(path.getLeafNode()).thenReturn(node);
         when(constraintViolation.getPropertyPath()).thenReturn(path);

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
-public class AuthenticationSuccessEventListenerUnitTest {
+class AuthenticationSuccessEventListenerUnitTest {
 
     private static final Long TEST_USER_ID = 1L;
 
@@ -52,7 +52,7 @@ public class AuthenticationSuccessEventListenerUnitTest {
     }
 
     @Test
-    public void testOnApplicationEvent() {
+    void testOnApplicationEvent() {
         final UserModel user = UserModel.builder()
                                         .id(TEST_USER_ID)
                                         .build();
@@ -64,7 +64,7 @@ public class AuthenticationSuccessEventListenerUnitTest {
     }
 
     @Test
-    public void testOnApplicationEventUserLoggedNotFound(final CapturedOutput output) {
+    void testOnApplicationEventUserLoggedNotFound(final CapturedOutput output) {
         authenticationSuccessEventListener.onApplicationEvent(authenticationSuccessEvent);
         verify(userService).findUser(TEST_USER_ID);
         verify(userService, Mockito.never()).saveUser(Mockito.any(UserModel.class));

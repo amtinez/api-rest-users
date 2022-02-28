@@ -10,15 +10,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public class ResponseEntityUtilsUnitTest {
+class ResponseEntityUtilsUnitTest {
 
     @Test
-    public void testGetResponseEntityByAffectedEntitiesOneEntities() {
+    void testGetResponseEntityByAffectedEntitiesOneEntities() {
         assertThat(ResponseEntityUtils.getResponseEntityByAffectedEntities(1).getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    public void testGetResponseEntityByAffectedEntitiesNoEntities() {
+    void testGetResponseEntityByAffectedEntitiesNoEntities() {
         assertThat(ResponseEntityUtils.getResponseEntityByAffectedEntities(0).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 

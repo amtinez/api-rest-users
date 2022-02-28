@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public class RoleMapperUnitTest {
+class RoleMapperUnitTest {
 
     private static final Long TEST_ROLE_ID = 1L;
     private static final String TEST_ROLE_NAME = "testName";
@@ -38,31 +38,31 @@ public class RoleMapperUnitTest {
     }
 
     @Test
-    public void modelToDto() {
+    void modelToDto() {
         final Role role = mapper.roleModelToRole(roleModel);
         assertThat(role.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(role.getName()).isEqualTo(TEST_ROLE_NAME);
     }
 
     @Test
-    public void nullModelToDto() {
+    void nullModelToDto() {
         assertNull(mapper.roleModelToRole(null));
     }
 
     @Test
-    public void dtoToModel() {
+    void dtoToModel() {
         final RoleModel roleModel = mapper.roleToRoleModel(role);
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
         assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);
     }
 
     @Test
-    public void nullDtoToModel() {
+    void nullDtoToModel() {
         assertNull(mapper.roleToRoleModel(null));
     }
 
     @Test
-    public void dtoToModelUpdate() {
+    void dtoToModelUpdate() {
         role.setName(TEST_ROLE_UPDATED_NAME);
         mapper.updateRoleModelFromRole(roleModel, role);
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
@@ -70,7 +70,7 @@ public class RoleMapperUnitTest {
     }
 
     @Test
-    public void nullDtoToModelUpdate() {
+    void nullDtoToModelUpdate() {
         assertNull(mapper.updateRoleModelFromRole(roleModel, null));
     }
 

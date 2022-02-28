@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class PasswordResetTokenServiceIntegrationTest {
+class PasswordResetTokenServiceIntegrationTest {
 
     private static final String TEST_TOKEN_CODE = "testTokenCode";
 
@@ -63,28 +63,28 @@ public class PasswordResetTokenServiceIntegrationTest {
     }
 
     @Test
-    public void testFindTokenById() {
+    void testFindTokenById() {
         final Optional<PasswordResetTokenModel> tokenFound = passwordResetTokenService.findToken(testPasswordResetToken.getId());
         assertTrue(tokenFound.isPresent());
         assertThat(tokenFound.get().getCode()).isEqualTo(TEST_TOKEN_CODE);
     }
 
     @Test
-    public void testFindTokenByToken() {
+    void testFindTokenByToken() {
         final Optional<PasswordResetTokenModel> tokenFound = passwordResetTokenService.findToken(testPasswordResetToken.getCode());
         assertTrue(tokenFound.isPresent());
         assertThat(tokenFound.get().getCode()).isEqualTo(TEST_TOKEN_CODE);
     }
 
     @Test
-    public void testFindTokenByUser() {
+    void testFindTokenByUser() {
         final Optional<PasswordResetTokenModel> tokenFound = passwordResetTokenService.findToken(testPasswordResetToken.getUser());
         assertTrue(tokenFound.isPresent());
         assertThat(tokenFound.get().getCode()).isEqualTo(TEST_TOKEN_CODE);
     }
 
     @Test
-    public void testSaveToken() {
+    void testSaveToken() {
         assertNotNull(testPasswordResetToken);
         assertNotNull(testPasswordResetToken.getId());
         assertThat(testPasswordResetToken.getCode()).isEqualTo(TEST_TOKEN_CODE);
@@ -96,19 +96,19 @@ public class PasswordResetTokenServiceIntegrationTest {
     }
 
     @Test
-    public void testDeleteToken() {
+    void testDeleteToken() {
         passwordResetTokenService.deleteToken(testPasswordResetToken.getId());
         assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
     }
 
     @Test
-    public void testDeleteTokenByToken() {
+    void testDeleteTokenByToken() {
         passwordResetTokenService.deleteToken(testPasswordResetToken);
         assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
     }
 
     @Test
-    public void testDeleteTokenByUserId() {
+    void testDeleteTokenByUserId() {
         passwordResetTokenService.deleteTokenByUserId(testUser.getId());
         assertTrue(passwordResetTokenService.findToken(testPasswordResetToken.getId()).isEmpty());
     }

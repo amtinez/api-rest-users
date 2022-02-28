@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public class RoleUtilsUnitTest {
+class RoleUtilsUnitTest {
 
     private static final String TEST_ROLE_NAME = "testRoleName";
     private static final String TEST_ROLE_NAME_UPPER_CASE_FORMATTED = "ROLE_TESTROLENAME";
@@ -26,7 +26,7 @@ public class RoleUtilsUnitTest {
     }
 
     @Test
-    public void testGetPrefixedName() {
+    void testGetPrefixedName() {
         assertThat(RoleUtils.getPrefixedName(roleModel)).isEqualTo(TEST_ROLE_NAME_UPPER_CASE_FORMATTED);
     }
 

@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles(ConfigurationConstants.Profiles.TEST)
 @ExtendWith(OutputCaptureExtension.class)
 @Transactional
-public class UserFacadeIntegrationTest {
+class UserFacadeIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
@@ -84,7 +84,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testFindUser() {
+    void testFindUser() {
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertThat(userFound.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -93,7 +93,7 @@ public class UserFacadeIntegrationTest {
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
-    public void testGetCurrentUser() {
+    void testGetCurrentUser() {
         Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getPrincipal)
                 .filter(UserDetailsImpl.class::isInstance)
@@ -106,26 +106,26 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testGetCurrentUserNotExists() {
+    void testGetCurrentUserNotExists() {
         final Optional<User> userFound = userFacade.getCurrentUser();
         assertTrue(userFound.isEmpty());
     }
 
     @Test
-    public void testDeleteUser() {
+    void testDeleteUser() {
         userFacade.deleteUser(testUser.getId());
         assertTrue(userFacade.findUser(testUser.getId()).isEmpty());
     }
 
     @Test
-    public void testFindAllUsers() {
+    void testFindAllUsers() {
         final List<User> users = userFacade.findAllUsers();
         assertFalse(users.isEmpty());
         assertThat(users).hasSize(1);
     }
 
     @Test
-    public void testRegisterUser() {
+    void testRegisterUser() {
         assertNotNull(testUser);
         assertNotNull(testUser.getId());
         assertThat(testUser.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -142,7 +142,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testConfirmRegisterUser() {
+    void testConfirmRegisterUser() {
         userFacade.confirmRegisterUser(UserVerificationToken.builder()
                                                             .user(testUser)
                                                             .build());
@@ -152,7 +152,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testConfirmRegisterUserNotExists(final CapturedOutput output) {
+    void testConfirmRegisterUserNotExists(final CapturedOutput output) {
         userFacade.confirmRegisterUser(UserVerificationToken.builder()
                                                             .code(TEST_TOKEN_CODE)
                                                             .build());
@@ -160,7 +160,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testSendUserPasswordResetEmail() {
+    void testSendUserPasswordResetEmail() {
         userFacade.sendUserPasswordResetEmail(testUser);
         assertTrue(passwordResetTokenService.findToken(UserModel.builder()
                                                                 .id(testUser.getId())
@@ -169,7 +169,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testUpdatePasswordUser() {
+    void testUpdatePasswordUser() {
         userFacade.updatePasswordUser(PasswordResetToken.builder()
                                                         .password(TEST_USER_NEW_PASSWORD)
                                                         .user(testUser)
@@ -180,7 +180,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testUpdatePasswordUserUserNotExists(final CapturedOutput output) {
+    void testUpdatePasswordUserUserNotExists(final CapturedOutput output) {
         userFacade.updatePasswordUser(PasswordResetToken.builder()
                                                         .code(TEST_TOKEN_CODE)
                                                         .build());
@@ -188,7 +188,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testEnableUser() {
+    void testEnableUser() {
         final int affectedUsers = userFacade.enableUser(testUser.getId());
         assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
@@ -197,13 +197,13 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testEnableUserNotExists() {
+    void testEnableUserNotExists() {
         final int affectedUsers = userFacade.enableUser(Long.MAX_VALUE);
         assertThat(affectedUsers).isZero();
     }
 
     @Test
-    public void testDisableUser() {
+    void testDisableUser() {
         final int affectedUsers = userFacade.disableUser(testUser.getId());
         assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
@@ -212,13 +212,13 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testDisableUserNotExists() {
+    void testDisableUserNotExists() {
         final int affectedUsers = userFacade.disableUser(Long.MAX_VALUE);
         assertThat(affectedUsers).isZero();
     }
 
     @Test
-    public void testUpdateUser() {
+    void testUpdateUser() {
         final User user = User.builder()
                               .id(testUser.getId())
                               .firstName(TEST_USER_FIRST_NAME_UPDATED)
@@ -232,7 +232,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testLockUser() {
+    void testLockUser() {
         final int affectedUsers = userFacade.lockUser(testUser.getId());
         assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
@@ -241,13 +241,13 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testLockUserNotExists() {
+    void testLockUserNotExists() {
         final int affectedUsers = userFacade.lockUser(Long.MAX_VALUE);
         assertThat(affectedUsers).isZero();
     }
 
     @Test
-    public void testUnlockUser() {
+    void testUnlockUser() {
         final int affectedUsers = userFacade.unlockUser(testUser.getId());
         assertThat(affectedUsers).isOne();
         final Optional<User> userFound = userFacade.findUser(testUser.getId());
@@ -256,7 +256,7 @@ public class UserFacadeIntegrationTest {
     }
 
     @Test
-    public void testUnlockUserNotExists() {
+    void testUnlockUserNotExists() {
         final int affectedUsers = userFacade.unlockUser(Long.MAX_VALUE);
         assertThat(affectedUsers).isZero();
     }

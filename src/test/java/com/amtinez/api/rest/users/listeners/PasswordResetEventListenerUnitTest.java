@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
-public class PasswordResetEventListenerUnitTest {
+class PasswordResetEventListenerUnitTest {
 
     private static final String EMAIL_SUBJECT = "Reset password";
     private static final String PASSWORD_RESET_MESSAGE = "Please visit the following URL to reset your password";
@@ -73,7 +73,7 @@ public class PasswordResetEventListenerUnitTest {
     }
 
     @Test
-    public void testOnApplicationEvent() {
+    void testOnApplicationEvent() {
         Mockito.when(passwordResetTokenMapper.userToTokenModel(testUser))
                .thenReturn(passwordResetTokenModel);
         passwordResetEventListener.onApplicationEvent(passwordResetEvent);

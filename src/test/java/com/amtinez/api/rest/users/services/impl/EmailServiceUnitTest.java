@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
-public class EmailServiceUnitTest {
+class EmailServiceUnitTest {
 
     private static final String TEST_MAIL_FROM = "test@from.com";
     private static final String TEST_MAIL_ADDRESS = "test@address.com";
@@ -46,7 +46,7 @@ public class EmailServiceUnitTest {
     }
 
     @Test
-    public void testSendEmail() {
+    void testSendEmail() {
         emailService.sendEmail(TEST_MAIL_ADDRESS, TEST_MAIL_SUBJECT, TEST_MAIL_MESSAGE);
         Mockito.verify(mailSender).send(simpleMailMessageArgumentCaptor.capture());
         assertThat(simpleMailMessageArgumentCaptor.getValue().getFrom()).isEqualTo(TEST_MAIL_FROM);

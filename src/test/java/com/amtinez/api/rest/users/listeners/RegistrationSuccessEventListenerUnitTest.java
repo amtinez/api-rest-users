@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
-public class RegistrationSuccessEventListenerUnitTest {
+class RegistrationSuccessEventListenerUnitTest {
 
     private static final String EMAIL_SUBJECT = "Registration Confirmation";
     private static final String REGISTRATION_CONFIRMATION_MESSAGE = "Please visit the following URL to confirm your registration";
@@ -73,7 +73,7 @@ public class RegistrationSuccessEventListenerUnitTest {
     }
 
     @Test
-    public void testOnApplicationEvent() {
+    void testOnApplicationEvent() {
         Mockito.when(userVerificationTokenMapper.userToTokenModel(testUser))
                .thenReturn(userVerificationTokenModel);
         registrationSuccessEventListener.onApplicationEvent(registrationSuccessEvent);
