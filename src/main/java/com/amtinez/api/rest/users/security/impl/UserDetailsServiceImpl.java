@@ -2,13 +2,10 @@ package com.amtinez.api.rest.users.security.impl;
 
 import com.amtinez.api.rest.users.daos.UserDao;
 import com.amtinez.api.rest.users.mappers.UserDetailsMapper;
-import com.amtinez.api.rest.users.models.UserModel;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -26,9 +23,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String email) {
-        final Optional<UserModel> user = Optional.ofNullable(userDao.findByEmail(email));
-        return user.map(userDetailsMapper::userModelToUserDetails)
-                   .orElseThrow(() -> new UsernameNotFoundException(String.format("User with the email: %s not found", email)));
+        return userDao.findByEmail(email)
+                      .map(userDetailsMapper::userModelToUserDetails)
+                      .orElseThrow(() -> new UsernameNotFoundException(String.format("User with the email: %s not found", email)));
     }
 
 }
