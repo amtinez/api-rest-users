@@ -1,6 +1,7 @@
 package com.amtinez.api.rest.users.facades.impl;
 
-import com.amtinez.api.rest.users.dtos.Token;
+import com.amtinez.api.rest.users.dtos.UserVerificationToken;
+import com.amtinez.api.rest.users.facades.TokenFacade;
 import com.amtinez.api.rest.users.mappers.UserVerificationTokenMapper;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.services.TokenService;
@@ -20,6 +21,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
+ * Unit test for {@link UserVerificationTokenFacadeImpl}
+ *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +37,7 @@ public class UserVerificationTokenFacadeUnitTest {
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
 
     @InjectMocks
-    private UserVerificationTokenFacadeImpl userVerificationTokenFacade;
+    private TokenFacade<UserVerificationTokenModel, UserVerificationToken> userVerificationTokenFacade;
 
     private UserVerificationTokenModel userVerificationTokenModel;
 
@@ -44,8 +47,8 @@ public class UserVerificationTokenFacadeUnitTest {
                                                                .expiryDate(LocalDate.now().plusDays(1))
                                                                .build();
         Mockito.when(userVerificationTokenService.findToken(TEST_TOKEN_CODE)).thenReturn(Optional.of(userVerificationTokenModel));
-        Mockito.when(userVerificationTokenMapper.tokenModelToToken(userVerificationTokenModel)).thenReturn(Token.builder()
-                                                                                                                .build());
+        Mockito.when(userVerificationTokenMapper.tokenModelToToken(userVerificationTokenModel)).thenReturn(UserVerificationToken.builder()
+                                                                                                                                .build());
     }
 
     @Test

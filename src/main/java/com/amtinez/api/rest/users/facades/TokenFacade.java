@@ -1,6 +1,5 @@
 package com.amtinez.api.rest.users.facades;
 
-import com.amtinez.api.rest.users.dtos.Token;
 import com.amtinez.api.rest.users.models.TokenModel;
 import com.amtinez.api.rest.users.services.TokenService;
 
@@ -10,7 +9,7 @@ import java.util.Optional;
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-public interface TokenFacade<T> {
+public interface TokenFacade<T, K> {
 
     /**
      * Get the token if not expired
@@ -18,7 +17,7 @@ public interface TokenFacade<T> {
      * @param code the code of the token
      * @return the token if not expired
      */
-    Optional<Token> getUnexpiredToken(final String code);
+    Optional<K> getUnexpiredToken(final String code);
 
     /**
      * Check if the token has expired. If expired, it is deleted.

@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
-
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
@@ -14,13 +12,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class Token {
-
-    private Long id;
-
-    @NotBlank
-    private String code;
-
-    private User user;
+public class UserVerificationToken extends Token {
 
 }
