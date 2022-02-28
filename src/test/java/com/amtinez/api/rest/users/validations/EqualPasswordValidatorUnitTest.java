@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class EqualPasswordValidatorUnitTest {
+class EqualPasswordValidatorUnitTest {
 
     private static final String TEST_PASSWORD = "testPassword";
 
@@ -34,7 +34,7 @@ public class EqualPasswordValidatorUnitTest {
     private EqualPasswordValidator equalPasswordValidator;
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         assertTrue(equalPasswordValidator.isValid(PasswordResetToken.builder()
                                                                     .password(TEST_PASSWORD)
                                                                     .repeatedPassword(TEST_PASSWORD)
@@ -43,7 +43,7 @@ public class EqualPasswordValidatorUnitTest {
     }
 
     @Test
-    public void testIsNotValid() {
+    void testIsNotValid() {
         assertFalse(equalPasswordValidator.isValid(PasswordResetToken.builder()
                                                                      .password(TEST_PASSWORD)
                                                                      .repeatedPassword(StringUtils.EMPTY)

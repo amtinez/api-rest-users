@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class UniqueUserEmailValidatorUnitTest {
+class UniqueUserEmailValidatorUnitTest {
 
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
@@ -36,13 +36,13 @@ public class UniqueUserEmailValidatorUnitTest {
     private UniqueUserEmailValidator uniqueUserEmailValidator;
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         when(userService.existsUserEmail(anyString())).thenReturn(Boolean.FALSE);
         assertTrue(uniqueUserEmailValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
     }
 
     @Test
-    public void testIsNotValid() {
+    void testIsNotValid() {
         when(userService.existsUserEmail(anyString())).thenReturn(Boolean.TRUE);
         assertFalse(uniqueUserEmailValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
     }

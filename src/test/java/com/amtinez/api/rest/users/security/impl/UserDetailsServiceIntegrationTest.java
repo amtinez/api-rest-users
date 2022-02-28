@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class UserDetailsServiceIntegrationTest {
+class UserDetailsServiceIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
@@ -61,12 +61,12 @@ public class UserDetailsServiceIntegrationTest {
     }
 
     @Test
-    public void testLoadUserByUsernameExists() {
+    void testLoadUserByUsernameExists() {
         assertNotNull(userDetailsService.loadUserByUsername(TEST_USER_EMAIL));
     }
 
     @Test
-    public void testLoadUserByUsernameNotExists() {
+    void testLoadUserByUsernameNotExists() {
         Assertions.assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(TEST_USER_EMAIL_NOT_EXISTS));
     }
 

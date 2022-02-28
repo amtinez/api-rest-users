@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class UserVerificationTokenFacadeUnitTest {
+class UserVerificationTokenFacadeUnitTest {
 
     private static final String TEST_TOKEN_CODE = "testTokenCode";
 
@@ -52,12 +52,12 @@ public class UserVerificationTokenFacadeUnitTest {
     }
 
     @Test
-    public void testGetUnexpiredToken() {
+    void testGetUnexpiredToken() {
         assertTrue(userVerificationTokenFacade.getUnexpiredToken(TEST_TOKEN_CODE).isPresent());
     }
 
     @Test
-    public void testGetUnexpiredTokenExpired() {
+    void testGetUnexpiredTokenExpired() {
         userVerificationTokenModel.setExpiryDate(LocalDate.now().minusDays(1));
         assertTrue(userVerificationTokenFacade.getUnexpiredToken(TEST_TOKEN_CODE).isEmpty());
     }

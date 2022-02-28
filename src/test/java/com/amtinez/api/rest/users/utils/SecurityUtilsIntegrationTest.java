@@ -23,25 +23,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SpringBootTest
 @ActiveProfiles(ConfigurationConstants.Profiles.TEST)
-public class SecurityUtilsIntegrationTest {
+class SecurityUtilsIntegrationTest {
 
     private static final Long TEST_LOGGED_IN_USER_ID = 1L;
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
-    public void testIsAdminUser() {
+    void testIsAdminUser() {
         assertTrue(SecurityUtils.isAdminUser());
     }
 
     @Test
     @WithMockUser
-    public void testIsNotAdminUser() {
+    void testIsNotAdminUser() {
         assertFalse(SecurityUtils.isAdminUser());
     }
 
     @Test
     @WithMockUser
-    public void testIsUserSameLoggedInUser() {
+    void testIsUserSameLoggedInUser() {
         setTestLoggedInUserId();
         assertTrue(SecurityUtils.isUserSameLoggedInUser(User.builder()
                                                             .id(TEST_LOGGED_IN_USER_ID)
@@ -50,7 +50,7 @@ public class SecurityUtilsIntegrationTest {
 
     @Test
     @WithMockUser
-    public void testIsNotUserSameLoggedInUser() {
+    void testIsNotUserSameLoggedInUser() {
         assertFalse(SecurityUtils.isUserSameLoggedInUser(User.builder()
                                                              .id(TEST_LOGGED_IN_USER_ID)
                                                              .build()));
@@ -58,14 +58,14 @@ public class SecurityUtilsIntegrationTest {
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
-    public void testCanLoggedInUserUpdateThisUserAdminUser() {
+    void testCanLoggedInUserUpdateThisUserAdminUser() {
         assertTrue(SecurityUtils.canLoggedInUserUpdateThisUser(User.builder()
                                                                    .build()));
     }
 
     @Test
     @WithMockUser
-    public void testCanLoggedInUserUpdateThisUserNormalUser() {
+    void testCanLoggedInUserUpdateThisUserNormalUser() {
         setTestLoggedInUserId();
         assertTrue(SecurityUtils.canLoggedInUserUpdateThisUser(User.builder()
                                                                    .id(TEST_LOGGED_IN_USER_ID)
@@ -74,7 +74,7 @@ public class SecurityUtilsIntegrationTest {
 
     @Test
     @WithMockUser
-    public void testCanLoggedInUserUpdateThisUserOtherUser() {
+    void testCanLoggedInUserUpdateThisUserOtherUser() {
         assertFalse(SecurityUtils.canLoggedInUserUpdateThisUser(User.builder()
                                                                     .id(TEST_LOGGED_IN_USER_ID)
                                                                     .build()));

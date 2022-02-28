@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class UserServiceIntegrationTest {
+class UserServiceIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
@@ -65,7 +65,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testFindUser() {
+    void testFindUser() {
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertThat(userFound.get().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -73,33 +73,33 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testFindUserNotExists() {
+    void testFindUserNotExists() {
         final Optional<UserModel> userFound = userService.findUser(Long.MAX_VALUE);
         assertFalse(userFound.isPresent());
     }
 
     @Test
-    public void testFindUserEmail() {
+    void testFindUserEmail() {
         final Optional<UserModel> userFound = userService.findUser(testUser.getEmail());
         assertTrue(userFound.isPresent());
         assertThat(userFound.get().getEmail()).isEqualTo(TEST_USER_EMAIL);
     }
 
     @Test
-    public void testFindUserEmailNotExists() {
+    void testFindUserEmailNotExists() {
         final Optional<UserModel> userFound = userService.findUser(StringUtils.EMPTY);
         assertFalse(userFound.isPresent());
     }
 
     @Test
-    public void testFindAllUsers() {
+    void testFindAllUsers() {
         final List<UserModel> users = userService.findAllUsers();
         assertFalse(users.isEmpty());
         assertThat(users).hasSize(1);
     }
 
     @Test
-    public void testSaveUser() {
+    void testSaveUser() {
         assertNotNull(testUser);
         assertNotNull(testUser.getId());
         assertThat(testUser.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
@@ -116,23 +116,23 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testDeleteUser() {
+    void testDeleteUser() {
         userService.deleteUser(testUser.getId());
         assertTrue(userService.findUser(testUser.getId()).isEmpty());
     }
 
     @Test
-    public void testExistsUserEmail() {
+    void testExistsUserEmail() {
         assertTrue(userService.existsUserEmail(TEST_USER_EMAIL));
     }
 
     @Test
-    public void testExistsUserEmailUserNotExists() {
+    void testExistsUserEmailUserNotExists() {
         assertFalse(userService.existsUserEmail(StringUtils.EMPTY));
     }
 
     @Test
-    public void testUpdateUserPassword() {
+    void testUpdateUserPassword() {
         assertThat(userService.updateUserPassword(testUser.getId(), TEST_USER_NEW_PASSWORD)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
@@ -141,12 +141,12 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateUserPasswordUserNotExists() {
+    void testUpdateUserPasswordUserNotExists() {
         assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
     }
 
     @Test
-    public void testUpdateUserEnabledStatusEnable() {
+    void testUpdateUserEnabledStatusEnable() {
         assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.TRUE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
@@ -154,7 +154,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateUserEnabledStatusDisable() {
+    void testUpdateUserEnabledStatusDisable() {
         assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.FALSE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
@@ -162,12 +162,12 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateUserEnabledStatusUserNotExists() {
+    void testUpdateUserEnabledStatusUserNotExists() {
         assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
     }
 
     @Test
-    public void testUpdateLockedStatusByIdLocked() {
+    void testUpdateLockedStatusByIdLocked() {
         assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.TRUE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
@@ -175,7 +175,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateLockedStatusByIdUnlocked() {
+    void testUpdateLockedStatusByIdUnlocked() {
         assertThat(userService.updateLockedStatusById(testUser.getId(), Boolean.FALSE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
@@ -183,7 +183,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdateLockedStatusByIdUserNotExists() {
+    void testUpdateLockedStatusByIdUserNotExists() {
         assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
     }
 

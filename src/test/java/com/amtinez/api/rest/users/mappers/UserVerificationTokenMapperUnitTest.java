@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class UserVerificationTokenMapperUnitTest {
+class UserVerificationTokenMapperUnitTest {
 
     private static final Long TEST_TOKEN_ID = 1L;
     private static final String TEST_TOKEN_CODE = "testTokenCode";
@@ -57,7 +57,7 @@ public class UserVerificationTokenMapperUnitTest {
     }
 
     @Test
-    public void tokenModelToToken() {
+    void tokenModelToToken() {
         final Token token = mapper.tokenModelToToken(userVerificationTokenModel);
         assertThat(token.getId()).isEqualTo(TEST_TOKEN_ID);
         assertThat(token.getCode()).isEqualTo(TEST_TOKEN_CODE);
@@ -65,12 +65,12 @@ public class UserVerificationTokenMapperUnitTest {
     }
 
     @Test
-    public void nullTokenModelToToken() {
+    void nullTokenModelToToken() {
         assertNull(mapper.tokenModelToToken(null));
     }
 
     @Test
-    public void userToTokenModel() {
+    void userToTokenModel() {
         final UserVerificationTokenModel userVerificationToken = mapper.userToTokenModel(user);
         assertThat(userVerificationToken.getUser()).isEqualTo(userModel);
         assertThat(userVerificationToken.getCode()).isNotBlank();
@@ -79,7 +79,7 @@ public class UserVerificationTokenMapperUnitTest {
     }
 
     @Test
-    public void nullUserToTokenModel() {
+    void nullUserToTokenModel() {
         assertNull(mapper.userToTokenModel(null));
     }
 

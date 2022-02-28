@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class UserVerificationTokenServiceImplIntegrationTest {
+class UserVerificationTokenServiceImplIntegrationTest {
 
     private static final String TEST_CODE = "testCode";
 
@@ -63,28 +63,28 @@ public class UserVerificationTokenServiceImplIntegrationTest {
     }
 
     @Test
-    public void testFindTokenById() {
+    void testFindTokenById() {
         final Optional<UserVerificationTokenModel> tokenFound = userVerificationTokenService.findToken(testUserVerificationToken.getId());
         assertTrue(tokenFound.isPresent());
         assertThat(tokenFound.get().getCode()).isEqualTo(TEST_CODE);
     }
 
     @Test
-    public void testFindTokenByCode() {
+    void testFindTokenByCode() {
         final Optional<UserVerificationTokenModel> tokenFound = userVerificationTokenService.findToken(testUserVerificationToken.getCode());
         assertTrue(tokenFound.isPresent());
         assertThat(tokenFound.get().getCode()).isEqualTo(TEST_CODE);
     }
 
     @Test
-    public void testFindTokenByUser() {
+    void testFindTokenByUser() {
         final Optional<UserVerificationTokenModel> tokenFound = userVerificationTokenService.findToken(testUserVerificationToken.getUser());
         assertTrue(tokenFound.isPresent());
         assertThat(tokenFound.get().getCode()).isEqualTo(TEST_CODE);
     }
 
     @Test
-    public void testSaveToken() {
+    void testSaveToken() {
         assertNotNull(testUserVerificationToken);
         assertNotNull(testUserVerificationToken.getId());
         assertThat(testUserVerificationToken.getCode()).isEqualTo(TEST_CODE);
@@ -96,19 +96,19 @@ public class UserVerificationTokenServiceImplIntegrationTest {
     }
 
     @Test
-    public void testDeleteToken() {
+    void testDeleteToken() {
         userVerificationTokenService.deleteToken(testUserVerificationToken.getId());
         assertTrue(userVerificationTokenService.findToken(testUserVerificationToken.getId()).isEmpty());
     }
 
     @Test
-    public void testDeleteTokenByToken() {
+    void testDeleteTokenByToken() {
         userVerificationTokenService.deleteToken(testUserVerificationToken);
         assertTrue(userVerificationTokenService.findToken(testUserVerificationToken.getId()).isEmpty());
     }
 
     @Test
-    public void testDeleteTokenByUserId() {
+    void testDeleteTokenByUserId() {
         userVerificationTokenService.deleteTokenByUserId(testUser.getId());
         assertTrue(userVerificationTokenService.findToken(testUserVerificationToken.getId()).isEmpty());
     }

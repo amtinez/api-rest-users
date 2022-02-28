@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
 @Transactional
-public class RoleServiceIntegrationTest {
+class RoleServiceIntegrationTest {
 
     private static final String TEST_ROLE_NAME = "testRoleName";
 
@@ -44,34 +44,34 @@ public class RoleServiceIntegrationTest {
     }
 
     @Test
-    public void testFindRole() {
+    void testFindRole() {
         final Optional<RoleModel> roleFound = roleService.findRole(testRole.getId());
         assertTrue(roleFound.isPresent());
         assertThat(roleFound.get().getName()).isEqualTo(TEST_ROLE_NAME);
     }
 
     @Test
-    public void testFindRoleNotExists() {
+    void testFindRoleNotExists() {
         final Optional<RoleModel> roleFound = roleService.findRole(Long.MAX_VALUE);
         assertFalse(roleFound.isPresent());
     }
 
     @Test
-    public void testFindAllRoles() {
+    void testFindAllRoles() {
         final List<RoleModel> roles = roleService.findAllRoles();
         assertFalse(roles.isEmpty());
         assertThat(roles).hasSize(1);
     }
 
     @Test
-    public void testSaveRole() {
+    void testSaveRole() {
         assertNotNull(testRole);
         assertNotNull(testRole.getId());
         assertThat(testRole.getName()).isEqualTo(TEST_ROLE_NAME);
     }
 
     @Test
-    public void testDeleteRole() {
+    void testDeleteRole() {
         roleService.deleteRole(testRole.getId());
         assertTrue(roleService.findRole(testRole.getId()).isEmpty());
     }
