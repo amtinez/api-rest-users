@@ -5,6 +5,7 @@ import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.UserService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserModel> findUser(final String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Override
     public List<UserModel> findAllUsers() {
         return userDao.findAll();
     }
@@ -42,6 +48,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsUserEmail(final String email) {
         return userDao.existsByEmail(email);
+    }
+
+    @Override
+    public int updateUserPassword(final Long id, final String password) {
+        return userDao.updatePasswordById(id, password, LocalDate.now());
     }
 
     @Override

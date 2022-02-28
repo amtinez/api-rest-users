@@ -37,6 +37,7 @@ public class UserServiceIntegrationTest {
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
+    private static final String TEST_USER_NEW_PASSWORD = "testUserNewPassword";
 
     private static final String TEST_ROLE_NAME = "testRoleName";
 
@@ -78,6 +79,19 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
+    public void testFindUserEmail() {
+        final Optional<UserModel> userFound = userService.findUser(testUser.getEmail());
+        assertTrue(userFound.isPresent());
+        assertThat(userFound.get().getEmail()).isEqualTo(TEST_USER_EMAIL);
+    }
+
+    @Test
+    public void testFindUserEmailNotExists() {
+        final Optional<UserModel> userFound = userService.findUser(StringUtils.EMPTY);
+        assertFalse(userFound.isPresent());
+    }
+
+    @Test
     public void testFindAllUsers() {
         final List<UserModel> users = userService.findAllUsers();
         assertFalse(users.isEmpty());
@@ -115,6 +129,20 @@ public class UserServiceIntegrationTest {
     @Test
     public void testExistsUserEmailUserNotExists() {
         assertFalse(userService.existsUserEmail(StringUtils.EMPTY));
+    }
+
+    @Test
+    public void testUpdateUserPassword() {
+        assertThat(userService.updateUserPassword(testUser.getId(), TEST_USER_NEW_PASSWORD)).isOne();
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertThat(userFound.get().getPassword()).isEqualTo(TEST_USER_NEW_PASSWORD);
+        assertThat(userFound.get().getLastPasswordUpdateDate()).isEqualTo(LocalDate.now());
+    }
+
+    @Test
+    public void testUpdateUserPasswordUserNotExists() {
+        assertThat(userService.updateUserEnabledStatus(Long.MAX_VALUE, Boolean.FALSE)).isZero();
     }
 
     @Test

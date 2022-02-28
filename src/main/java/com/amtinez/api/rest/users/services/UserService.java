@@ -19,6 +19,14 @@ public interface UserService {
     Optional<UserModel> findUser(final Long id);
 
     /**
+     * Retrieves the user model with the given email
+     *
+     * @param email the email of the user model
+     * @return the user model if found
+     */
+    Optional<UserModel> findUser(final String email);
+
+    /**
      * Retrieves the list of all user models
      *
      * @return the list of all user models
@@ -47,6 +55,15 @@ public interface UserService {
      * @return if email address exists
      */
     boolean existsUserEmail(final String email);
+
+    /**
+     * Update the user password if user exists
+     *
+     * @param id       the id of the user
+     * @param password the password of the user
+     * @return number of updated users
+     */
+    int updateUserPassword(final Long id, final String password);
 
     /**
      * Enables or disables the user if it exists
