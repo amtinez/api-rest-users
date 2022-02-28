@@ -1,7 +1,6 @@
 package com.amtinez.api.rest.users.facades.impl;
 
 import com.amtinez.api.rest.users.dtos.UserVerificationToken;
-import com.amtinez.api.rest.users.facades.TokenFacade;
 import com.amtinez.api.rest.users.mappers.UserVerificationTokenMapper;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.services.TokenService;
@@ -37,7 +36,7 @@ class UserVerificationTokenFacadeUnitTest {
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
 
     @InjectMocks
-    private TokenFacade<UserVerificationTokenModel, UserVerificationToken> userVerificationTokenFacade;
+    private UserVerificationTokenFacadeImpl userVerificationTokenFacade;
 
     private UserVerificationTokenModel userVerificationTokenModel;
 
