@@ -1,11 +1,14 @@
 package com.amtinez.api.rest.users.controllers;
 
-import com.amtinez.api.rest.users.dtos.Token;
+import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.User;
+import com.amtinez.api.rest.users.dtos.UserVerificationToken;
 import com.amtinez.api.rest.users.facades.UserFacade;
+import com.amtinez.api.rest.users.facades.impl.PasswordResetTokenFacadeImpl;
 import com.amtinez.api.rest.users.facades.impl.UserVerificationTokenFacadeImpl;
 import com.amtinez.api.rest.users.utils.ResponseEntityUtils;
 import com.amtinez.api.rest.users.utils.SecurityUtils;
+import com.amtinez.api.rest.users.validations.groups.PasswordResetEmail;
 import com.amtinez.api.rest.users.validations.groups.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,9 @@ public class UserController {
     @Resource
     private UserVerificationTokenFacadeImpl userVerificationTokenFacade;
 
+    @Resource
+    private PasswordResetTokenFacadeImpl passwordResetTokenFacade;
+
     @PreAuthorize(HAS_ONLY_ROLE_ADMIN)
     @GetMapping
     public ResponseEntity<List<User>> findAllUsers() {
@@ -60,9 +66,27 @@ public class UserController {
     @PreAuthorize(PERMIT_ALL)
     @GetMapping("/confirm/{code}")
     public ResponseEntity<Void> confirmRegisterUser(@PathVariable final String code) {
-        final Optional<Token> token = userVerificationTokenFacade.getUnexpiredToken(code);
+        final Optional<UserVerificationToken> token = userVerificationTokenFacade.getUnexpiredToken(code);
         if (token.isPresent()) {
             userFacade.confirmRegisterUser(token.get());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PreAuthorize(PERMIT_ALL)
+    @GetMapping("/reset")
+    public ResponseEntity<Void> sendUserPasswordResetEmail(@Validated(PasswordResetEmail.class) @RequestBody final User user) {
+        userFacade.sendUserPasswordResetEmail(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize(PERMIT_ALL)
+    @PostMapping("/reset")
+    public ResponseEntity<Void> resetUserPassword(@Valid @RequestBody final PasswordResetToken passwordResetToken) {
+        final Optional<PasswordResetToken> token = passwordResetTokenFacade.getUnexpiredToken(passwordResetToken.getCode());
+        if (token.isPresent()) {
+            userFacade.updatePasswordUser(passwordResetToken);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
