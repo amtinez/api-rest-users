@@ -30,9 +30,9 @@ class UserDetailsMapperUnitTest {
 
     private static final String ROLE_NAME = "testName";
 
-    private UserModel userModel;
-
     private final UserDetailsMapper mapper = new UserDetailsMapperImpl();
+
+    private UserModel userModel;
 
     @BeforeEach
     public void setUp() {

@@ -19,10 +19,10 @@ class RoleMapperUnitTest {
     private static final String TEST_ROLE_NAME = "testName";
     private static final String TEST_ROLE_UPDATED_NAME = "testNameUpdated";
 
+    private final RoleMapper mapper = new RoleMapperImpl();
+
     private RoleModel roleModel;
     private Role role;
-
-    private final RoleMapper mapper = new RoleMapperImpl();
 
     @BeforeEach
     public void setUp() {

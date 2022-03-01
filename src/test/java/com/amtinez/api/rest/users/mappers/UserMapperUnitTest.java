@@ -38,11 +38,11 @@ class UserMapperUnitTest {
     private static final Long TEST_ROLE_ID = 1L;
     private static final String TEST_ROLE_NAME = "testRoleName";
 
+    private final UserMapperImpl mapper = new UserMapperImpl();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private UserModel userModel;
     private User user;
-
-    private final UserMapper mapper = new UserMapperImpl();
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
     public void setUp() {
