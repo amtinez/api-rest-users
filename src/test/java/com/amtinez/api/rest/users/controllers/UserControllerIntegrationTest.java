@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -124,13 +125,15 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(user)))
+                                              .content(mapper.writeValueAsString(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void testRegisterUserWithInvalidUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL))
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -190,7 +193,8 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL + "/reset/")
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(token)))
+                                              .content(mapper.writeValueAsString(token))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -214,7 +218,8 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL + "/reset/")
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(token)))
+                                              .content(mapper.writeValueAsString(token))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
@@ -229,7 +234,8 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(user)))
+                                              .content(mapper.writeValueAsString(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -242,7 +248,8 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(user)))
+                                              .content(mapper.writeValueAsString(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -256,7 +263,8 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(user)))
+                                              .content(mapper.writeValueAsString(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -270,14 +278,16 @@ class UserControllerIntegrationTest {
         final ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(mapper.writeValueAsString(user)))
+                                              .content(mapper.writeValueAsString(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testUpdateUserWithInvalidUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL))
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -289,7 +299,8 @@ class UserControllerIntegrationTest {
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(mapper.writeValueAsString(User.builder()
                                                                                      .id(testUser.getId())
-                                                                                     .build())))
+                                                                                     .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -300,7 +311,8 @@ class UserControllerIntegrationTest {
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(mapper.writeValueAsString(User.builder()
                                                                                      .id(testUser.getId())
-                                                                                     .build())))
+                                                                                     .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
@@ -362,135 +374,155 @@ class UserControllerIntegrationTest {
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testDeleteUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId())
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testDeleteUserNotExists() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE))
+        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE)
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testDeleteUserForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId())
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void testDeleteUserUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(USER_CONTROLLER_URL + "/" + testUser.getId())
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testEnableUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testEnableNotExists() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/enable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/enable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testEnableUserForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void testEnableUserUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/enable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testDisableUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testDisableNotExists() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/disable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/disable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testDisableUserForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void testDisableUserUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/disable")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testLockUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testLockNotExists() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/lock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/lock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testLockUserForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void testLockUserUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/lock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testUnlockUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testUnlockNotExists() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/unlock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + Long.MAX_VALUE + "/unlock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testUnlockUserForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void testUnlockUserUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(USER_CONTROLLER_URL + "/" + testUser.getId() + "/unlock")
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 

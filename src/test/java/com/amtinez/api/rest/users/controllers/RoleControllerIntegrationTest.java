@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -77,7 +78,8 @@ class RoleControllerIntegrationTest {
     void testRegisterRole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(null)))
+                                              .content(createRole(null))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -86,7 +88,8 @@ class RoleControllerIntegrationTest {
     void testRegisterRoleForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(null)))
+                                              .content(createRole(null))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -94,7 +97,8 @@ class RoleControllerIntegrationTest {
     void testRegisterRoleUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(null)))
+                                              .content(createRole(null))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
@@ -103,7 +107,8 @@ class RoleControllerIntegrationTest {
     void testUpdateRole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(testRole.getId())))
+                                              .content(createRole(testRole.getId()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -112,7 +117,8 @@ class RoleControllerIntegrationTest {
     void testUpdateRoleNotExists() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(Long.MAX_VALUE)))
+                                              .content(createRole(Long.MAX_VALUE))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -121,7 +127,8 @@ class RoleControllerIntegrationTest {
     void testUpdateRoleForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(testRole.getId())))
+                                              .content(createRole(testRole.getId()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -129,7 +136,8 @@ class RoleControllerIntegrationTest {
     void testUpdateRoleUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(createRole(testRole.getId())))
+                                              .content(createRole(testRole.getId()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
@@ -163,27 +171,31 @@ class RoleControllerIntegrationTest {
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testDeleteRole() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + testRole.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + testRole.getId())
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
     void testDeleteRoleNotExists() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + Long.MAX_VALUE))
+        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + Long.MAX_VALUE)
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testDeleteRoleForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + testRole.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + testRole.getId())
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     void testDeleteRoleUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + testRole.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(ROLE_CONTROLLER_URL + "/" + testRole.getId())
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
