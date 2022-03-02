@@ -4,17 +4,29 @@ import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
+import com.amtinez.api.rest.users.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UserMapperUnitTest {
 
     private static final Long TEST_USER_ID = 1L;
@@ -38,14 +52,20 @@ class UserMapperUnitTest {
     private static final Long TEST_ROLE_ID = 1L;
     private static final String TEST_ROLE_NAME = "testRoleName";
 
-    private final UserMapperImpl mapper = new UserMapperImpl();
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Mock
+    private RoleService roleService;
 
+    @InjectMocks
+    private UserMapperImpl mapper;
+
+    private PasswordEncoder passwordEncoder;
     private UserModel userModel;
     private User user;
 
     @BeforeEach
     public void setUp() {
+        passwordEncoder = new BCryptPasswordEncoder();
+
         final RoleModel roleModel = RoleModel.builder()
                                              .id(TEST_ROLE_ID)
                                              .name(TEST_ROLE_NAME)
@@ -76,6 +96,8 @@ class UserMapperUnitTest {
                    .roles(Stream.of(role)
                                 .collect(Collectors.toSet()))
                    .build();
+
+        Mockito.when(roleService.findRole(USER.name())).thenReturn(Optional.of(roleModel));
     }
 
     @Test
@@ -150,7 +172,7 @@ class UserMapperUnitTest {
 
     @Test
     void dtoToModelRegisterStep() {
-        final UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder);
+        final UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder, roleService);
         assertThat(userModel.getId()).isEqualTo(TEST_USER_ID);
         assertThat(userModel.getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
         assertThat(userModel.getLastName()).isEqualTo(TEST_USER_LAST_NAME);
@@ -168,13 +190,27 @@ class UserMapperUnitTest {
 
     @Test
     void nullDtoToModelRegisterStep() {
-        assertNull(mapper.userToUserModelRegisterStep(null, passwordEncoder));
+        assertNull(mapper.userToUserModelRegisterStep(null, passwordEncoder, roleService));
     }
 
     @Test
     void dtoToModelRegisterStepNullPasswordEncoder() {
-        UserModel userModel = mapper.userToUserModelRegisterStep(user, null);
+        UserModel userModel = mapper.userToUserModelRegisterStep(user, null, roleService);
         assertThat(userModel.getPassword()).isEqualTo(TEST_USER_PASSWORD);
+    }
+
+    @Test
+    void dtoToModelRegisterStepRoleNotExists(final CapturedOutput output) {
+        Mockito.when(roleService.findRole(USER.name())).thenReturn(Optional.empty());
+        UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder, roleService);
+        assertThat(userModel.getRoles()).isEqualTo(Collections.emptySet());
+        assertThat(output.getOut()).contains("The default role with name " + USER.name() + " not exists");
+    }
+
+    @Test
+    void dtoToModelRegisterStepNullRoleService() {
+        UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder, null);
+        assertThat(userModel.getRoles()).isEqualTo(Collections.emptySet());
     }
 
     @Test

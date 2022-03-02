@@ -10,6 +10,7 @@ import com.amtinez.api.rest.users.mappers.UserMapper;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
+import com.amtinez.api.rest.users.services.RoleService;
 import com.amtinez.api.rest.users.services.TokenService;
 import com.amtinez.api.rest.users.services.UserService;
 import org.slf4j.Logger;
@@ -39,6 +40,9 @@ public class UserFacadeImpl implements UserFacade {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RoleService roleService;
 
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
@@ -76,7 +80,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public User registerUser(final User user) {
         final User registeredUser = userMapper.userModelToUser(userService.saveUser(userMapper.userToUserModelRegisterStep(user,
-                                                                                                                           passwordEncoder)));
+                                                                                                                           passwordEncoder,
+                                                                                                                           roleService)));
         applicationEventPublisher.publishEvent(new RegistrationSuccessEvent(registeredUser));
         return registeredUser;
     }
