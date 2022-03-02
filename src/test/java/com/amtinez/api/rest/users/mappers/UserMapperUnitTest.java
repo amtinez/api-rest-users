@@ -76,7 +76,7 @@ class UserMapperUnitTest {
                              .lastName(TEST_USER_LAST_NAME)
                              .email(TEST_USER_EMAIL)
                              .birthdayDate(TEST_USER_BIRTHDAY_DATE)
-                             .roles(Stream.of((roleModel))
+                             .roles(Stream.of(roleModel)
                                           .collect(Collectors.toSet()))
                              .build();
 
