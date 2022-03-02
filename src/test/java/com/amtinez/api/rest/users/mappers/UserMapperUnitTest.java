@@ -50,7 +50,6 @@ class UserMapperUnitTest {
     private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
 
     private static final Long TEST_ROLE_ID = 1L;
-    private static final String TEST_ROLE_NAME = "testRoleName";
 
     @Mock
     private RoleService roleService;
@@ -68,7 +67,7 @@ class UserMapperUnitTest {
 
         final RoleModel roleModel = RoleModel.builder()
                                              .id(TEST_ROLE_ID)
-                                             .name(TEST_ROLE_NAME)
+                                             .name(USER.name())
                                              .build();
 
         userModel = UserModel.builder()
@@ -83,7 +82,7 @@ class UserMapperUnitTest {
 
         final Role role = Role.builder()
                               .id(TEST_ROLE_ID)
-                              .name(TEST_ROLE_NAME)
+                              .name(USER.name())
                               .build();
 
         user = User.builder()
@@ -98,6 +97,7 @@ class UserMapperUnitTest {
                    .build();
 
         Mockito.when(roleService.findRole(USER.name())).thenReturn(Optional.of(roleModel));
+        Mockito.when(roleService.saveRole(Mockito.any(RoleModel.class))).thenReturn(roleModel);
     }
 
     @Test
@@ -113,7 +113,7 @@ class UserMapperUnitTest {
         assertThat(roles).hasSize(1);
         final Role role = roles.iterator().next();
         assertThat(role.getId()).isEqualTo(TEST_ROLE_ID);
-        assertThat(role.getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(role.getName()).isEqualTo(USER.name());
     }
 
     @Test
@@ -148,7 +148,7 @@ class UserMapperUnitTest {
         assertThat(roles).hasSize(1);
         final RoleModel roleModel = roles.iterator().next();
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
-        assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(roleModel.getName()).isEqualTo(USER.name());
     }
 
     @Test
@@ -185,7 +185,7 @@ class UserMapperUnitTest {
         assertThat(roles).hasSize(1);
         final RoleModel roleModel = roles.iterator().next();
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
-        assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(roleModel.getName()).isEqualTo(USER.name());
     }
 
     @Test
@@ -203,14 +203,19 @@ class UserMapperUnitTest {
     void dtoToModelRegisterStepRoleNotExists(final CapturedOutput output) {
         Mockito.when(roleService.findRole(USER.name())).thenReturn(Optional.empty());
         UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder, roleService);
-        assertThat(userModel.getRoles()).isEqualTo(Collections.emptySet());
+        final Set<RoleModel> roles = userModel.getRoles();
+        assertThat(roles).hasSize(1);
+        final RoleModel roleModel = roles.iterator().next();
+        assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
+        assertThat(roleModel.getName()).isEqualTo(USER.name());
         assertThat(output.getOut()).contains("The default role with name " + USER.name() + " not exists");
     }
 
     @Test
-    void dtoToModelRegisterStepNullRoleService() {
+    void dtoToModelRegisterStepNullRoleService(final CapturedOutput output) {
         UserModel userModel = mapper.userToUserModelRegisterStep(user, passwordEncoder, null);
         assertThat(userModel.getRoles()).isEqualTo(Collections.emptySet());
+        assertThat(output.getOut()).contains("The role service is not injected");
     }
 
     @Test
