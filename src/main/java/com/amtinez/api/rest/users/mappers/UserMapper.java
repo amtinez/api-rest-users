@@ -80,13 +80,18 @@ public interface UserMapper {
     }
 
     default Set<RoleModel> defaultRole(@Context final RoleService roleService) {
-        return roleService != null ? roleService.findRole(USER.name())
-                                                .map(Set::of)
-                                                .orElseGet(() -> {
-                                                    LOG.error("The default role with name {} not exists", USER.name());
-                                                    return Collections.emptySet();
-                                                })
-                                   : Collections.emptySet();
+        if (roleService != null) {
+            return roleService.findRole(USER.name())
+                              .map(Set::of)
+                              .orElseGet(() -> {
+                                  LOG.error("The default role with name {} not exists", USER.name());
+                                  return Set.of(roleService.saveRole(RoleModel.builder()
+                                                                              .name(USER.name())
+                                                                              .build()));
+                              });
+        }
+        LOG.error("The role service is not injected");
+        return Collections.emptySet();
     }
 
 }
