@@ -1,5 +1,6 @@
 package com.amtinez.api.rest.users.validations;
 
+import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.UserService;
 import com.amtinez.api.rest.users.validations.validators.UniqueUserEmailValidator;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import java.util.Optional;
 
 import javax.validation.ConstraintValidatorContext;
 
@@ -37,13 +40,14 @@ class UniqueUserEmailValidatorUnitTest {
 
     @Test
     void testIsValid() {
-        when(userService.existsUserEmail(anyString())).thenReturn(Boolean.FALSE);
+        when(userService.findUser(anyString())).thenReturn(Optional.empty());
         assertTrue(uniqueUserEmailValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
     }
 
     @Test
     void testIsNotValid() {
-        when(userService.existsUserEmail(anyString())).thenReturn(Boolean.TRUE);
+        when(userService.findUser(anyString())).thenReturn(Optional.of(UserModel.builder()
+                                                                                .build()));
         assertFalse(uniqueUserEmailValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
     }
 

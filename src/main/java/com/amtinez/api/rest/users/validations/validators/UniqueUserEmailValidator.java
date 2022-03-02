@@ -16,7 +16,7 @@ public class UniqueUserEmailValidator implements ConstraintValidator<UniqueUserE
     private UserService userService;
 
     /**
-     * Returns whether the user's email exists or not.
+     * Returns whether the user's email exists or not
      *
      * @param email   the user's email
      * @param context the constraint validator context
@@ -24,7 +24,7 @@ public class UniqueUserEmailValidator implements ConstraintValidator<UniqueUserE
      */
     @Override
     public boolean isValid(final String email, final ConstraintValidatorContext context) {
-        return !userService.existsUserEmail(email);
+        return userService.findUser(email).isEmpty();
     }
 
 }
