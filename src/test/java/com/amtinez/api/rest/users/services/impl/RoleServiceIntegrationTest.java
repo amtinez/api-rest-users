@@ -3,8 +3,11 @@ package com.amtinez.api.rest.users.services.impl;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.services.RoleService;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleServiceIntegrationTest {
 
     private static final String TEST_ROLE_NAME = "testRoleName";
@@ -36,11 +40,16 @@ class RoleServiceIntegrationTest {
 
     private RoleModel testRole;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testRole = roleService.saveRole(RoleModel.builder()
                                                  .name(TEST_ROLE_NAME)
                                                  .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        roleService.deleteRole(testRole.getId());
     }
 
     @Test
@@ -53,6 +62,19 @@ class RoleServiceIntegrationTest {
     @Test
     void testFindRoleNotExists() {
         final Optional<RoleModel> roleFound = roleService.findRole(Long.MAX_VALUE);
+        assertFalse(roleFound.isPresent());
+    }
+
+    @Test
+    void testFindRoleByName() {
+        final Optional<RoleModel> roleFound = roleService.findRole(testRole.getName());
+        assertTrue(roleFound.isPresent());
+        assertThat(roleFound.get().getName()).isEqualTo(TEST_ROLE_NAME);
+    }
+
+    @Test
+    void testFindRoleByNameNotExists() {
+        final Optional<RoleModel> roleFound = roleService.findRole(StringUtils.EMPTY);
         assertFalse(roleFound.isPresent());
     }
 
