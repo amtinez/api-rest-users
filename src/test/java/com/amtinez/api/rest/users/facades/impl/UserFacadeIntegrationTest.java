@@ -31,6 +31,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 import static com.amtinez.api.rest.users.constants.SecurityConstants.ROLE_ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -54,8 +55,6 @@ class UserFacadeIntegrationTest {
     private static final String TEST_USER_PASSWORD = "testUserPassword";
     private static final String TEST_USER_NEW_PASSWORD = "testUserNewPassword";
 
-    private static final String TEST_ROLE_NAME = "testRoleName";
-
     private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
 
     private static final String TEST_TOKEN_CODE = "testTokenCode";
@@ -78,7 +77,7 @@ class UserFacadeIntegrationTest {
                                                .password(TEST_USER_PASSWORD)
                                                .birthdayDate(LocalDate.now())
                                                .roles(Collections.singleton(Role.builder()
-                                                                                .name(TEST_ROLE_NAME)
+                                                                                .name(USER.name())
                                                                                 .build()))
                                                .build());
     }

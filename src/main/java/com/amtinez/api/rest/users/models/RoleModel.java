@@ -37,7 +37,7 @@ public class RoleModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = Role.NAME_FIELD, length = Role.NAME_FIELD_LENGTH)
+    @Column(name = Role.NAME_FIELD, unique = true, length = Role.NAME_FIELD_LENGTH)
     private String name;
 
     @Builder.Default

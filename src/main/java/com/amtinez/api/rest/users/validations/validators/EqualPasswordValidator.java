@@ -13,7 +13,7 @@ import javax.validation.ConstraintValidatorContext;
 public class EqualPasswordValidator implements ConstraintValidator<EqualPassword, PasswordResetToken> {
 
     /**
-     * Returns whether the passwords are the same or not.
+     * Returns whether the passwords are the same or not
      *
      * @param passwordResetToken the password reset token
      * @param context            the constraint validator context

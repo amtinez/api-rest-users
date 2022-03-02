@@ -46,11 +46,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsUserEmail(final String email) {
-        return userDao.existsByEmail(email);
-    }
-
-    @Override
     public int updateUserPassword(final Long id, final String password) {
         return userDao.updatePasswordById(id, password, LocalDate.now());
     }

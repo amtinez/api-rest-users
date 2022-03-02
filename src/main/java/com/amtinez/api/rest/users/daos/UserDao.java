@@ -24,14 +24,6 @@ public interface UserDao extends JpaRepository<UserModel, Long> {
     Optional<UserModel> findByEmail(final String email);
 
     /**
-     * Retrieves if exists an user with the given email address
-     *
-     * @param email the email of the user
-     * @return if email address exists
-     */
-    boolean existsByEmail(final String email);
-
-    /**
      * Update the user password if user exists
      *
      * @param id       the id of the user

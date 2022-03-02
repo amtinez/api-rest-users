@@ -1,8 +1,8 @@
 package com.amtinez.api.rest.users.validations;
 
-import com.amtinez.api.rest.users.models.UserModel;
-import com.amtinez.api.rest.users.services.UserService;
-import com.amtinez.api.rest.users.validations.validators.UniqueUserEmailValidator;
+import com.amtinez.api.rest.users.models.RoleModel;
+import com.amtinez.api.rest.users.services.RoleService;
+import com.amtinez.api.rest.users.validations.validators.UniqueRoleNameValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,33 +22,33 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link UniqueUserEmailValidator}
+ * Unit test for {@link UniqueRoleNameValidator}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class UniqueUserEmailValidatorUnitTest {
+class UniqueRoleNameValidatorUnitTest {
 
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
     @Mock
-    private UserService userService;
+    private RoleService roleService;
 
     @InjectMocks
-    private UniqueUserEmailValidator uniqueUserEmailValidator;
+    private UniqueRoleNameValidator uniqueRoleNameValidator;
 
     @Test
     void testIsValid() {
-        when(userService.findUser(anyString())).thenReturn(Optional.empty());
-        assertTrue(uniqueUserEmailValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
+        when(roleService.findRole(anyString())).thenReturn(Optional.empty());
+        assertTrue(uniqueRoleNameValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
     }
 
     @Test
     void testIsNotValid() {
-        when(userService.findUser(anyString())).thenReturn(Optional.of(UserModel.builder()
+        when(roleService.findRole(anyString())).thenReturn(Optional.of(RoleModel.builder()
                                                                                 .build()));
-        assertFalse(uniqueUserEmailValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
+        assertFalse(uniqueRoleNameValidator.isValid(StringUtils.EMPTY, constraintValidatorContext));
     }
 
 }

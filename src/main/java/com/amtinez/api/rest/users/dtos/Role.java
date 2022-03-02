@@ -1,5 +1,6 @@
 package com.amtinez.api.rest.users.dtos;
 
+import com.amtinez.api.rest.users.annotations.UniqueRoleName;
 import com.amtinez.api.rest.users.validations.groups.Update;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Role {
     private Long id;
 
     @NotBlank
+    @UniqueRoleName(groups = {Default.class, Update.class})
     @Size(max = NAME_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
     private String name;
 

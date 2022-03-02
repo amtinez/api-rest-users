@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `users`
     `enabled`                   BOOLEAN DEFAULT NULL,
     `locked`                    BOOLEAN DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `UK_EMAIL` (`email`)
+    UNIQUE KEY `UK_USER_EMAIL` (`email`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS `roles`
 (
     `id`   BIGINT      NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `UK_ROLE_NAME` (`name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;

@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.amtinez.api.rest.users.constants.MapperConstants.SPRING_COMPONENT_MODEL;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.DISABLE_USER_BY_DEFAULT;
@@ -82,12 +84,14 @@ public interface UserMapper {
     default Set<RoleModel> defaultRole(@Context final RoleService roleService) {
         if (roleService != null) {
             return roleService.findRole(USER.name())
-                              .map(Set::of)
+                              .map(roleFound -> Stream.of(roleFound)
+                                                      .collect(Collectors.toSet()))
                               .orElseGet(() -> {
                                   LOG.error("The default role with name {} not exists", USER.name());
-                                  return Set.of(roleService.saveRole(RoleModel.builder()
-                                                                              .name(USER.name())
-                                                                              .build()));
+                                  return Stream.of(roleService.saveRole(RoleModel.builder()
+                                                                                 .name(USER.name())
+                                                                                 .build()))
+                                               .collect(Collectors.toSet());
                               });
         }
         LOG.error("The role service is not injected");
