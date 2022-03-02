@@ -19,6 +19,14 @@ public interface RoleService {
     Optional<RoleModel> findRole(final Long id);
 
     /**
+     * Retrieves the role model with the given name
+     *
+     * @param name the name of the role model
+     * @return the role model if found
+     */
+    Optional<RoleModel> findRole(final String name);
+
+    /**
      * Retrieves the list of all role models
      *
      * @return the list of all role models
