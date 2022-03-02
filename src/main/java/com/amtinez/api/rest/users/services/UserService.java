@@ -49,14 +49,6 @@ public interface UserService {
     void deleteUser(final Long id);
 
     /**
-     * Retrieves if exists an user with the given email address
-     *
-     * @param email the email of the user model
-     * @return if email address exists
-     */
-    boolean existsUserEmail(final String email);
-
-    /**
      * Update the user password if user exists
      *
      * @param id       the id of the user

@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,8 +40,6 @@ class UserServiceIntegrationTest {
     private static final String TEST_USER_PASSWORD = "testUserPassword";
     private static final String TEST_USER_NEW_PASSWORD = "testUserNewPassword";
 
-    private static final String TEST_ROLE_NAME = "testRoleName";
-
     @Resource
     private UserService userService;
 
@@ -59,7 +58,7 @@ class UserServiceIntegrationTest {
                                                  .enabled(Boolean.TRUE)
                                                  .locked(Boolean.FALSE)
                                                  .roles(Collections.singleton(RoleModel.builder()
-                                                                                       .name(TEST_ROLE_NAME)
+                                                                                       .name(USER.name())
                                                                                        .build()))
                                                  .build());
     }
@@ -112,23 +111,13 @@ class UserServiceIntegrationTest {
         assertTrue(testUser.getEnabled());
         assertThat(testUser.getRoles()).hasSize(1);
         assertTrue(testUser.getRoles().stream().findFirst().isPresent());
-        assertThat(testUser.getRoles().stream().findFirst().get().getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(testUser.getRoles().stream().findFirst().get().getName()).isEqualTo(USER.name());
     }
 
     @Test
     void testDeleteUser() {
         userService.deleteUser(testUser.getId());
         assertTrue(userService.findUser(testUser.getId()).isEmpty());
-    }
-
-    @Test
-    void testExistsUserEmail() {
-        assertTrue(userService.existsUserEmail(TEST_USER_EMAIL));
-    }
-
-    @Test
-    void testExistsUserEmailUserNotExists() {
-        assertFalse(userService.existsUserEmail(StringUtils.EMPTY));
     }
 
     @Test
