@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import static com.amtinez.api.rest.users.constants.SecurityConstants.ROLE_ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.USER;
 
 /**
  * Integration test for {@link RoleController}
@@ -36,7 +38,6 @@ class RoleControllerIntegrationTest {
 
     private static final String ROLE_CONTROLLER_URL = "/roles";
 
-    private static final String TEST_ROLE_NAME = "testRoleName";
     private static final String TEST_NOT_EXISTS_AUTHORITY_NAME = "NOT_EXISTS";
 
     @Resource
@@ -49,7 +50,7 @@ class RoleControllerIntegrationTest {
     @BeforeEach
     public void setUp() {
         testRole = roleService.saveRole(RoleModel.builder()
-                                                 .name(TEST_ROLE_NAME)
+                                                 .name(USER.name())
                                                  .build());
     }
 
@@ -202,7 +203,7 @@ class RoleControllerIntegrationTest {
     private String createRole(final Long id) throws JsonProcessingException {
         final Role role = Role.builder()
                               .id(id)
-                              .name(TEST_ROLE_NAME)
+                              .name(ADMIN.name())
                               .build();
         return new ObjectMapper().writeValueAsString(role);
     }
