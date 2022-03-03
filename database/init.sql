@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens`
     `user_id`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `UK_PASSWORD_RESET_TOKEN_CODE` (`code`),
+    UNIQUE KEY `UK_PASSWORD_RESET_TOKEN_USER` (`user_id`),
     CONSTRAINT `FK_PASSWORD_RESET_TOKEN_USER` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `user_verification_tokens`
     `user_id`       BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `UK_USER_VERIFICATION_TOKEN_CODE` (`code`),
+    UNIQUE KEY `UK_USER_VERIFICATION_TOKEN_USER` (`user_id`),
     CONSTRAINT `FK_USER_VERIFICATION_TOKEN_USER` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
