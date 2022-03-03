@@ -19,7 +19,6 @@ public class PasswordResetTokenFacadeImpl implements TokenFacade<PasswordResetTo
 
     @Resource
     private PasswordResetTokenMapper passwordResetTokenMapper;
-
     @Resource
     private TokenService<PasswordResetTokenModel> passwordResetTokenService;
 

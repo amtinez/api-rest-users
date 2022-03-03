@@ -19,7 +19,6 @@ public class UserVerificationTokenFacadeImpl implements TokenFacade<UserVerifica
 
     @Resource
     private UserVerificationTokenMapper userVerificationTokenMapper;
-
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
 

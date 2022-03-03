@@ -21,7 +21,6 @@ public class RoleFacadeImpl implements RoleFacade {
 
     @Resource
     private RoleMapper roleMapper;
-
     @Resource
     private RoleService roleService;
 

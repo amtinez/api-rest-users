@@ -37,19 +37,14 @@ public class UserFacadeImpl implements UserFacade {
 
     @Resource
     private UserMapper userMapper;
-
     @Resource
     private UserService userService;
-
     @Resource
     private RoleService roleService;
-
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
-
     @Resource
     private PasswordEncoder passwordEncoder;
-
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
 

@@ -26,10 +26,8 @@ public class PasswordResetEventListener implements ApplicationListener<PasswordR
 
     @Resource
     private TokenService<PasswordResetTokenModel> passwordResetTokenService;
-
     @Resource
     private EmailService emailService;
-
     @Resource
     private PasswordResetTokenMapper passwordResetTokenMapper;
 
