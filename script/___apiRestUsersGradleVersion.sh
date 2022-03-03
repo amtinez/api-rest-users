@@ -11,7 +11,7 @@ echo "7. Execute Sonarqube report"
 echo "0. Exit"
 
 PROJECT_PATH=[YOUR PROJECT PATH]
-DOCKER_DATA_DIRECTORY=[YOUR DOCKER DATA DIRECTORY]
+DOCKER_DATA_DIRECTORY=docker-data
 
 while :; do
   read -r OPTION
