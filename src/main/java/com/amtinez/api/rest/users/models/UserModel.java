@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -68,7 +67,7 @@ public class UserModel {
     private Boolean locked;
 
     @Builder.Default
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = UsersRoles.TABLE_NAME,
                joinColumns = {@JoinColumn(name = UsersRoles.USER_ID_FIELD)},
                inverseJoinColumns = {@JoinColumn(name = UsersRoles.ROLE_ID_FIELD)})
