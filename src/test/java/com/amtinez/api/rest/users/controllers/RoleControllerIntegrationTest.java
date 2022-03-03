@@ -7,8 +7,10 @@ import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.services.RoleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -30,10 +32,11 @@ import static com.amtinez.api.rest.users.enums.Role.USER;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles(Profiles.TEST)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleControllerIntegrationTest {
 
     private static final String ROLE_CONTROLLER_URL = "/roles";
@@ -47,11 +50,16 @@ class RoleControllerIntegrationTest {
 
     private RoleModel testRole;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testRole = roleService.saveRole(RoleModel.builder()
                                                  .name(USER.name())
                                                  .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        roleService.deleteRole(testRole.getId());
     }
 
     @Test

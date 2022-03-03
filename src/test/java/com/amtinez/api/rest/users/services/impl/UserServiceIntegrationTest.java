@@ -3,10 +3,13 @@ package com.amtinez.api.rest.users.services.impl;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
+import com.amtinez.api.rest.users.services.RoleService;
 import com.amtinez.api.rest.users.services.UserService;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
@@ -42,10 +46,12 @@ class UserServiceIntegrationTest {
 
     @Resource
     private UserService userService;
+    @Resource
+    private RoleService roleService;
 
     private UserModel testUser;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testUser = userService.saveUser(UserModel.builder()
                                                  .firstName(TEST_USER_FIRST_NAME)
@@ -57,10 +63,20 @@ class UserServiceIntegrationTest {
                                                  .lastPasswordUpdateDate(LocalDate.now())
                                                  .enabled(Boolean.TRUE)
                                                  .locked(Boolean.FALSE)
-                                                 .roles(Collections.singleton(RoleModel.builder()
-                                                                                       .name(USER.name())
-                                                                                       .build()))
+                                                 .roles(Collections.singleton(roleService.saveRole(RoleModel.builder()
+                                                                                                            .name(USER.name())
+                                                                                                            .build())))
                                                  .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        userService.deleteUser(testUser.getId());
+        testUser.getRoles()
+                .stream()
+                .map(RoleModel::getId)
+                .findFirst()
+                .ifPresent(roleService::deleteRole);
     }
 
     @Test
