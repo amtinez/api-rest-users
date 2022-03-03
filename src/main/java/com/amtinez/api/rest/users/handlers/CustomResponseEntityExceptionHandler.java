@@ -1,7 +1,7 @@
 package com.amtinez.api.rest.users.handlers;
 
-import com.amtinez.api.rest.users.errors.FieldError;
-import com.amtinez.api.rest.users.errors.ValidationError;
+import com.amtinez.api.rest.users.validations.errors.Error;
+import com.amtinez.api.rest.users.validations.errors.FieldError;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,10 +40,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                                                                        .message(fieldError.getDefaultMessage())
                                                                        .build())
                                           .collect(Collectors.toList());
-        final ValidationError validationError = ValidationError.builder()
-                                                               .errors(errors)
-                                                               .build();
-        return new ResponseEntity<>(validationError, headers, status);
+        final Error error = Error.builder()
+                                 .errors(errors)
+                                 .build();
+        return new ResponseEntity<>(error, headers, status);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -52,10 +52,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                                                 .field(ex.getName())
                                                 .message("does not have the correct type")
                                                 .build();
-        final ValidationError validationError = ValidationError.builder()
-                                                               .errors(Collections.singletonList(fieldError))
-                                                               .build();
-        return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
+        final Error error = Error.builder()
+                                 .errors(Collections.singletonList(fieldError))
+                                 .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -69,10 +69,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                                                                .build();
                                           })
                                           .collect(Collectors.toList());
-        final ValidationError validationError = ValidationError.builder()
-                                                               .errors(errors)
-                                                               .build();
-        return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
+        final Error error = Error.builder()
+                                 .errors(errors)
+                                 .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }

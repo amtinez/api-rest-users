@@ -1,10 +1,8 @@
-package com.amtinez.api.rest.users.errors;
+package com.amtinez.api.rest.users.validations.errors;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
@@ -12,8 +10,9 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class ValidationError {
+public class FieldError {
 
-    private List<FieldError> errors;
+    private String field;
+    private String message;
 
 }

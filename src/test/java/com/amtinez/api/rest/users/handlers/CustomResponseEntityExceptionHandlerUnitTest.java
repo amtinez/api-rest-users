@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.handlers;
 
-import com.amtinez.api.rest.users.errors.ValidationError;
+import com.amtinez.api.rest.users.validations.errors.Error;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -78,8 +78,8 @@ class CustomResponseEntityExceptionHandlerUnitTest {
                                                                               webRequest);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertNotNull(responseEntity.getBody());
-        assertThat(responseEntity.getBody().getClass()).isEqualTo(ValidationError.class);
-        final ValidationError validationError = (ValidationError) responseEntity.getBody();
+        assertThat(responseEntity.getBody().getClass()).isEqualTo(Error.class);
+        final Error validationError = (Error) responseEntity.getBody();
         assertFalse(validationError.getErrors().isEmpty());
         assertThat(validationError.getErrors()).hasSize(1);
         assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_METHOD_ARGUMENT_MESSAGE);
@@ -93,8 +93,8 @@ class CustomResponseEntityExceptionHandlerUnitTest {
             customResponseEntityExceptionHandler.handleMethodArgumentTypeMismatch(methodArgumentTypeMismatchException);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertNotNull(responseEntity.getBody());
-        assertThat(responseEntity.getBody().getClass()).isEqualTo(ValidationError.class);
-        final ValidationError validationError = (ValidationError) responseEntity.getBody();
+        assertThat(responseEntity.getBody().getClass()).isEqualTo(Error.class);
+        final Error validationError = (Error) responseEntity.getBody();
         assertFalse(validationError.getErrors().isEmpty());
         assertThat(validationError.getErrors()).hasSize(1);
         assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_METHOD_ARGUMENT_TYPE_MESSAGE);
@@ -112,8 +112,8 @@ class CustomResponseEntityExceptionHandlerUnitTest {
             customResponseEntityExceptionHandler.handleConstraintViolation(constraintViolationException);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertNotNull(responseEntity.getBody());
-        assertThat(responseEntity.getBody().getClass()).isEqualTo(ValidationError.class);
-        final ValidationError validationError = (ValidationError) responseEntity.getBody();
+        assertThat(responseEntity.getBody().getClass()).isEqualTo(Error.class);
+        final Error validationError = (Error) responseEntity.getBody();
         assertFalse(validationError.getErrors().isEmpty());
         assertThat(validationError.getErrors()).hasSize(1);
         assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_CONSTRAINT_MESSAGE);
