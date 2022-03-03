@@ -11,7 +11,7 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -38,7 +38,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
                     final Optional<UserModel> userFound = userService.findUser(userDetails.getId());
                     userFound.ifPresentOrElse(
                         userLogged -> {
-                            userLogged.setLastAccessDate(LocalDate.now());
+                            userLogged.setLastAccessDate(LocalDateTime.now());
                             userService.saveUser(userLogged);
                         },
                         () -> LOG.error("User logged with id {} not found", userDetails.getId())

@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -59,8 +60,8 @@ class UserServiceIntegrationTest {
                                                  .email(TEST_USER_EMAIL)
                                                  .password(TEST_USER_PASSWORD)
                                                  .birthdayDate(LocalDate.now())
-                                                 .lastAccessDate(LocalDate.now())
-                                                 .lastPasswordUpdateDate(LocalDate.now())
+                                                 .lastAccessDate(LocalDateTime.now())
+                                                 .lastPasswordUpdateDate(LocalDateTime.now())
                                                  .enabled(Boolean.TRUE)
                                                  .locked(Boolean.FALSE)
                                                  .roles(Collections.singleton(roleService.saveRole(RoleModel.builder()
@@ -122,8 +123,8 @@ class UserServiceIntegrationTest {
         assertThat(testUser.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(testUser.getPassword()).isEqualTo(TEST_USER_PASSWORD);
         assertThat(testUser.getBirthdayDate()).isEqualTo(LocalDate.now());
-        assertThat(testUser.getLastAccessDate()).isEqualTo(LocalDate.now());
-        assertThat(testUser.getLastPasswordUpdateDate()).isEqualTo(LocalDate.now());
+        assertThat(testUser.getLastAccessDate().toLocalDate()).isEqualTo(LocalDate.now());
+        assertThat(testUser.getLastPasswordUpdateDate().toLocalDate()).isEqualTo(LocalDate.now());
         assertTrue(testUser.getEnabled());
         assertThat(testUser.getRoles()).hasSize(1);
         assertTrue(testUser.getRoles().stream().findFirst().isPresent());
@@ -142,7 +143,7 @@ class UserServiceIntegrationTest {
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());
         assertTrue(userFound.isPresent());
         assertThat(userFound.get().getPassword()).isEqualTo(TEST_USER_NEW_PASSWORD);
-        assertThat(userFound.get().getLastPasswordUpdateDate()).isEqualTo(LocalDate.now());
+        assertThat(userFound.get().getLastPasswordUpdateDate().toLocalDate()).isEqualTo(LocalDate.now());
     }
 
     @Test

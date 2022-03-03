@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -34,7 +34,7 @@ public interface UserDao extends JpaRepository<UserModel, Long> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE UserModel AS U SET U.password = :password, U.lastPasswordUpdateDate = :date WHERE U.id = :id")
-    int updatePasswordById(@Param("id") final Long id, @Param("password") final String password, @Param("date") final LocalDate date);
+    int updatePasswordById(@Param("id") final Long id, @Param("password") final String password, @Param("date") final LocalDateTime date);
 
     /**
      * Enables or disables the user if it exists

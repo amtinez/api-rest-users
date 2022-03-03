@@ -56,8 +56,8 @@ public final class MapperConstants {
         public static final String USER_OBJECT = "user";
 
         public static final String GENERATE_UUID = "java(UUID.randomUUID().toString())";
-        public static final String CREATION_DATE = "java(LocalDate.now())";
-        public static final String EXPIRY_DATE = "java(LocalDate.now().plusDays(1))";
+        public static final String CREATION_DATE = "java(LocalDateTime.now())";
+        public static final String EXPIRY_DATE = "java(LocalDateTime.now().plusDays(1))";
 
         private Token() {
         }

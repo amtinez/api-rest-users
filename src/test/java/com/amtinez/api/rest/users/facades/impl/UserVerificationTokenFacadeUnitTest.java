@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,7 +43,7 @@ class UserVerificationTokenFacadeUnitTest {
     @BeforeEach
     public void setUp() {
         userVerificationTokenModel = UserVerificationTokenModel.builder()
-                                                               .expiryDate(LocalDate.now().plusDays(1))
+                                                               .expiryDate(LocalDateTime.now().plusDays(1))
                                                                .build();
         Mockito.when(userVerificationTokenService.findToken(TEST_TOKEN_CODE)).thenReturn(Optional.of(userVerificationTokenModel));
         Mockito.when(userVerificationTokenMapper.tokenModelToToken(userVerificationTokenModel)).thenReturn(UserVerificationToken.builder()
@@ -57,7 +57,7 @@ class UserVerificationTokenFacadeUnitTest {
 
     @Test
     void testGetUnexpiredTokenExpired() {
-        userVerificationTokenModel.setExpiryDate(LocalDate.now().minusDays(1));
+        userVerificationTokenModel.setExpiryDate(LocalDateTime.now().minusDays(1));
         assertTrue(userVerificationTokenFacade.getUnexpiredToken(TEST_TOKEN_CODE).isEmpty());
     }
 

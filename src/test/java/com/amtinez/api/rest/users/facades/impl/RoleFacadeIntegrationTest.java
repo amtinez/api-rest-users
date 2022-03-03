@@ -74,11 +74,11 @@ class RoleFacadeIntegrationTest {
     @Test
     void testSaveRole() {
         final Role role = Role.builder()
-                              .name(USER.name())
+                              .name(ADMIN.name())
                               .build();
         final Role roleSaved = roleFacade.saveRole(role);
         assertNotNull(roleSaved);
-        assertThat(roleSaved.getName()).isEqualTo(USER.name());
+        assertThat(roleSaved.getName()).isEqualTo(ADMIN.name());
     }
 
     @Test

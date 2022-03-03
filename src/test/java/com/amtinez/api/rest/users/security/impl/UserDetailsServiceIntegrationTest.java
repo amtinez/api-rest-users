@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import javax.annotation.Resource;
@@ -49,8 +50,8 @@ class UserDetailsServiceIntegrationTest {
                                       .email(TEST_USER_EMAIL)
                                       .password(TEST_USER_PASSWORD)
                                       .birthdayDate(LocalDate.now())
-                                      .lastAccessDate(LocalDate.now())
-                                      .lastPasswordUpdateDate(LocalDate.now())
+                                      .lastAccessDate(LocalDateTime.now())
+                                      .lastPasswordUpdateDate(LocalDateTime.now())
                                       .enabled(Boolean.TRUE)
                                       .roles(Collections.singleton(RoleModel.builder()
                                                                             .name(USER.name())

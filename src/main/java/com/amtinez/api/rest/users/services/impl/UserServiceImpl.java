@@ -5,7 +5,7 @@ import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.UserService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateUserPassword(final Long id, final String password) {
-        return userDao.updatePasswordById(id, password, LocalDate.now());
+        return userDao.updatePasswordById(id, password, LocalDateTime.now());
     }
 
     @Override

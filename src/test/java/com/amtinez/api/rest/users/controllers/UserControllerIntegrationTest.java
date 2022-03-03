@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -95,8 +96,8 @@ class UserControllerIntegrationTest {
                                                  .email(TEST_USER_EMAIL)
                                                  .password(TEST_USER_PASSWORD)
                                                  .birthdayDate(LocalDate.now())
-                                                 .lastAccessDate(LocalDate.now())
-                                                 .lastPasswordUpdateDate(LocalDate.now())
+                                                 .lastAccessDate(LocalDateTime.now())
+                                                 .lastPasswordUpdateDate(LocalDateTime.now())
                                                  .enabled(Boolean.TRUE)
                                                  .locked(Boolean.FALSE)
                                                  .roles(Stream.of(roleService.saveRole(RoleModel.builder()
@@ -174,7 +175,7 @@ class UserControllerIntegrationTest {
                                                                                                                 .id(registeredUser.getId())
                                                                                                                 .build());
         tokenModel.ifPresent(tokenModelFound -> {
-            tokenModelFound.setExpiryDate(LocalDate.now().minusDays(1));
+            tokenModelFound.setExpiryDate(LocalDateTime.now().minusDays(1));
             userVerificationTokenService.saveToken(tokenModelFound);
         });
         mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_URL
@@ -223,7 +224,7 @@ class UserControllerIntegrationTest {
                                                                                                           .id(registeredUser.getId())
                                                                                                           .build());
         tokenModel.ifPresent(tokenModelFound -> {
-            tokenModelFound.setExpiryDate(LocalDate.now().minusDays(1));
+            tokenModelFound.setExpiryDate(LocalDateTime.now().minusDays(1));
             passwordResetTokenService.saveToken(tokenModelFound);
         });
         final PasswordResetToken token = tokenModel.map(tokenModelFound -> PasswordResetToken.builder()
