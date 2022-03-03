@@ -10,4 +10,4 @@ Code base for user administration of an application in Spring Boot
 
 ## EER Diagram
 
-![EER Diagram](database/EER-diagram.png)
+![EER Diagram](database/EER-diagram.svg)
