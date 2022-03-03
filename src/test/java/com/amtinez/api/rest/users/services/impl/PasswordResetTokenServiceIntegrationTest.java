@@ -5,8 +5,10 @@ import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.TokenService;
 import com.amtinez.api.rest.users.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PasswordResetTokenServiceIntegrationTest {
 
     private static final String TEST_TOKEN_CODE = "testTokenCode";
@@ -45,7 +48,7 @@ class PasswordResetTokenServiceIntegrationTest {
     private UserModel testUser;
     private PasswordResetTokenModel testPasswordResetToken;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testUser = userService.saveUser(UserModel.builder()
                                                  .firstName(TEST_USER_FIRST_NAME)
@@ -60,6 +63,12 @@ class PasswordResetTokenServiceIntegrationTest {
                                                                                             .expiryDate(LocalDate.now())
                                                                                             .user(testUser)
                                                                                             .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        passwordResetTokenService.deleteToken(testPasswordResetToken);
+        userService.deleteUser(testUser.getId());
     }
 
     @Test

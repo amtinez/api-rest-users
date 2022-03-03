@@ -5,6 +5,8 @@ import com.amtinez.api.rest.users.models.RoleModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.amtinez.api.rest.users.enums.Role.ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -16,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class RoleMapperUnitTest {
 
     private static final Long TEST_ROLE_ID = 1L;
-    private static final String TEST_ROLE_NAME = "testName";
-    private static final String TEST_ROLE_UPDATED_NAME = "testNameUpdated";
 
     private final RoleMapper mapper = new RoleMapperImpl();
 
@@ -28,12 +28,12 @@ class RoleMapperUnitTest {
     public void setUp() {
         roleModel = RoleModel.builder()
                              .id(TEST_ROLE_ID)
-                             .name(TEST_ROLE_NAME)
+                             .name(USER.name())
                              .build();
 
         role = Role.builder()
                    .id(TEST_ROLE_ID)
-                   .name(TEST_ROLE_NAME)
+                   .name(USER.name())
                    .build();
     }
 
@@ -41,7 +41,7 @@ class RoleMapperUnitTest {
     void modelToDto() {
         final Role role = mapper.roleModelToRole(roleModel);
         assertThat(role.getId()).isEqualTo(TEST_ROLE_ID);
-        assertThat(role.getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(role.getName()).isEqualTo(USER.name());
     }
 
     @Test
@@ -53,7 +53,7 @@ class RoleMapperUnitTest {
     void dtoToModel() {
         final RoleModel roleModel = mapper.roleToRoleModel(role);
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
-        assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(roleModel.getName()).isEqualTo(USER.name());
     }
 
     @Test
@@ -63,10 +63,10 @@ class RoleMapperUnitTest {
 
     @Test
     void dtoToModelUpdate() {
-        role.setName(TEST_ROLE_UPDATED_NAME);
+        role.setName(ADMIN.name());
         mapper.updateRoleModelFromRole(roleModel, role);
         assertThat(roleModel.getId()).isEqualTo(TEST_ROLE_ID);
-        assertThat(roleModel.getName()).isEqualTo(TEST_ROLE_UPDATED_NAME);
+        assertThat(roleModel.getName()).isEqualTo(ADMIN.name());
     }
 
     @Test

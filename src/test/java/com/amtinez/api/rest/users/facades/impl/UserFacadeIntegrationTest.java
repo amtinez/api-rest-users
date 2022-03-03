@@ -6,14 +6,17 @@ import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.dtos.UserVerificationToken;
+import com.amtinez.api.rest.users.facades.RoleFacade;
 import com.amtinez.api.rest.users.facades.UserFacade;
 import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import com.amtinez.api.rest.users.services.TokenService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
@@ -43,10 +46,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @ActiveProfiles(ConfigurationConstants.Profiles.TEST)
 @ExtendWith(OutputCaptureExtension.class)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserFacadeIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
@@ -60,15 +64,17 @@ class UserFacadeIntegrationTest {
     private static final String TEST_TOKEN_CODE = "testTokenCode";
 
     @Resource
+    private UserFacade userFacade;
+    @Resource
+    private RoleFacade roleFacade;
+    @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
     @Resource
     private TokenService<PasswordResetTokenModel> passwordResetTokenService;
-    @Resource
-    private UserFacade userFacade;
 
     private User testUser;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testUser = userFacade.registerUser(User.builder()
                                                .firstName(TEST_USER_FIRST_NAME)
@@ -80,6 +86,16 @@ class UserFacadeIntegrationTest {
                                                                                 .name(USER.name())
                                                                                 .build()))
                                                .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        userFacade.deleteUser(testUser.getId());
+        testUser.getRoles()
+                .stream()
+                .map(Role::getId)
+                .findFirst()
+                .ifPresent(roleFacade::deleteRole);
     }
 
     @Test

@@ -16,7 +16,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Resource
     private MailProperties mailProperties;
-
     @Resource
     private JavaMailSender mailSender;
 

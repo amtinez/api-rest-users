@@ -44,10 +44,8 @@ public class UserController {
 
     @Resource
     private UserFacade userFacade;
-
     @Resource
     private UserVerificationTokenFacadeImpl userVerificationTokenFacade;
-
     @Resource
     private PasswordResetTokenFacadeImpl passwordResetTokenFacade;
 

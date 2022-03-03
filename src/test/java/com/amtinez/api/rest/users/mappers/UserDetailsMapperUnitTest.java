@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,8 +29,6 @@ class UserDetailsMapperUnitTest {
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final LocalDate EXPIRED_LOCAL_DATE = LocalDate.of(2020, 1, 1);
 
-    private static final String ROLE_NAME = "testName";
-
     private final UserDetailsMapper mapper = new UserDetailsMapperImpl();
 
     private UserModel userModel;
@@ -37,7 +36,7 @@ class UserDetailsMapperUnitTest {
     @BeforeEach
     public void setUp() {
         final RoleModel roleModel = RoleModel.builder()
-                                             .name(ROLE_NAME)
+                                             .name(USER.name())
                                              .build();
 
         userModel = UserModel.builder()

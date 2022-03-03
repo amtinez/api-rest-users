@@ -11,12 +11,15 @@ import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
+import com.amtinez.api.rest.users.services.RoleService;
 import com.amtinez.api.rest.users.services.TokenService;
 import com.amtinez.api.rest.users.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -37,16 +40,19 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 
 import static com.amtinez.api.rest.users.constants.SecurityConstants.ROLE_ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.USER;
 
 /**
  * Integration test for {@link UserController}
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles(Profiles.TEST)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerIntegrationTest {
 
     private static final String USER_CONTROLLER_URL = "/users";
@@ -64,7 +70,6 @@ class UserControllerIntegrationTest {
     private static final String TEST_USER_REGISTER_EMAIL = "user@register.com";
     private static final String TEST_USER_REGISTER_PASSWORD = "testUserRegisterPassword";
 
-    private static final String TEST_ROLE_NAME = "testRoleName";
     private static final String TEST_NOT_EXISTS_ROLE_NAME = "NOT_EXISTS";
 
     @Resource
@@ -74,13 +79,15 @@ class UserControllerIntegrationTest {
     @Resource
     private UserService userService;
     @Resource
+    private RoleService roleService;
+    @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
     @Resource
     private TokenService<PasswordResetTokenModel> passwordResetTokenService;
 
     private UserModel testUser;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testUser = userService.saveUser(UserModel.builder()
                                                  .firstName(TEST_USER_FIRST_NAME)
@@ -92,11 +99,21 @@ class UserControllerIntegrationTest {
                                                  .lastPasswordUpdateDate(LocalDate.now())
                                                  .enabled(Boolean.TRUE)
                                                  .locked(Boolean.FALSE)
-                                                 .roles(Stream.of(RoleModel.builder()
-                                                                           .name(TEST_ROLE_NAME)
-                                                                           .build())
+                                                 .roles(Stream.of(roleService.saveRole(RoleModel.builder()
+                                                                                                .name(USER.name())
+                                                                                                .build()))
                                                               .collect(Collectors.toSet()))
                                                  .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        userService.deleteUser(testUser.getId());
+        testUser.getRoles()
+                .stream()
+                .map(RoleModel::getId)
+                .findFirst()
+                .ifPresent(roleService::deleteRole);
     }
 
     @Test
@@ -542,7 +559,7 @@ class UserControllerIntegrationTest {
                    .password(TEST_USER_REGISTER_PASSWORD)
                    .birthdayDate(LocalDate.now())
                    .roles(Stream.of(Role.builder()
-                                        .name(TEST_ROLE_NAME)
+                                        .name(ADMIN.name())
                                         .build())
                                 .collect(Collectors.toSet()))
                    .build();

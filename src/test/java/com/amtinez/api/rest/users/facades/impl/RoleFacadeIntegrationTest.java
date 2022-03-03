@@ -3,8 +3,10 @@ package com.amtinez.api.rest.users.facades.impl;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.facades.RoleFacade;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import static com.amtinez.api.rest.users.enums.Role.ADMIN;
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,31 +28,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
-@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleFacadeIntegrationTest {
-
-    private static final String TEST_ROLE_NAME = "testName";
-    private static final String TEST_ROLE_UPDATED_NAME = "testNameUpdated";
 
     @Resource
     private RoleFacade roleFacade;
 
     private Role testRole;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         testRole = roleFacade.saveRole(Role.builder()
-                                           .name(TEST_ROLE_NAME)
+                                           .name(USER.name())
                                            .build());
+    }
+
+    @AfterAll
+    public void cleanUp() {
+        roleFacade.deleteRole(testRole.getId());
     }
 
     @Test
     void testFindRole() {
         final Optional<Role> roleFound = roleFacade.findRole(testRole.getId());
         assertTrue(roleFound.isPresent());
-        assertThat(roleFound.get().getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(roleFound.get().getName()).isEqualTo(USER.name());
     }
 
     @Test
@@ -67,29 +74,29 @@ class RoleFacadeIntegrationTest {
     @Test
     void testSaveRole() {
         final Role role = Role.builder()
-                              .name(TEST_ROLE_NAME)
+                              .name(USER.name())
                               .build();
         final Role roleSaved = roleFacade.saveRole(role);
         assertNotNull(roleSaved);
-        assertThat(roleSaved.getName()).isEqualTo(TEST_ROLE_NAME);
+        assertThat(roleSaved.getName()).isEqualTo(USER.name());
     }
 
     @Test
     void testUpdateRole() {
         final Role role = Role.builder()
                               .id(testRole.getId())
-                              .name(TEST_ROLE_UPDATED_NAME)
+                              .name(ADMIN.name())
                               .build();
         final Optional<Role> roleUpdated = roleFacade.updateRole(role);
         assertTrue(roleUpdated.isPresent());
-        assertThat(roleUpdated.get().getName()).isEqualTo(TEST_ROLE_UPDATED_NAME);
+        assertThat(roleUpdated.get().getName()).isEqualTo(ADMIN.name());
     }
 
     @Test
     void testUpdateRoleNotFound() {
         final Role role = Role.builder()
                               .id(Long.MAX_VALUE)
-                              .name(TEST_ROLE_UPDATED_NAME)
+                              .name(ADMIN.name())
                               .build();
         final Optional<Role> roleUpdated = roleFacade.updateRole(role);
         assertTrue(roleUpdated.isEmpty());

@@ -5,7 +5,6 @@ import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.UserService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +17,7 @@ import java.util.Collections;
 
 import javax.annotation.Resource;
 
+import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
+@Transactional
 @SpringBootTest
 @ActiveProfiles(Profiles.TEST)
-@Transactional
 class UserDetailsServiceIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
@@ -36,15 +36,13 @@ class UserDetailsServiceIntegrationTest {
     private static final String TEST_USER_EMAIL_NOT_EXISTS = "test@user.notexists";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
 
-    private static final String TEST_ROLE_NAME = "testRoleName";
-
     @Resource
     private UserDetailsService userDetailsService;
     @Resource
     private UserService userService;
 
-    @BeforeEach
-    public void setUp() {
+    @Test
+    void testLoadUserByUsernameExists() {
         userService.saveUser(UserModel.builder()
                                       .firstName(TEST_USER_FIRST_NAME)
                                       .lastName(TEST_USER_LAST_NAME)
@@ -55,13 +53,9 @@ class UserDetailsServiceIntegrationTest {
                                       .lastPasswordUpdateDate(LocalDate.now())
                                       .enabled(Boolean.TRUE)
                                       .roles(Collections.singleton(RoleModel.builder()
-                                                                            .name(TEST_ROLE_NAME)
+                                                                            .name(USER.name())
                                                                             .build()))
                                       .build());
-    }
-
-    @Test
-    void testLoadUserByUsernameExists() {
         assertNotNull(userDetailsService.loadUserByUsername(TEST_USER_EMAIL));
     }
 

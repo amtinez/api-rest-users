@@ -17,7 +17,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
     private UserDetailsMapper userDetailsMapper;
-
     @Resource
     private UserDao userDao;
 

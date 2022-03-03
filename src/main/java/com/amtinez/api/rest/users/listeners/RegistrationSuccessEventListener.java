@@ -26,10 +26,8 @@ public class RegistrationSuccessEventListener implements ApplicationListener<Reg
 
     @Resource
     private TokenService<UserVerificationTokenModel> userVerificationTokenService;
-
     @Resource
     private EmailService emailService;
-
     @Resource
     private UserVerificationTokenMapper userVerificationTokenMapper;
 
