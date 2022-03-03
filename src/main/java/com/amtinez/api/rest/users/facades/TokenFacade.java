@@ -3,7 +3,7 @@ package com.amtinez.api.rest.users.facades;
 import com.amtinez.api.rest.users.models.TokenModel;
 import com.amtinez.api.rest.users.services.TokenService;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -30,7 +30,7 @@ public interface TokenFacade<T, K> {
                        .filter(TokenModel.class::isInstance)
                        .map(TokenModel.class::cast)
                        .map(tokenModelFound -> {
-                           final boolean isUnexpired = LocalDate.now().isBefore(tokenModelFound.getExpiryDate());
+                           final boolean isUnexpired = LocalDateTime.now().isBefore(tokenModelFound.getExpiryDate());
                            if (!isUnexpired) {
                                tokenService.deleteToken(token);
                            }

@@ -12,7 +12,7 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Set;
@@ -61,14 +61,14 @@ public interface UserDetailsMapper {
     }
 
     @Named(IS_ACCOUNT_NON_EXPIRED)
-    static boolean isAccountNonExpired(final LocalDate lastAccessDate) {
-        return lastAccessDate != null && ChronoUnit.MONTHS.between(lastAccessDate, LocalDate.now()) < INACTIVE_LIFETIME_MONTHS;
+    static boolean isAccountNonExpired(final LocalDateTime lastAccessDate) {
+        return lastAccessDate != null && ChronoUnit.MONTHS.between(lastAccessDate, LocalDateTime.now()) < INACTIVE_LIFETIME_MONTHS;
     }
 
     @Named(IS_CREDENTIALS_NON_EXPIRED)
-    static boolean isCredentialsNonExpired(final LocalDate lastPasswordUpdateDate) {
+    static boolean isCredentialsNonExpired(final LocalDateTime lastPasswordUpdateDate) {
         return lastPasswordUpdateDate != null
-            && ChronoUnit.MONTHS.between(lastPasswordUpdateDate, LocalDate.now()) < PASSWORD_LIFETIME_MONTHS;
+            && ChronoUnit.MONTHS.between(lastPasswordUpdateDate, LocalDateTime.now()) < PASSWORD_LIFETIME_MONTHS;
     }
 
 }

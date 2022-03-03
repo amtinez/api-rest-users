@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -59,8 +60,8 @@ class PasswordResetTokenServiceIntegrationTest {
                                                  .build());
         testPasswordResetToken = passwordResetTokenService.saveToken(PasswordResetTokenModel.builder()
                                                                                             .code(TEST_TOKEN_CODE)
-                                                                                            .creationDate(LocalDate.now())
-                                                                                            .expiryDate(LocalDate.now())
+                                                                                            .creationDate(LocalDateTime.now())
+                                                                                            .expiryDate(LocalDateTime.now())
                                                                                             .user(testUser)
                                                                                             .build());
     }
@@ -97,8 +98,8 @@ class PasswordResetTokenServiceIntegrationTest {
         assertNotNull(testPasswordResetToken);
         assertNotNull(testPasswordResetToken.getId());
         assertThat(testPasswordResetToken.getCode()).isEqualTo(TEST_TOKEN_CODE);
-        assertThat(testPasswordResetToken.getCreationDate()).isEqualTo(LocalDate.now());
-        assertThat(testPasswordResetToken.getExpiryDate()).isEqualTo(LocalDate.now());
+        assertThat(testPasswordResetToken.getCreationDate().toLocalDate()).isEqualTo(LocalDate.now());
+        assertThat(testPasswordResetToken.getExpiryDate().toLocalDate()).isEqualTo(LocalDate.now());
         assertNotNull(testPasswordResetToken.getUser());
         assertThat(testPasswordResetToken.getUser().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
         assertThat(testPasswordResetToken.getUser().getLastName()).isEqualTo(TEST_USER_LAST_NAME);

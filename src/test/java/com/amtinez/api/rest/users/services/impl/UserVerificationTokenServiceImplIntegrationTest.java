@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -59,8 +60,8 @@ class UserVerificationTokenServiceImplIntegrationTest {
                                                  .build());
         testUserVerificationToken = userVerificationTokenService.saveToken(UserVerificationTokenModel.builder()
                                                                                                      .code(TEST_CODE)
-                                                                                                     .creationDate(LocalDate.now())
-                                                                                                     .expiryDate(LocalDate.now())
+                                                                                                     .creationDate(LocalDateTime.now())
+                                                                                                     .expiryDate(LocalDateTime.now())
                                                                                                      .user(testUser)
                                                                                                      .build());
     }
@@ -97,8 +98,8 @@ class UserVerificationTokenServiceImplIntegrationTest {
         assertNotNull(testUserVerificationToken);
         assertNotNull(testUserVerificationToken.getId());
         assertThat(testUserVerificationToken.getCode()).isEqualTo(TEST_CODE);
-        assertThat(testUserVerificationToken.getCreationDate()).isEqualTo(LocalDate.now());
-        assertThat(testUserVerificationToken.getExpiryDate()).isEqualTo(LocalDate.now());
+        assertThat(testUserVerificationToken.getCreationDate().toLocalDate()).isEqualTo(LocalDate.now());
+        assertThat(testUserVerificationToken.getExpiryDate().toLocalDate()).isEqualTo(LocalDate.now());
         assertNotNull(testUserVerificationToken.getUser());
         assertThat(testUserVerificationToken.getUser().getFirstName()).isEqualTo(TEST_USER_FIRST_NAME);
         assertThat(testUserVerificationToken.getUser().getLastName()).isEqualTo(TEST_USER_LAST_NAME);

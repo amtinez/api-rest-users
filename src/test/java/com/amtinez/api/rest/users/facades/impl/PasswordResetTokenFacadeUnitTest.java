@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,7 +43,7 @@ class PasswordResetTokenFacadeUnitTest {
     @BeforeEach
     public void setUp() {
         passwordResetTokenModel = PasswordResetTokenModel.builder()
-                                                         .expiryDate(LocalDate.now().plusDays(1))
+                                                         .expiryDate(LocalDateTime.now().plusDays(1))
                                                          .build();
         Mockito.when(passwordResetTokenService.findToken(TEST_TOKEN_CODE)).thenReturn(Optional.of(passwordResetTokenModel));
         Mockito.when(passwordResetTokenMapper.tokenModelToToken(passwordResetTokenModel)).thenReturn(PasswordResetToken.builder()
@@ -57,7 +57,7 @@ class PasswordResetTokenFacadeUnitTest {
 
     @Test
     void testGetUnexpiredTokenExpired() {
-        passwordResetTokenModel.setExpiryDate(LocalDate.now().minusDays(1));
+        passwordResetTokenModel.setExpiryDate(LocalDateTime.now().minusDays(1));
         assertTrue(passwordResetTokenFacade.getUnexpiredToken(TEST_TOKEN_CODE).isEmpty());
     }
 

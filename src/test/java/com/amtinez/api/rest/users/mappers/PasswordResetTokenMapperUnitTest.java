@@ -74,8 +74,8 @@ class PasswordResetTokenMapperUnitTest {
         final PasswordResetTokenModel passwordResetToken = mapper.userToTokenModel(user);
         assertThat(passwordResetToken.getUser()).isEqualTo(userModel);
         assertThat(passwordResetToken.getCode()).isNotBlank();
-        assertThat(passwordResetToken.getCreationDate()).isEqualTo(LocalDate.now());
-        assertThat(passwordResetToken.getExpiryDate()).isEqualTo(LocalDate.now().plusDays(1));
+        assertThat(passwordResetToken.getCreationDate().toLocalDate()).isEqualTo(LocalDate.now());
+        assertThat(passwordResetToken.getExpiryDate().toLocalDate()).isEqualTo(LocalDate.now().plusDays(1));
     }
 
     @Test

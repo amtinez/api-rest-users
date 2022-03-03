@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.FetchType;
@@ -35,10 +35,10 @@ public abstract class TokenModel {
     private String code;
 
     @Column(name = Token.CREATION_DATE_FIELD, nullable = false)
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @Column(name = Token.EXPIRY_DATE_FIELD, nullable = false)
-    private LocalDate expiryDate;
+    private LocalDateTime expiryDate;
 
     @OneToOne(targetEntity = UserModel.class, fetch = FetchType.EAGER)
     @JoinColumn(name = Token.USER_ID_FIELD, nullable = false)

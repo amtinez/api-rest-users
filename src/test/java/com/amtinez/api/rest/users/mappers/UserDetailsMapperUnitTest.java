@@ -6,7 +6,7 @@ import com.amtinez.api.rest.users.security.impl.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static com.amtinez.api.rest.users.enums.Role.USER;
@@ -27,7 +27,7 @@ class UserDetailsMapperUnitTest {
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
     private static final String TEST_USER_EMAIL = "test@user.com";
-    private static final LocalDate EXPIRED_LOCAL_DATE = LocalDate.of(2020, 1, 1);
+    private static final LocalDateTime EXPIRED_LOCAL_DATE = LocalDateTime.of(2020, 1, 1, 0, 0);
 
     private final UserDetailsMapper mapper = new UserDetailsMapperImpl();
 
@@ -47,8 +47,8 @@ class UserDetailsMapperUnitTest {
                              .email(TEST_USER_EMAIL)
                              .enabled(Boolean.TRUE)
                              .locked(Boolean.FALSE)
-                             .lastAccessDate(LocalDate.now())
-                             .lastPasswordUpdateDate(LocalDate.now())
+                             .lastAccessDate(LocalDateTime.now())
+                             .lastPasswordUpdateDate(LocalDateTime.now())
                              .roles(Collections.singleton(roleModel))
                              .build();
     }

@@ -74,8 +74,8 @@ class UserVerificationTokenMapperUnitTest {
         final UserVerificationTokenModel userVerificationToken = mapper.userToTokenModel(user);
         assertThat(userVerificationToken.getUser()).isEqualTo(userModel);
         assertThat(userVerificationToken.getCode()).isNotBlank();
-        assertThat(userVerificationToken.getCreationDate()).isEqualTo(LocalDate.now());
-        assertThat(userVerificationToken.getExpiryDate()).isEqualTo(LocalDate.now().plusDays(1));
+        assertThat(userVerificationToken.getCreationDate().toLocalDate()).isEqualTo(LocalDate.now());
+        assertThat(userVerificationToken.getExpiryDate().toLocalDate()).isEqualTo(LocalDate.now().plusDays(1));
     }
 
     @Test

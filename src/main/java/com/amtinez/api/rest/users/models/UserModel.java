@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,10 +56,10 @@ public class UserModel {
     private LocalDate birthdayDate;
 
     @Column(name = User.LAST_ACCESS_DATE_FIELD)
-    private LocalDate lastAccessDate;
+    private LocalDateTime lastAccessDate;
 
     @Column(name = User.LAST_PASSWORD_UPDATE_DATE_FIELD)
-    private LocalDate lastPasswordUpdateDate;
+    private LocalDateTime lastPasswordUpdateDate;
 
     @Column(name = User.ENABLED_FIELD, nullable = false)
     private Boolean enabled;

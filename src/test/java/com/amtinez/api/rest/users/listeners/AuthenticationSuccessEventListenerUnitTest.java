@@ -59,7 +59,7 @@ class AuthenticationSuccessEventListenerUnitTest {
         Mockito.when(userService.findUser(TEST_USER_ID)).thenReturn(Optional.of(user));
         authenticationSuccessEventListener.onApplicationEvent(authenticationSuccessEvent);
         verify(userService).findUser(TEST_USER_ID);
-        assertThat(user.getLastAccessDate()).isEqualTo(LocalDate.now());
+        assertThat(user.getLastAccessDate().toLocalDate()).isEqualTo(LocalDate.now());
         verify(userService).saveUser(user);
     }
 
