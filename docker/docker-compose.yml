@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: aru-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: api_rest_users
+      MYSQL_USER: amtinez
+      MYSQL_PASSWORD: apirestusers
+      MYSQL_ROOT_PASSWORD: rootapirestusers
+      MYSQL_TCP_PORT: 3306
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+    healthcheck:
+      interval: 3s
+      retries: 2000
+      test: /usr/bin/mysql --user=root --password=rootapirestusers --execute "SHOW DATABASES;"
+      timeout: 3s
+    volumes:
+      - ../docker-data/mysql:/var/lib/mysql
+      - ../database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  db-test:
+    container_name: aru-mysql-test
+    image: mysql
+    environment:
+      MYSQL_DATABASE: api_rest_users_test
+      MYSQL_USER: amtineztest
+      MYSQL_PASSWORD: apirestuserstest
+      MYSQL_ROOT_PASSWORD: rootapirestuserstest
+      MYSQL_TCP_PORT: 3307
+    expose:
+      - 3307
+    ports:
+      - "3307:3307"
+    healthcheck:
+      interval: 3s
+      retries: 2000
+      test: /usr/bin/mysql --user=root --password=rootapirestuserstest --execute "SHOW DATABASES;"
+      timeout: 3s
+    volumes:
+      - ../docker-data/mysql-test:/var/lib/mysql
+      - ../database/init-test.sql:/docker-entrypoint-initdb.d/init.sql
+
+  sonarqube:
+    container_name: aru-sonarqube
+    image: sonarqube
+    ports:
+      - 9000:9000
+      - 9092:9092
+    volumes:
+      - ../docker-data/sonarqube/data:/opt/sonarqube/data
+      - ../docker-data/sonarqube/extensions:/opt/sonarqube/extensions
+
+  mailhog:
+    container_name: aru-mailhog
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  mailhog-test:
+    container_name: aru-mailhog-test
+    image: mailhog/mailhog
+    environment:
+      MH_SMTP_BIND_ADDR: 0.0.0.0:1026
+      MH_API_BIND_ADDR: 0.0.0.0:8026
+      MH_UI_BIND_ADDR: 0.0.0.0:8026
+    ports:
+      - "1026:1026"
+      - "8026:8026"

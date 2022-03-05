@@ -1,0 +1,47 @@
+package com.amtinez.api.rest.users.services.impl;
+
+import com.amtinez.api.rest.users.daos.RoleDao;
+import com.amtinez.api.rest.users.models.RoleModel;
+import com.amtinez.api.rest.users.services.RoleService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Resource;
+
+/**
+ * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
+ */
+@Service
+public class RoleServiceImpl implements RoleService {
+
+    @Resource
+    private RoleDao roleDao;
+
+    @Override
+    public Optional<RoleModel> findRole(final Long id) {
+        return roleDao.findById(id);
+    }
+
+    @Override
+    public Optional<RoleModel> findRole(final String name) {
+        return roleDao.findByName(name);
+    }
+
+    @Override
+    public List<RoleModel> findAllRoles() {
+        return roleDao.findAll();
+    }
+
+    @Override
+    public RoleModel saveRole(final RoleModel role) {
+        return roleDao.save(role);
+    }
+
+    @Override
+    public void deleteRole(final Long id) {
+        roleDao.deleteById(id);
+    }
+
+}
