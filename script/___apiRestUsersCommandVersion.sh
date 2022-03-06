@@ -7,7 +7,7 @@ echo "3. Remove docker data directory"
 echo "4. Compile"
 echo "5. Start the server"
 echo "6. Compile and start the server"
-echo "7. Execute Sonarqube report"
+echo "7. Execute JaCoCo test report"
 echo "0. Exit"
 
 PROJECT_PATH=[YOUR PROJECT PATH]
@@ -58,8 +58,8 @@ while :; do
     break
     ;;
   7)
-    echo "Executing Sonarqube report..."
-    cd "$PROJECT_PATH" && ./gradlew check && ./gradlew jacocoTestReport && ./gradlew sonarqube
+    echo "Executing JaCoCo test report..."
+    cd "$PROJECT_PATH" && ./gradlew check && ./gradlew jacocoTestReport
     break
     ;;
   *)

@@ -45,16 +45,6 @@ services:
       - ../docker-data/mysql-test:/var/lib/mysql
       - ../database/init-test.sql:/docker-entrypoint-initdb.d/init.sql
 
-  sonarqube:
-    container_name: aru-sonarqube
-    image: sonarqube
-    ports:
-      - 9000:9000
-      - 9092:9092
-    volumes:
-      - ../docker-data/sonarqube/data:/opt/sonarqube/data
-      - ../docker-data/sonarqube/extensions:/opt/sonarqube/extensions
-
   mailhog:
     container_name: aru-mailhog
     image: mailhog/mailhog
