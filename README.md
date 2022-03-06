@@ -1,6 +1,17 @@
 # API Rest Users
 
-The API Rest Users project was born with the aim of learning and deepening in a RESTful application based on user management and security, which from my point of view is one of the most important and critical parts. The project management is being done through the Jira tool following the Kanban methodology. This project is developed in Spring Boot, and I am using all the best practices I have learned during my working life.
+<p align="center">
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=amtinez_api-rest-users)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=amtinez_api-rest-users)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=coverage)](https://sonarcloud.io/summary/new_code?id=amtinez_api-rest-users)
+
+</p>
+
+The API Rest Users project was born with the aim of learning and deepening in a RESTful application based on user management and security,
+which from my point of view is one of the most important and critical parts. The project management is being done through the Jira tool
+following the Kanban methodology. This project is developed in Spring Boot, and I am using all the best practices I have learned during my
+working life.
 
 ## Requirements
 
@@ -25,25 +36,11 @@ echo "3. Remove docker data directory"
 echo "4. Compile"
 echo "5. Start the server"
 echo "6. Compile and start the server"
-echo "7. Execute Sonarqube report"
+echo "7. Execute JaCoCo test report"
 echo "0. Exit"
 
 PROJECT_PATH=[YOUR PROJECT PATH]
 ```
-
-## Sonarqube
-
-![Code quality](sonarqube/code-quality.png)
-
-The first time we start Sonarqube we must change the password of the following default user:
-
-    sonar.login=admin
-    sonar.password=admin
-
-Once the previous step has been done, for greater security, we will have to generate a user token. Finally, we will add it with the
-following property inside the ```~/.gradle/gradle.properties``` file:
-
-    systemProp.sonar.login=[User Token]
 
 ## EER Diagram
 
