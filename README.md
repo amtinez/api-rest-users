@@ -1,11 +1,9 @@
-# API Rest Users
+<h1 align="center">API Rest Users</h1>
 
 <p align="center">
-
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=amtinez_api-rest-users)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=amtinez_api-rest-users)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=coverage)](https://sonarcloud.io/summary/new_code?id=amtinez_api-rest-users)
-
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=alert_status" alt="Quality gate"/>
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=security_rating" alt="Security rating"/>
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=coverage" alt="Coverage"/>
 </p>
 
 The API Rest Users project was born with the aim of learning and deepening in a RESTful application based on user management and security,
