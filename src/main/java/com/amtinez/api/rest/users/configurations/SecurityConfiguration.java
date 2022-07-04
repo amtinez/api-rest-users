@@ -22,7 +22,7 @@ import static com.amtinez.api.rest.users.constants.SecurityConstants.BCRYPT_PASS
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;
