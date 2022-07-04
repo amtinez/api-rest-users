@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.dtos;
 
-import com.amtinez.api.rest.users.annotations.EqualPassword;
+import com.amtinez.api.rest.users.validations.constraints.EqualPassword;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
