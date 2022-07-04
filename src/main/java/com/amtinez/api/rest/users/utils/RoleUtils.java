@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class RoleUtils {
 
+    private static final String PREFIX = "ROLE_";
+
     private RoleUtils() {
     }
 
@@ -18,7 +20,17 @@ public final class RoleUtils {
      * @return the prefixed role name
      */
     public static String getPrefixedName(final RoleModel roleModel) {
-        return String.format("ROLE_%s", StringUtils.toRootUpperCase(roleModel.getName()));
+        return String.format("%s%s", PREFIX, StringUtils.toRootUpperCase(roleModel.getName()));
+    }
+
+    /**
+     * Returns the name of the role without the "ROLE_" prefix
+     *
+     * @param roleName the role
+     * @return the prefixed role name
+     */
+    public static String getNameWithoutPrefix(final String roleName) {
+        return StringUtils.removeStart(roleName, PREFIX);
     }
 
 }
