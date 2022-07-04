@@ -1,7 +1,9 @@
 package com.amtinez.api.rest.users.dtos;
 
-import com.amtinez.api.rest.users.annotations.UniqueRoleName;
+import com.amtinez.api.rest.users.validations.constraints.UniqueRoleName;
 import com.amtinez.api.rest.users.validations.groups.Update;
+import com.amtinez.api.rest.users.views.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import static com.amtinez.api.rest.users.constants.ValidationConstants.Role.NAME
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonView(value = View.Admin.class)
 public class Role {
 
     @NotNull(groups = Update.class)
