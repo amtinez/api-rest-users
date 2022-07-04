@@ -1,7 +1,7 @@
 package com.amtinez.api.rest.users.validations.validators;
 
-import com.amtinez.api.rest.users.annotations.UniqueRoleName;
 import com.amtinez.api.rest.users.services.RoleService;
+import com.amtinez.api.rest.users.validations.constraints.UniqueRoleName;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintValidator;
