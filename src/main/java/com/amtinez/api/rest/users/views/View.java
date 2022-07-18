@@ -5,6 +5,9 @@ package com.amtinez.api.rest.users.views;
  */
 public final class View {
 
+    private View() {
+    }
+
     public interface Anonymous {
 
     }
