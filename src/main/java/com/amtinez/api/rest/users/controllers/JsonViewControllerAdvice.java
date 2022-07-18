@@ -51,4 +51,5 @@ public class JsonViewControllerAdvice extends AbstractMappingJacksonResponseBody
                 .ifPresentOrElse(bodyContainer::setSerializationView,
                                  () -> bodyContainer.setSerializationView(View.Anonymous.class));
     }
+
 }
