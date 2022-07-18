@@ -1,6 +1,6 @@
-package com.amtinez.api.rest.users.annotations;
+package com.amtinez.api.rest.users.validations.constraints;
 
-import com.amtinez.api.rest.users.validations.validators.UniqueRoleNameValidator;
+import com.amtinez.api.rest.users.validations.validators.UniqueUserEmailValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,16 +11,16 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * UniqueRoleName is the interface used to implement the uniqueness restriction of a role name.
+ * UniqueUserEmail is the interface used to implement the uniqueness restriction of a user's email address.
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueRoleNameValidator.class)
-public @interface UniqueRoleName {
+@Constraint(validatedBy = UniqueUserEmailValidator.class)
+public @interface UniqueUserEmail {
 
-    String message() default "a role with that name already exists";
+    String message() default "an account is already registered with this email address";
 
     Class<?>[] groups() default {};
 
