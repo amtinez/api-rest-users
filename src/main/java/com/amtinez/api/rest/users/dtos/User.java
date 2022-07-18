@@ -1,8 +1,10 @@
 package com.amtinez.api.rest.users.dtos;
 
-import com.amtinez.api.rest.users.annotations.UniqueUserEmail;
+import com.amtinez.api.rest.users.validations.constraints.UniqueUserEmail;
 import com.amtinez.api.rest.users.validations.groups.PasswordResetEmail;
 import com.amtinez.api.rest.users.validations.groups.Update;
+import com.amtinez.api.rest.users.views.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -36,20 +38,24 @@ import static com.amtinez.api.rest.users.constants.ValidationConstants.User.PASS
 public class User {
 
     @NotNull(groups = Update.class)
+    @JsonView(value = View.User.class)
     private Long id;
 
     @NotBlank
     @Size(max = FIRST_NAME_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
+    @JsonView(value = View.User.class)
     private String firstName;
 
     @NotBlank
     @Size(max = LAST_NAME_MAX_FIELD_LENGTH, groups = {Default.class, Update.class})
+    @JsonView(value = View.User.class)
     private String lastName;
 
     @Email
     @NotBlank
     @UniqueUserEmail(groups = {Default.class, Update.class})
     @Size(max = EMAIL_MAX_FIELD_LENGTH, groups = {Default.class, Update.class, PasswordResetEmail.class})
+    @JsonView(value = View.User.class)
     private String email;
 
     @NotBlank
@@ -59,12 +65,16 @@ public class User {
     @NotNull
     @JsonSerialize(using = ToStringSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonView(value = View.User.class)
     private LocalDate birthdayDate;
 
+    @JsonView(value = View.Admin.class)
     private Boolean enabled;
 
+    @JsonView(value = View.Admin.class)
     private Boolean locked;
 
+    @JsonView(value = View.Admin.class)
     private Set<Role> roles;
 
 }

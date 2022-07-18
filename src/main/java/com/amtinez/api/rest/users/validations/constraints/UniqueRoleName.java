@@ -1,6 +1,6 @@
-package com.amtinez.api.rest.users.annotations;
+package com.amtinez.api.rest.users.validations.constraints;
 
-import com.amtinez.api.rest.users.validations.validators.EqualPasswordValidator;
+import com.amtinez.api.rest.users.validations.validators.UniqueRoleNameValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,16 +11,16 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * EqualPassword is the interface used to implement the equality constraint when updating the user's password.
+ * UniqueRoleName is the interface used to implement the uniqueness restriction of a role name.
  *
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = EqualPasswordValidator.class)
-public @interface EqualPassword {
+@Constraint(validatedBy = UniqueRoleNameValidator.class)
+public @interface UniqueRoleName {
 
-    String message() default "passwords are not equal";
+    String message() default "a role with that name already exists";
 
     Class<?>[] groups() default {};
 

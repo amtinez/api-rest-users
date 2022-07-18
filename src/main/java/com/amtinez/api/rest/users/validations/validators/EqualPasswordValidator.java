@@ -1,7 +1,7 @@
 package com.amtinez.api.rest.users.validations.validators;
 
-import com.amtinez.api.rest.users.annotations.EqualPassword;
 import com.amtinez.api.rest.users.dtos.PasswordResetToken;
+import com.amtinez.api.rest.users.validations.constraints.EqualPassword;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
