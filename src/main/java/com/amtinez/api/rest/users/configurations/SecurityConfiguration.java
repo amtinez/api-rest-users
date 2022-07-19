@@ -1,5 +1,7 @@
 package com.amtinez.api.rest.users.configurations;
 
+import com.amtinez.api.rest.users.filters.SuccessfulAuthenticationFilter;
+import com.amtinez.api.rest.users.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import javax.annotation.Resource;
@@ -26,10 +29,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;
+    @Resource
+    private UserService userService;
 
     @Bean
     public BCryptPasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(BCRYPT_PASSWORD_ENCODER_STRENGTH);
+    }
+
+    @Bean
+    public SuccessfulAuthenticationFilter getSuccessfulAuthenticationFilter() throws Exception {
+        return new SuccessfulAuthenticationFilter(authenticationManager(), userService);
     }
 
     @Override
@@ -45,7 +55,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.httpBasic()
             .and()
             .csrf()
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .and()
+            .addFilterBefore(getSuccessfulAuthenticationFilter(), BasicAuthenticationFilter.class);
     }
 
 }

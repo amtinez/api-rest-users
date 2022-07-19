@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateUserLastAccess(final Long id) {
+        userDao.updateLastAccessById(id, LocalDateTime.now());
+    }
+
+    @Override
     public int updateUserEnabledStatus(final Long id, final Boolean enabled) {
         return userDao.updateEnabledStatusById(id, enabled);
     }

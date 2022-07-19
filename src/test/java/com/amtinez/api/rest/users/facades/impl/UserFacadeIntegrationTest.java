@@ -1,6 +1,7 @@
 package com.amtinez.api.rest.users.facades.impl;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
+import com.amtinez.api.rest.users.common.BaseMailIntegrationTest;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants;
 import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
@@ -51,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles(ConfigurationConstants.Profiles.TEST)
 @ExtendWith(OutputCaptureExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserFacadeIntegrationTest {
+class UserFacadeIntegrationTest extends BaseMailIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
     private static final String TEST_USER_LAST_NAME = "testUserLastName";
@@ -149,11 +150,13 @@ class UserFacadeIntegrationTest {
         assertNull(testUser.getPassword());
         assertThat(testUser.getBirthdayDate()).isEqualTo(LocalDate.now());
         assertFalse(testUser.getEnabled());
+        assertFalse(testUser.getLocked());
         assertThat(testUser.getRoles()).hasSize(1);
         assertTrue(userVerificationTokenService.findToken(UserModel.builder()
                                                                    .id(testUser.getId())
                                                                    .build())
                                                .isPresent());
+        assertThat(getGreenMail().getReceivedMessages()).isNotEmpty();
     }
 
     @Test
@@ -181,6 +184,7 @@ class UserFacadeIntegrationTest {
                                                                 .id(testUser.getId())
                                                                 .build())
                                             .isPresent());
+        assertThat(getGreenMail().getReceivedMessages()).isNotEmpty();
     }
 
     @Test

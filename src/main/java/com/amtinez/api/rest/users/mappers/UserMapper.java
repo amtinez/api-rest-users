@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,6 +29,10 @@ import static com.amtinez.api.rest.users.constants.MapperConstants.SPRING_COMPON
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.DISABLE_USER_BY_DEFAULT;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ENABLED_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ENCRYPT_PASSWORD;
+import static com.amtinez.api.rest.users.constants.MapperConstants.User.LAST_ACCESS_DATE_BY_DEFAULT;
+import static com.amtinez.api.rest.users.constants.MapperConstants.User.LAST_ACCESS_DATE_PROPERTY;
+import static com.amtinez.api.rest.users.constants.MapperConstants.User.LAST_PASSWORD_UPDATE_DATE_BY_DEFAULT;
+import static com.amtinez.api.rest.users.constants.MapperConstants.User.LAST_PASSWORD_UPDATE_DATE_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.LOCKED_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.PASSWORD_PROPERTY;
 import static com.amtinez.api.rest.users.constants.MapperConstants.User.ROLES_PROPERTY;
@@ -40,7 +45,7 @@ import static com.amtinez.api.rest.users.enums.Role.USER;
 /**
  * @author Alejandro Martínez Cerro <amartinezcerro @ gmail.com>
  */
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = SPRING_COMPONENT_MODEL)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = SPRING_COMPONENT_MODEL, imports = LocalDateTime.class)
 public interface UserMapper {
 
     Logger LOG = LoggerFactory.getLogger(UserFacadeImpl.class);
@@ -70,6 +75,8 @@ public interface UserMapper {
 
     @Mapping(target = ENABLED_PROPERTY, expression = DISABLE_USER_BY_DEFAULT)
     @Mapping(target = LOCKED_PROPERTY, expression = UNLOCK_USER_BY_DEFAULT)
+    @Mapping(target = LAST_ACCESS_DATE_PROPERTY, expression = LAST_ACCESS_DATE_BY_DEFAULT)
+    @Mapping(target = LAST_PASSWORD_UPDATE_DATE_PROPERTY, expression = LAST_PASSWORD_UPDATE_DATE_BY_DEFAULT)
     @Mapping(target = PASSWORD_PROPERTY, source = PASSWORD_PROPERTY, qualifiedByName = ENCRYPT_PASSWORD)
     @Mapping(target = ROLES_PROPERTY, expression = ROLE_USER_BY_DEFAULT)
     UserModel userToUserModelRegisterStep(final User user,
