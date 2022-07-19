@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.facades.impl;
 
-import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
+import com.amtinez.api.rest.users.common.BaseMailIntegrationTest;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.facades.RoleFacade;
 import org.junit.jupiter.api.AfterAll;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -30,9 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Transactional
 @SpringBootTest
-@ActiveProfiles(Profiles.TEST)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class RoleFacadeIntegrationTest {
+class RoleFacadeIntegrationTest extends BaseMailIntegrationTest {
 
     @Resource
     private RoleFacade roleFacade;

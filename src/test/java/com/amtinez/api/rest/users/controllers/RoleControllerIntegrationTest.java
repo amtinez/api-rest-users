@@ -1,7 +1,6 @@
 package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
-import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.services.RoleService;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -35,7 +33,6 @@ import static com.amtinez.api.rest.users.enums.Role.USER;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles(Profiles.TEST)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoleControllerIntegrationTest {
 
