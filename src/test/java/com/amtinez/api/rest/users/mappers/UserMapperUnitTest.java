@@ -241,7 +241,7 @@ class UserMapperUnitTest {
 
     @Test
     void nullDtoToModelUpdate() {
-        assertNull(mapper.updateUserModelFromUser(userModel, null, passwordEncoder));
+        assertThat(mapper.updateUserModelFromUser(userModel, null, passwordEncoder)).isEqualTo(userModel);
     }
 
     @Test

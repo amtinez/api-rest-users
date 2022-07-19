@@ -71,7 +71,7 @@ class RoleMapperUnitTest {
 
     @Test
     void nullDtoToModelUpdate() {
-        assertNull(mapper.updateRoleModelFromRole(roleModel, null));
+        assertThat(mapper.updateRoleModelFromRole(roleModel, null)).isEqualTo(roleModel);
     }
 
 }

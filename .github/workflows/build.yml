@@ -20,8 +20,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Start Docker containers
-        run: ./gradlew dockerStart --info
       - name: Build project
         run: ./gradlew build --info
       - name: Generate JaCoCo test report
@@ -31,9 +29,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube --info
-      - name: Stop Docker containers
-        if: always()
-        run: ./gradlew dockerStop --info
-      - name: Remove Docker containers
-        if: always()
-        run: ./gradlew dockerRemove --info

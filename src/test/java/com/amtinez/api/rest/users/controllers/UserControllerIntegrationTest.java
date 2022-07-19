@@ -1,7 +1,7 @@
 package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
-import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
+import com.amtinez.api.rest.users.common.BaseMailIntegrationTest;
 import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
@@ -26,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -52,9 +51,8 @@ import static com.amtinez.api.rest.users.enums.Role.USER;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles(Profiles.TEST)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserControllerIntegrationTest {
+class UserControllerIntegrationTest extends BaseMailIntegrationTest {
 
     private static final String USER_CONTROLLER_URL = "/users";
 

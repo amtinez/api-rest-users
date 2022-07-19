@@ -1,6 +1,5 @@
 package com.amtinez.api.rest.users.security.impl;
 
-import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.services.UserService;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -28,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @Transactional
 @SpringBootTest
-@ActiveProfiles(Profiles.TEST)
 class UserDetailsServiceIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
@@ -53,6 +50,7 @@ class UserDetailsServiceIntegrationTest {
                                       .lastAccessDate(LocalDateTime.now())
                                       .lastPasswordUpdateDate(LocalDateTime.now())
                                       .enabled(Boolean.TRUE)
+                                      .locked(Boolean.FALSE)
                                       .roles(Collections.singleton(RoleModel.builder()
                                                                             .name(USER.name())
                                                                             .build()))

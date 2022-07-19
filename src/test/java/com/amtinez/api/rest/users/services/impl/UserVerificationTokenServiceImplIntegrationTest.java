@@ -1,6 +1,5 @@
 package com.amtinez.api.rest.users.services.impl;
 
-import com.amtinez.api.rest.users.constants.ConfigurationConstants.Profiles;
 import com.amtinez.api.rest.users.models.UserModel;
 import com.amtinez.api.rest.users.models.UserVerificationTokenModel;
 import com.amtinez.api.rest.users.services.TokenService;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -30,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Transactional
 @SpringBootTest
-@ActiveProfiles(Profiles.TEST)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserVerificationTokenServiceImplIntegrationTest {
 
@@ -57,6 +54,8 @@ class UserVerificationTokenServiceImplIntegrationTest {
                                                  .email(TEST_USER_EMAIL)
                                                  .password(TEST_USER_PASSWORD)
                                                  .birthdayDate(LocalDate.now())
+                                                 .enabled(Boolean.TRUE)
+                                                 .locked(Boolean.FALSE)
                                                  .build());
         testUserVerificationToken = userVerificationTokenService.saveToken(UserVerificationTokenModel.builder()
                                                                                                      .code(TEST_CODE)
