@@ -149,6 +149,14 @@ class UserServiceIntegrationTest {
     }
 
     @Test
+    void testUpdateUserLastAccess() {
+        userService.updateUserLastAccess(testUser.getId());
+        final Optional<UserModel> userFound = userService.findUser(testUser.getId());
+        assertTrue(userFound.isPresent());
+        assertNotNull(userFound.get().getLastAccessDate());
+    }
+
+    @Test
     void testUpdateUserEnabledStatusEnable() {
         assertThat(userService.updateUserEnabledStatus(testUser.getId(), Boolean.TRUE)).isOne();
         final Optional<UserModel> userFound = userService.findUser(testUser.getId());

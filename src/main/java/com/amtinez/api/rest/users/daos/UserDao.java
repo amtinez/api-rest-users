@@ -37,6 +37,17 @@ public interface UserDao extends JpaRepository<UserModel, Long> {
     int updatePasswordById(@Param("id") final Long id, @Param("password") final String password, @Param("date") final LocalDateTime date);
 
     /**
+     * Update the user last access if user exists
+     *
+     * @param id   the id of the user
+     * @param date the date of the update
+     */
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE UserModel AS U SET U.lastAccessDate = :date WHERE U.id = :id")
+    void updateLastAccessById(@Param("id") final Long id, @Param("date") final LocalDateTime date);
+
+    /**
      * Enables or disables the user if it exists
      *
      * @param id      the id of the user

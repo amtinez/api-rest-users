@@ -58,6 +58,13 @@ public interface UserService {
     int updateUserPassword(final Long id, final String password);
 
     /**
+     * Update the user last access if user exists
+     *
+     * @param id the id of the user
+     */
+    void updateUserLastAccess(final Long id);
+
+    /**
      * Enables or disables the user if it exists
      *
      * @param id      the id of the user

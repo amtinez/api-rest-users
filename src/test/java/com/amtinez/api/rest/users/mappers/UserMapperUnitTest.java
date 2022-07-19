@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import static com.amtinez.api.rest.users.enums.Role.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -181,6 +182,8 @@ class UserMapperUnitTest {
         assertThat(userModel.getBirthdayDate()).isEqualTo(TEST_USER_BIRTHDAY_DATE);
         assertFalse(userModel.getEnabled());
         assertFalse(userModel.getLocked());
+        assertNotNull(userModel.getLastAccessDate());
+        assertNotNull(userModel.getLastPasswordUpdateDate());
         final Set<RoleModel> roles = userModel.getRoles();
         assertThat(roles).hasSize(1);
         final RoleModel roleModel = roles.iterator().next();

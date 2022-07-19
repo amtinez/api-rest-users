@@ -12,6 +12,8 @@ public final class MapperConstants {
         public static final String PASSWORD_PROPERTY = "password";
         public static final String ENABLED_PROPERTY = "enabled";
         public static final String LOCKED_PROPERTY = "locked";
+        public static final String LAST_ACCESS_DATE_PROPERTY = "lastAccessDate";
+        public static final String LAST_PASSWORD_UPDATE_DATE_PROPERTY = "lastPasswordUpdateDate";
         public static final String ROLES_PROPERTY = "roles";
 
         public static final String ENCRYPT_PASSWORD = "encryptPassword";
@@ -20,6 +22,8 @@ public final class MapperConstants {
 
         public static final String DISABLE_USER_BY_DEFAULT = "java(Boolean.FALSE)";
         public static final String UNLOCK_USER_BY_DEFAULT = "java(Boolean.FALSE)";
+        public static final String LAST_ACCESS_DATE_BY_DEFAULT = "java(LocalDateTime.now())";
+        public static final String LAST_PASSWORD_UPDATE_DATE_BY_DEFAULT = "java(LocalDateTime.now())";
         public static final String ROLE_USER_BY_DEFAULT = "java(defaultRole(roleService))";
 
         private User() {
