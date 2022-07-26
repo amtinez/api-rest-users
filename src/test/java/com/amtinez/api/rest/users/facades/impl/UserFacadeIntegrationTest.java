@@ -1,7 +1,7 @@
 package com.amtinez.api.rest.users.facades.impl;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
-import com.amtinez.api.rest.users.common.BaseMailIntegrationTest;
+import com.amtinez.api.rest.users.common.AbstractMailIntegrationTest;
 import com.amtinez.api.rest.users.constants.ConfigurationConstants;
 import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles(ConfigurationConstants.Profiles.TEST)
 @ExtendWith(OutputCaptureExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserFacadeIntegrationTest extends BaseMailIntegrationTest {
+class UserFacadeIntegrationTest extends AbstractMailIntegrationTest {
 
     private static final String TEST_USER_FIRST_NAME = "testUserFirstName";
     private static final String TEST_USER_LAST_NAME = "testUserLastName";

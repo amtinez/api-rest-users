@@ -1,7 +1,6 @@
 package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
-import com.amtinez.api.rest.users.common.BaseControllerIntegrationTest;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.services.RoleService;
@@ -37,7 +36,7 @@ import static com.amtinez.api.rest.users.enums.Role.USER;
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
-class RoleControllerIntegrationTest extends BaseControllerIntegrationTest {
+class RoleControllerIntegrationTest implements ControllerIntegrationTest {
 
     private static final String ROLE_CONTROLLER_URL = "/roles";
     private static final String TEST_NOT_EXISTS_AUTHORITY_NAME = "NOT_EXISTS";

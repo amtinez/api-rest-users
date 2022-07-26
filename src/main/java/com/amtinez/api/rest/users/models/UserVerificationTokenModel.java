@@ -18,6 +18,6 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = UserVerificationToken.TABLE_NAME)
-public class UserVerificationTokenModel extends TokenModel {
+public class UserVerificationTokenModel extends AbstractTokenModel {
 
 }
