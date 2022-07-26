@@ -19,16 +19,16 @@ public abstract class BaseMailIntegrationTest {
     private GreenMail greenMail;
 
     @BeforeAll
-    public void startSmtp() {
+    protected void startSmtp() {
         getGreenMail().start();
     }
 
     @AfterAll
-    public void stopSmtp() {
+    protected void stopSmtp() {
         getGreenMail().stop();
     }
 
-    public GreenMail getGreenMail() {
+    protected GreenMail getGreenMail() {
         return greenMail;
     }
 
