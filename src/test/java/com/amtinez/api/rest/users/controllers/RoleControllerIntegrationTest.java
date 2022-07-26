@@ -1,15 +1,17 @@
 package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
+import com.amtinez.api.rest.users.common.BaseControllerIntegrationTest;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.services.RoleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -34,10 +36,10 @@ import static com.amtinez.api.rest.users.enums.Role.USER;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class RoleControllerIntegrationTest {
+@ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
+class RoleControllerIntegrationTest extends BaseControllerIntegrationTest {
 
     private static final String ROLE_CONTROLLER_URL = "/roles";
-
     private static final String TEST_NOT_EXISTS_AUTHORITY_NAME = "NOT_EXISTS";
 
     @Resource
@@ -81,7 +83,7 @@ class RoleControllerIntegrationTest {
 
     @Test
     @WithMockUser(authorities = ROLE_ADMIN)
-    void testRegisterRole() throws Exception {
+    void testCreateRole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(createRole(null))
@@ -90,8 +92,46 @@ class RoleControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    void testCreateRoleEmptyName() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(Role.builder()
+                                                                   .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError("name", "must not be blank")));
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    void testCreateRoleOverSizeName() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(Role.builder()
+                                                                   .name(USER.name().repeat(13))
+                                                                   .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError("name", "size must be between 0 and 50")));
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    void testCreateRoleExistName() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(Role.builder()
+                                                                   .name(USER.name())
+                                                                   .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError("name", "a role with that name already exists")));
+    }
+
+    @Test
     @WithMockUser
-    void testRegisterRoleForbidden() throws Exception {
+    void testCreateRoleForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(createRole(null))
@@ -100,7 +140,7 @@ class RoleControllerIntegrationTest {
     }
 
     @Test
-    void testRegisterRoleUnauthorized() throws Exception {
+    void testCreateRoleUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(createRole(null))
@@ -145,6 +185,19 @@ class RoleControllerIntegrationTest {
                                               .content(createRole(testRole.getId()))
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(authorities = ROLE_ADMIN)
+    void testUpdateRoleNullId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put(ROLE_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(Role.builder()
+                                                                   .name(ADMIN.name())
+                                                                   .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError("id", "must not be null")));
     }
 
     @Test
@@ -206,11 +259,10 @@ class RoleControllerIntegrationTest {
     }
 
     private String createRole(final Long id) throws JsonProcessingException {
-        final Role role = Role.builder()
-                              .id(id)
-                              .name(ADMIN.name())
-                              .build();
-        return new ObjectMapper().writeValueAsString(role);
+        return getJson(Role.builder()
+                           .id(id)
+                           .name(ADMIN.name())
+                           .build());
     }
 
 }
