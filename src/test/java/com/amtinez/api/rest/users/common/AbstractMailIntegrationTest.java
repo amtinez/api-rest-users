@@ -13,22 +13,22 @@ import javax.annotation.Resource;
  */
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class BaseMailIntegrationTest {
+public abstract class AbstractMailIntegrationTest {
 
     @Resource
     private GreenMail greenMail;
 
     @BeforeAll
-    public void startSmtp() {
+    protected void startSmtp() {
         getGreenMail().start();
     }
 
     @AfterAll
-    public void stopSmtp() {
+    protected void stopSmtp() {
         getGreenMail().stop();
     }
 
-    public GreenMail getGreenMail() {
+    protected GreenMail getGreenMail() {
         return greenMail;
     }
 

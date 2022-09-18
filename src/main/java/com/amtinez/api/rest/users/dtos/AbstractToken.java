@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class Token {
+public abstract class AbstractToken {
 
     private Long id;
 

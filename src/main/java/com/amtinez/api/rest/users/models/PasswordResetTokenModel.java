@@ -18,6 +18,6 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = PasswordResetToken.TABLE_NAME)
-public class PasswordResetTokenModel extends TokenModel {
+public class PasswordResetTokenModel extends AbstractTokenModel {
 
 }

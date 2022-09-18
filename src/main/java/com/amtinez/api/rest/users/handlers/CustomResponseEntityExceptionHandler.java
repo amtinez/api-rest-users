@@ -1,11 +1,14 @@
 package com.amtinez.api.rest.users.handlers;
 
 import com.amtinez.api.rest.users.validations.errors.Error;
-import com.amtinez.api.rest.users.validations.errors.FieldError;
+import com.amtinez.api.rest.users.validations.errors.ValidationError;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +18,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
@@ -32,14 +38,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                                                                final HttpHeaders headers,
                                                                final HttpStatus status,
                                                                final WebRequest request) {
-        final List<FieldError> errors = ex.getBindingResult()
-                                          .getFieldErrors()
-                                          .stream()
-                                          .map(fieldError -> FieldError.builder()
-                                                                       .field(fieldError.getField())
-                                                                       .message(fieldError.getDefaultMessage())
-                                                                       .build())
-                                          .collect(Collectors.toList());
+        final List<ValidationError> errors = ex.getBindingResult()
+                                               .getAllErrors()
+                                               .stream()
+                                               .filter(Objects::nonNull)
+                                               .map(this::createValidationError)
+                                               .collect(Collectors.toList());
         final Error error = Error.builder()
                                  .errors(errors)
                                  .build();
@@ -48,31 +52,50 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex) {
-        final FieldError fieldError = FieldError.builder()
-                                                .field(ex.getName())
-                                                .message("does not have the correct type")
-                                                .build();
+        final ValidationError validationError = ValidationError.builder()
+                                                               .field(ex.getName())
+                                                               .message("does not have the correct type")
+                                                               .build();
         final Error error = Error.builder()
-                                 .errors(Collections.singletonList(fieldError))
+                                 .errors(Collections.singletonList(validationError))
                                  .build();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex) {
-        final List<FieldError> errors = ex.getConstraintViolations().stream()
-                                          .map(constraintViolation -> {
-                                              final PathImpl path = (PathImpl) constraintViolation.getPropertyPath();
-                                              return FieldError.builder()
-                                                               .field(path.getLeafNode().getName())
-                                                               .message(constraintViolation.getMessage())
-                                                               .build();
-                                          })
-                                          .collect(Collectors.toList());
+        final List<ValidationError> errors = ex.getConstraintViolations().stream()
+                                               .map(constraintViolation -> {
+                                                   final PathImpl path = (PathImpl) constraintViolation.getPropertyPath();
+                                                   return ValidationError.builder()
+                                                                         .field(path.getLeafNode().getName())
+                                                                         .message(constraintViolation.getMessage())
+                                                                         .build();
+                                               })
+                                               .collect(Collectors.toList());
         final Error error = Error.builder()
                                  .errors(errors)
                                  .build();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+
+    private ValidationError createValidationError(final ObjectError error) {
+        return Optional.of(error)
+                       .filter(FieldError.class::isInstance)
+                       .map(FieldError.class::cast)
+                       .map(fieldError -> ValidationError.builder()
+                                                         .field(fieldError.getField())
+                                                         .message(fieldError.getDefaultMessage())
+                                                         .build())
+                       .orElseGet(() -> ValidationError.builder()
+                                                       .field(constraintCodesMap().getOrDefault(error.getCode(), StringUtils.EMPTY))
+                                                       .message(error.getDefaultMessage())
+                                                       .build());
+    }
+
+    private Map<String, String> constraintCodesMap() {
+        return Map.of("EqualPassword", "passwords");
     }
 
 }

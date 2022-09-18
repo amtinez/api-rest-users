@@ -25,7 +25,7 @@ import javax.persistence.OneToOne;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class TokenModel {
+public abstract class AbstractTokenModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
