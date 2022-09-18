@@ -1,6 +1,7 @@
 package com.amtinez.api.rest.users.handlers;
 
 import com.amtinez.api.rest.users.validations.errors.Error;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.hibernate.validator.internal.engine.path.NodeImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -38,6 +40,9 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CustomResponseEntityExceptionHandlerUnitTest {
 
+    private static final String TEST_CODE = "testCode";
+    private static final String TEST_REAL_CODE = "EqualPassword";
+    private static final String TEST_REAL_CODE_CONVERTED = "passwords";
     private static final String TEST_FIELD_NAME = "testFieldName";
     private static final String TEST_CONSTRAINT_MESSAGE = "testConstraintMessage";
     private static final String TEST_METHOD_ARGUMENT_MESSAGE = "testMethodArgumentMessage";
@@ -49,6 +54,8 @@ class CustomResponseEntityExceptionHandlerUnitTest {
     private MethodArgumentNotValidException methodArgumentNotValidException;
     @Mock
     private BeanPropertyBindingResult beanPropertyBindingResult;
+    @Mock
+    private ObjectError objectError;
     @Mock
     private FieldError fieldError;
     @Mock
@@ -67,9 +74,51 @@ class CustomResponseEntityExceptionHandlerUnitTest {
 
     @Test
     void testHandleMethodArgumentNotValid() {
+        when(objectError.getCode()).thenReturn(TEST_REAL_CODE);
+        when(objectError.getDefaultMessage()).thenReturn(TEST_METHOD_ARGUMENT_MESSAGE);
+        when(beanPropertyBindingResult.getAllErrors()).thenReturn(Collections.singletonList(objectError));
+        when(methodArgumentNotValidException.getBindingResult()).thenReturn(beanPropertyBindingResult);
+        final ResponseEntity<Object> responseEntity =
+            customResponseEntityExceptionHandler.handleMethodArgumentNotValid(methodArgumentNotValidException,
+                                                                              HttpHeaders.EMPTY,
+                                                                              HttpStatus.BAD_REQUEST,
+                                                                              webRequest);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertNotNull(responseEntity.getBody());
+        assertThat(responseEntity.getBody().getClass()).isEqualTo(Error.class);
+        final Error validationError = (Error) responseEntity.getBody();
+        assertFalse(validationError.getErrors().isEmpty());
+        assertThat(validationError.getErrors()).hasSize(1);
+        assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_METHOD_ARGUMENT_MESSAGE);
+        assertThat(validationError.getErrors().get(0).getField()).isEqualTo(TEST_REAL_CODE_CONVERTED);
+    }
+
+    @Test
+    void testHandleMethodArgumentNotValidConstraintCodeNotExists() {
+        when(objectError.getCode()).thenReturn(TEST_CODE);
+        when(objectError.getDefaultMessage()).thenReturn(TEST_METHOD_ARGUMENT_MESSAGE);
+        when(beanPropertyBindingResult.getAllErrors()).thenReturn(Collections.singletonList(objectError));
+        when(methodArgumentNotValidException.getBindingResult()).thenReturn(beanPropertyBindingResult);
+        final ResponseEntity<Object> responseEntity =
+            customResponseEntityExceptionHandler.handleMethodArgumentNotValid(methodArgumentNotValidException,
+                                                                              HttpHeaders.EMPTY,
+                                                                              HttpStatus.BAD_REQUEST,
+                                                                              webRequest);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertNotNull(responseEntity.getBody());
+        assertThat(responseEntity.getBody().getClass()).isEqualTo(Error.class);
+        final Error validationError = (Error) responseEntity.getBody();
+        assertFalse(validationError.getErrors().isEmpty());
+        assertThat(validationError.getErrors()).hasSize(1);
+        assertThat(validationError.getErrors().get(0).getMessage()).isEqualTo(TEST_METHOD_ARGUMENT_MESSAGE);
+        assertThat(validationError.getErrors().get(0).getField()).isEqualTo(StringUtils.EMPTY);
+    }
+
+    @Test
+    void testHandleMethodArgumentNotValidFieldError() {
         when(fieldError.getField()).thenReturn(TEST_FIELD_NAME);
         when(fieldError.getDefaultMessage()).thenReturn(TEST_METHOD_ARGUMENT_MESSAGE);
-        when(beanPropertyBindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
+        when(beanPropertyBindingResult.getAllErrors()).thenReturn(Collections.singletonList(fieldError));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(beanPropertyBindingResult);
         final ResponseEntity<Object> responseEntity =
             customResponseEntityExceptionHandler.handleMethodArgumentNotValid(methodArgumentNotValidException,

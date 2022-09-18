@@ -2,6 +2,9 @@ package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
 import com.amtinez.api.rest.users.common.AbstractMailIntegrationTest;
+import com.amtinez.api.rest.users.constants.ValidationConstants.Fields;
+import com.amtinez.api.rest.users.constants.ValidationConstants.Fields.Values;
+import com.amtinez.api.rest.users.constants.ValidationConstants.Messages;
 import com.amtinez.api.rest.users.dtos.PasswordResetToken;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.dtos.User;
@@ -60,6 +63,7 @@ class UserControllerIntegrationTest extends AbstractMailIntegrationTest implemen
     private static final String TEST_USER_EMAIL = "test@user.com";
     private static final String TEST_USER_PASSWORD = "testUserPassword";
     private static final String TEST_USER_NEW_PASSWORD = "testUserNewPassword";
+    private static final String TEST_USER_NEW_PASSWORD_OTHER = "testUserNewPasswordOther";
 
     private static final String TEST_USER_FIRST_NAME_UPDATED = "testUserFirstNameUpdated";
 
@@ -144,6 +148,126 @@ class UserControllerIntegrationTest extends AbstractMailIntegrationTest implemen
     }
 
     @Test
+    void testRegisterUserEmptyFirstName() throws Exception {
+        final User user = createUser();
+        user.setFirstName(StringUtils.EMPTY);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.FIRST_NAME, Messages.BLANK)));
+    }
+
+    @Test
+    void testRegisterUserOverSizeFirstName() throws Exception {
+        final User user = createUser();
+        user.setFirstName(Values.ONE_LETTER.repeat(51));
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.FIRST_NAME, Messages.OVERSIZE_50)));
+    }
+
+    @Test
+    void testRegisterUserEmptyLastName() throws Exception {
+        final User user = createUser();
+        user.setLastName(StringUtils.EMPTY);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.LAST_NAME, Messages.BLANK)));
+    }
+
+    @Test
+    void testRegisterUserOverSizeLastName() throws Exception {
+        final User user = createUser();
+        user.setLastName(Values.ONE_LETTER.repeat(51));
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.LAST_NAME, Messages.OVERSIZE_50)));
+    }
+
+    @Test
+    void testRegisterUserEmptyEmail() throws Exception {
+        final User user = createUser();
+        user.setEmail(StringUtils.EMPTY);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.EMAIL, Messages.BLANK)));
+    }
+
+    @Test
+    void testRegisterUserOverSizeEmail() throws Exception {
+        final User user = createUser();
+        user.setEmail(Values.OVER_SIZED_EMAIL);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.EMAIL, Messages.OVERSIZE_100)));
+    }
+
+    @Test
+    void testRegisterUserWrongFormattedEmail() throws Exception {
+        final User user = createUser();
+        user.setEmail(TEST_USER_FIRST_NAME);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.EMAIL, Messages.WELL_FORMED_EMAIL)));
+    }
+
+    @Test
+    void testRegisterUserExistsEmail() throws Exception {
+        final User user = createUser();
+        user.setEmail(TEST_USER_EMAIL);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.EMAIL, Messages.EXISTS_EMAIL)));
+    }
+
+    @Test
+    void testRegisterUserEmptyPassword() throws Exception {
+        final User user = createUser();
+        user.setPassword(StringUtils.EMPTY);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.PASSWORD, Messages.BLANK)));
+    }
+
+    @Test
+    void testRegisterUserNullBirthdayDate() throws Exception {
+        final User user = createUser();
+        user.setBirthdayDate(null);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(user))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.BIRTHDAY_DATE, Messages.NULL)));
+    }
+
+    @Test
     void testRegisterUserWithInvalidUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL)
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -209,6 +333,27 @@ class UserControllerIntegrationTest extends AbstractMailIntegrationTest implemen
     }
 
     @Test
+    void testResetUserPasswordNotEquals() throws Exception {
+        final User registeredUser = userFacade.registerUser(createUser());
+        userFacade.sendUserPasswordResetEmail(registeredUser);
+        final Optional<PasswordResetTokenModel> tokenModel = passwordResetTokenService.findToken(UserModel.builder()
+                                                                                                          .id(registeredUser.getId())
+                                                                                                          .build());
+        final PasswordResetToken token = tokenModel.map(tokenModelFound -> PasswordResetToken.builder()
+                                                                                             .code(tokenModelFound.getCode())
+                                                                                             .password(TEST_USER_NEW_PASSWORD)
+                                                                                             .repeatedPassword(TEST_USER_NEW_PASSWORD_OTHER)
+                                                                                             .build())
+                                                   .orElse(null);
+        mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_URL + "/reset/")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(token))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.PASSWORDS, Messages.NOT_EQUALS_PASSWORDS)));
+    }
+
+    @Test
     void testResetUserPasswordExpiredToken() throws Exception {
         final User registeredUser = userFacade.registerUser(createUser());
         userFacade.sendUserPasswordResetEmail(registeredUser);
@@ -244,6 +389,20 @@ class UserControllerIntegrationTest extends AbstractMailIntegrationTest implemen
                                                                    .build()))
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void testUpdateUserNullId() throws Exception {
+        setLoggedInUserId(testUser.getId());
+        mockMvc.perform(MockMvcRequestBuilders.put(USER_CONTROLLER_URL)
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(getJson(User.builder()
+                                                                   .firstName(TEST_USER_FIRST_NAME_UPDATED)
+                                                                   .build()))
+                                              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.ID, Messages.NULL)));
     }
 
     @Test
