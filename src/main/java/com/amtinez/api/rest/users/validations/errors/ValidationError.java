@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonView(value = View.Anonymous.class)
-public class FieldError {
+public class ValidationError {
 
     private String field;
     private String message;
