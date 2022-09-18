@@ -17,6 +17,6 @@ import java.util.List;
 @JsonView(value = View.Anonymous.class)
 public class Error {
 
-    private List<FieldError> errors;
+    private List<ValidationError> errors;
 
 }

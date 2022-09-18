@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.mappers;
 
-import com.amtinez.api.rest.users.dtos.Token;
+import com.amtinez.api.rest.users.dtos.AbstractToken;
 import com.amtinez.api.rest.users.dtos.User;
 import com.amtinez.api.rest.users.models.PasswordResetTokenModel;
 import com.amtinez.api.rest.users.models.UserModel;
@@ -58,7 +58,7 @@ class PasswordResetTokenMapperUnitTest {
 
     @Test
     void tokenModelToToken() {
-        final Token token = mapper.tokenModelToToken(passwordResetTokenModel);
+        final AbstractToken token = mapper.tokenModelToToken(passwordResetTokenModel);
         assertThat(token.getId()).isEqualTo(TEST_TOKEN_ID);
         assertThat(token.getCode()).isEqualTo(TEST_TOKEN_CODE);
         assertThat(token.getUser()).isEqualTo(user);

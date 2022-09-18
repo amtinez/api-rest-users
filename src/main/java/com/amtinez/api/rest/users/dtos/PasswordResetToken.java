@@ -19,7 +19,7 @@ import static com.amtinez.api.rest.users.constants.ValidationConstants.User.PASS
 @Getter
 @Setter
 @EqualPassword
-public class PasswordResetToken extends Token {
+public class PasswordResetToken extends AbstractToken {
 
     @NotBlank
     @Size(max = PASSWORD_MAX_FIELD_LENGTH)

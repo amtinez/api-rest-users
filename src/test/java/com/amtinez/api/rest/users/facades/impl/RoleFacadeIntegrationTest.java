@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.facades.impl;
 
-import com.amtinez.api.rest.users.common.BaseMailIntegrationTest;
+import com.amtinez.api.rest.users.common.AbstractMailIntegrationTest;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.facades.RoleFacade;
 import org.junit.jupiter.api.AfterAll;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class RoleFacadeIntegrationTest extends BaseMailIntegrationTest {
+class RoleFacadeIntegrationTest extends AbstractMailIntegrationTest {
 
     @Resource
     private RoleFacade roleFacade;

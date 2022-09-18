@@ -12,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserVerificationToken extends Token {
+public class UserVerificationToken extends AbstractToken {
 
 }

@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  */
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class BaseMailIntegrationTest {
+public abstract class AbstractMailIntegrationTest {
 
     @Resource
     private GreenMail greenMail;

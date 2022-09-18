@@ -1,6 +1,6 @@
 package com.amtinez.api.rest.users.facades;
 
-import com.amtinez.api.rest.users.models.TokenModel;
+import com.amtinez.api.rest.users.models.AbstractTokenModel;
 import com.amtinez.api.rest.users.services.TokenService;
 
 import java.time.LocalDateTime;
@@ -27,8 +27,8 @@ public interface TokenFacade<T, K> {
      */
     default boolean isUnexpiredToken(final TokenService<T> tokenService, final T token) {
         return Optional.of(token)
-                       .filter(TokenModel.class::isInstance)
-                       .map(TokenModel.class::cast)
+                       .filter(AbstractTokenModel.class::isInstance)
+                       .map(AbstractTokenModel.class::cast)
                        .map(tokenModelFound -> {
                            final boolean isUnexpired = LocalDateTime.now().isBefore(tokenModelFound.getExpiryDate());
                            if (!isUnexpired) {
