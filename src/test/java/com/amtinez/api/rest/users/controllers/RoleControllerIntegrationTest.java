@@ -1,6 +1,9 @@
 package com.amtinez.api.rest.users.controllers;
 
 import com.amtinez.api.rest.users.annotations.WithMockUser;
+import com.amtinez.api.rest.users.constants.ValidationConstants.Fields;
+import com.amtinez.api.rest.users.constants.ValidationConstants.Fields.Values;
+import com.amtinez.api.rest.users.constants.ValidationConstants.Messages;
 import com.amtinez.api.rest.users.dtos.Role;
 import com.amtinez.api.rest.users.models.RoleModel;
 import com.amtinez.api.rest.users.services.RoleService;
@@ -99,7 +102,7 @@ class RoleControllerIntegrationTest implements ControllerIntegrationTest {
                                                                    .build()))
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-               .andExpect(MockMvcResultMatchers.content().json(createFieldError("name", "must not be blank")));
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.NAME, Messages.BLANK)));
     }
 
     @Test
@@ -108,11 +111,11 @@ class RoleControllerIntegrationTest implements ControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post(ROLE_CONTROLLER_URL)
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(getJson(Role.builder()
-                                                                   .name(USER.name().repeat(13))
+                                                                   .name(Values.ONE_LETTER.repeat(51))
                                                                    .build()))
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-               .andExpect(MockMvcResultMatchers.content().json(createFieldError("name", "size must be between 0 and 50")));
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.NAME, Messages.OVERSIZE_50)));
     }
 
     @Test
@@ -125,7 +128,7 @@ class RoleControllerIntegrationTest implements ControllerIntegrationTest {
                                                                    .build()))
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-               .andExpect(MockMvcResultMatchers.content().json(createFieldError("name", "a role with that name already exists")));
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.NAME, Messages.EXISTS_ROLE)));
     }
 
     @Test
@@ -196,7 +199,7 @@ class RoleControllerIntegrationTest implements ControllerIntegrationTest {
                                                                    .build()))
                                               .with(SecurityMockMvcRequestPostProcessors.csrf()))
                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-               .andExpect(MockMvcResultMatchers.content().json(createFieldError("id", "must not be null")));
+               .andExpect(MockMvcResultMatchers.content().json(createFieldError(Fields.ID, Messages.NULL)));
     }
 
     @Test
