@@ -5,7 +5,11 @@
 </p>
 
 <p align="center">
-    This project is discontinued, but is maintained as an example. Currently, all this logic has been improved and migrated to microservices.
+    This project is discontinued, but is maintained as an example.
+</p>
+
+<p align="center">
+    Currently, all this logic has been improved and migrated to microservices.
 </p>
 
 <p align="center">
