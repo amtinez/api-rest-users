@@ -1,9 +1,19 @@
 <h1 align="center">API Rest Users</h1>
 
 <p align="center">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=alert_status" alt="Quality gate"/>
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=security_rating" alt="Security rating"/>
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=amtinez_api-rest-users&metric=coverage" alt="Coverage"/>
+    :warning:
+</p>
+
+<p align="center">
+    This project is discontinued, but is maintained as an example.
+</p>
+
+<p align="center">
+    Currently, all this logic has been improved and migrated to microservices.
+</p>
+
+<p align="center">
+    :warning:
 </p>
 
 The API Rest Users project was born with the aim of learning and deepening in a RESTful application based on user management and security,
